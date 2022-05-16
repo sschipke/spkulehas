@@ -13,18 +13,6 @@ let initialState = {
   selected_user: null,
 };
 
-initialState.user = {
-  name: "Scott Schipke",
-  status: "D1",
-  street: "755 S Dexter S #118",
-  city: "Denver",
-  state: "CO",
-  zipcode: "80246",
-  phone: "605-431-9294",
-  id: "e48de300-affb-40a0-88bf-e39e14126ab5",
-  email: "swschipke@gmail.com",
-};
-
 const data = (state = initialState, action) => {
   let new_state = { ...state };
 
