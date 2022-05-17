@@ -9,7 +9,7 @@ import {
   Stack,
   IconButton,
   Paper,
-  Typography
+  Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { formatPhoneNumber } from "../utils/helpers";
@@ -68,6 +68,10 @@ export const ProfilePage = ({
       case "state":
         inputValue = e.target.value.trim().toUpperCase();
         break;
+      case "firstName":
+      case "lastName":
+        inputValue = e.target.value;
+        break;
       default:
         inputValue = e.target.value.trim();
         break;
@@ -78,9 +82,10 @@ export const ProfilePage = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     userInfo.phone = formatPhoneNumber(userInfo.phone);
+    userInfo.name = `${userInfo.firstName} ${userInfo.lastName}`;
     try {
       let newUser = await updateUserProfile(userInfo, token);
-      updateUser(newUser.user);
+      updateUser(newUser.user, newUser.token);
       showToast("Profile updated.", "success");
       setIsEditting(false);
     } catch (error) {
@@ -92,19 +97,23 @@ export const ProfilePage = ({
   return (
     <Paper component="main" sx={{ minHeight: "90vh" }} className="profile-page">
       <Stack sx={{ alignItems: "center" }} className="profile-page-headers">
-        <Typography component="h2" variant="h2">{userReference.name}</Typography>
-        <Typography component="h4" variant="h4">Status: {userReference.status}</Typography>
+        <Typography component="h2" variant="h2">
+          {userReference.name}
+        </Typography>
+        <Typography component="h4" variant="h4">
+          Status: {userReference.status}
+        </Typography>
       </Stack>
       <Stack sx={{ alignItems: "center", height: "15vh", mt: "10px" }}>
         <TextField
-            id="email"
-            label="Email"
-            inputProps={{
-              readOnly: true
-            }}
-            value={userReference.email}
-          />
-        <Stack direction="row" spacing={2} sx={{mt: 2}}>
+          id="email"
+          label="Email"
+          inputProps={{
+            readOnly: true,
+          }}
+          value={userReference.email}
+        />
+        <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
           <Button
             variant="contained"
             onClick={() => showUdpateCredentialsModal("EMAIL")}
@@ -182,7 +191,7 @@ export const ProfilePage = ({
           />
           <TextField
             id="city"
-            label="city"
+            label="City"
             value={userReference.city}
             onChange={handleChange}
             required={isEditting}
@@ -263,14 +272,14 @@ export const ProfilePage = ({
             </IconButton>
           )}
           {isEditting && (
-              <Button
-                onClick={() => {
-                  setIsEditting(false);
-                }}
-                color="secondary"
-              >
-                Cancel
-              </Button>
+            <Button
+              onClick={() => {
+                setIsEditting(false);
+              }}
+              color="secondary"
+            >
+              Cancel
+            </Button>
           )}
         </Stack>
       </Box>

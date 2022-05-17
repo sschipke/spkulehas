@@ -115,6 +115,7 @@ const data = (state = initialState, action) => {
       return new_state;
     case "UPDATE_USER":
       new_state.user = action.user;
+      new_state.token = action.token
       return new_state;
     default:
       return state;

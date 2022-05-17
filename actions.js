@@ -116,8 +116,8 @@ export const updateSelectedUser = (value) => ({
   type: "UPDATE_SELECTED_USER", value
 });
 
-export const updateUser = (user) => ({
-  type: "UPDATE_USER", user
+export const updateUser = (user, token) => ({
+  type: "UPDATE_USER", user, token
 });
 
 export const showUdpateCredentialsModal = (kind) => ({
