@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -20,6 +20,8 @@ const UserSelect = ({
     const handleSelect = (value) => {
       updateSelectedUser(value);
     }
+
+
 
     const options = usersInfo.map(user => 
       (<MenuItem color="secondary" value={`${user.id}_${user.name}`}>{user.name}</MenuItem>)

@@ -78,7 +78,9 @@ const data = (state = initialState, action) => {
         (reservation) => reservation.id !== id
       );
       new_state.reservations = filteredReservations;
+      console.log({filteredReservations})
       if (user.status === "ADMIN") {
+        console.log("In admin")
         new_state.user_reservations = filteredReservations;
       }
       new_state.user_reservations = filteredReservations.filter(
@@ -111,6 +113,7 @@ const data = (state = initialState, action) => {
       return new_state;
     case "UPDATE_EMAIL":
       const { email } = action;
+      new_state.token = action.token;
       new_state.user = { ...user, email };
       return new_state;
     case "UPDATE_USER":

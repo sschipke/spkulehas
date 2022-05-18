@@ -26,17 +26,7 @@ export const ProfilePage = ({
   showUdpateCredentialsModal,
 }) => {
   const router = useRouter();
-  if (!user) {
-    router.push("/");
-    return null;
-  }
-
   const userClone = { ...user };
-  userClone.phone = (user.phone || "").split("-").join("");
-  const names = user.name.split(" ");
-  userClone.firstName = names[0];
-  userClone.lastName = names[1];
-
   const [isEditting, setIsEditting] = useState(false);
   const [userInfo, updateUserInfo] = useState(userClone);
 
@@ -44,7 +34,19 @@ export const ProfilePage = ({
     if (!isEditting) {
       updateUserInfo(userClone);
     }
-  }, [isEditting]);
+    if (!user) {
+      router.push("/");
+    }
+  }, [isEditting, user]);
+
+  if (user) {
+    userClone.phone = ((user && user.phone) || "").split("-").join("");
+    const names = user.name.split(" ");
+    userClone.firstName = names[0];
+    userClone.lastName = names[1];
+  } else {
+    return null;
+  }
 
   const userReference = isEditting ? userInfo : userClone;
   const phoneFormat = isEditting
@@ -114,12 +116,12 @@ export const ProfilePage = ({
           value={userReference.email}
         />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-          <Button
+          {user.status !== "ADMIN" && <Button
             variant="contained"
             onClick={() => showUdpateCredentialsModal("EMAIL")}
           >
             Update Email
-          </Button>
+          </Button>}
           <Button
             variant="outlined"
             color="secondary"
@@ -182,6 +184,7 @@ export const ProfilePage = ({
           <TextField
             id="street"
             label="Street Address"
+            helperText={isEditting ? "U.S. Addresses Only" : ""}
             inputProps={{
               readOnly: !isEditting,
             }}
@@ -192,6 +195,7 @@ export const ProfilePage = ({
           <TextField
             id="city"
             label="City"
+            helperText={isEditting ? "U.S. Cities Only Please" : ""}
             value={userReference.city}
             onChange={handleChange}
             required={isEditting}
@@ -221,6 +225,7 @@ export const ProfilePage = ({
           <TextField
             id="zipcode"
             label="Zip Code"
+            helperText={isEditting ? "5 Digit Zip Code" : ""}
             value={userReference.zipcode}
             onChange={handleChange}
             required={isEditting}

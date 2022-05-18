@@ -42,6 +42,7 @@ const UserAvatarMenu = ({ user, logOut }) => {
             return (
           <MenuItem key={link.page}
           className="unstyled-link"
+          onClick={() => handleClose()}
           >
             <Link 
             href={link.page}

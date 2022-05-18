@@ -128,6 +128,6 @@ export const closeUpdateCredentialsModal = () => ({
   type: "CLOSE_UPDATE_CREDENTIALS_MODAL"
 });
 
-export const updateUserEmail = (email) => ({
-  type: "UPDATE_EMAIL", email
+export const updateUserEmail = (email, token) => ({
+  type: "UPDATE_EMAIL", email, token
 })

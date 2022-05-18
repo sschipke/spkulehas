@@ -56,7 +56,7 @@ export const processEmailChange =
   (newEmail, password, token, id) => async (dispatch) => {
     try {
       let res = await updateEmail(newEmail, password, token, id);
-      dispatch(updateUserEmail(res.email));
+      dispatch(updateUserEmail(res.email, res.token));
       dispatch(showToast("Email sucessfully updated!", "success"));
       dispatch(closeUpdateCredentialsModal());
     } catch (error) {
