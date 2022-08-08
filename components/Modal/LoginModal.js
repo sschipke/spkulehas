@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import Avatar from "@mui/material/Avatar";
+import EmailIcon from "@mui/icons-material/Email";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
   TextField,
@@ -19,18 +20,19 @@ import {
   FormHelperText,
   FormControl,
 } from "@mui/material";
-import { closeLoginModal, setUser } from "../../actions";
-import { processLogin } from "../../thunks/thunks";
+import { closeLoginModal } from "../../actions";
+import { processLogin, processRequestPasswordReset } from "../../thunks/thunks";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-export const LoginModal = ({ isOpen, user, closeLoginModal, setUser }) => {
+export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
   const initialState = {
     email: "",
     password: "",
     error: false,
     showPassword: false,
+    resetPassword: false,
   };
   const [values, setValues] = useState(initialState);
 
@@ -66,7 +68,11 @@ export const LoginModal = ({ isOpen, user, closeLoginModal, setUser }) => {
     const { email, password } = values;
 
     setValues({ ...values, error: false });
-    dispatch(processLogin(email.toLowerCase(), password));
+    if (values.resetPassword) {
+      dispatch(processRequestPasswordReset(email.toLowerCase()));
+    } else {
+      dispatch(processLogin(email.toLowerCase(), password));
+    }
   };
 
   return (
@@ -78,10 +84,10 @@ export const LoginModal = ({ isOpen, user, closeLoginModal, setUser }) => {
     >
       <Box className="modal-large">
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
+          {values.resetPassword ? <EmailIcon /> : <LockOutlinedIcon />}
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          {values.resetPassword ? "Reset password" : "Sign in"}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
@@ -98,40 +104,56 @@ export const LoginModal = ({ isOpen, user, closeLoginModal, setUser }) => {
             error={values.error}
             autoFocus
           />
-          <TextField
-            name="password"
-            autoComplete="password"
-            label="Password"
-            type={values.showPassword ? "text" : "password"}
-            value={values.password}
-            onChange={handleChange}
-            required
-            fullWidth
-            error={values.error}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+          {!values.resetPassword && (
+            <TextField
+              name="password"
+              autoComplete="password"
+              label="Password"
+              type={values.showPassword ? "text" : "password"}
+              value={values.password}
+              onChange={handleChange}
+              required
+              fullWidth
+              error={values.error}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            disabled={!values.email.trim() || !values.password.trim()}
+            disabled={
+              !values.email.trim() ||
+              (!values.resetPassword && !values.password.trim())
+            }
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            {values.resetPassword ? "Reset Password" : "Sign In"}
           </Button>
+          {!values.resetPassword && <div style={{width: "100%", textAlign: "center"}} >
+            <Button
+            variant="outlined"
+            color="secondary"
+            edge="end"
+            onClick={() => setValues({ ...values, resetPassword: true })}
+            sx={{m: "auto", width: "40%"}}
+          >
+            Forgot password?
+          </Button>
+          </div>}
           {values.error && (
             <FormHelperText sx={{ color: "red" }}>
               Invalid email or password.
@@ -149,6 +171,6 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ closeLoginModal, setUser }, dispatch);
+  bindActionCreators({ closeLoginModal }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginModal);

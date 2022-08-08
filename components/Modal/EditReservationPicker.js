@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import moment from "moment";
 import { TextField, Modal, Backdrop, Box, Button, Stack } from "@mui/material";
-import { DateRangePicker, DatePicker, LocalizationProvider } from "@mui/lab";
+import { DateRangePicker, DatePicker } from "@mui/lab";
 import {
   toggleEditReservationPicker,
   updateReservation,
@@ -17,7 +18,8 @@ import {
   formatReservation,
 } from "../../utils/helpers";
 import { putReservation } from "../../utils/apiCalls";
-import UserSelect from "../Utilities/UserSelect";
+const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
+const ReservationTitle = dynamic(() => import("../Utilities/ReservationTitle"));
 
 export const EditReservationPicker = ({
   isOpen,
@@ -30,6 +32,7 @@ export const EditReservationPicker = ({
   closeViewReservationModal,
   user,
   selectedUser,
+  reservationTitle,
   token,
 }) => {
   const initialValue = () => {
@@ -64,6 +67,9 @@ export const EditReservationPicker = ({
     if (user.status === "ADMIN" && selectedUser) {
       reservation.title = selectedUser.name;
       reservation.user_id = selectedUser.id;
+    }
+    if (reservationTitle.trim()) {
+      reservation.title = reservationTitle.trim();
     }
     const formattedReservation = formatReservation(
       reservation,
@@ -125,6 +131,7 @@ export const EditReservationPicker = ({
         <TextField
           id="notes"
           label="Notes"
+          placeholder="Checkin time, checkout, etc."
           multiline
           rows={2}
           value={notes}
@@ -133,6 +140,7 @@ export const EditReservationPicker = ({
             maxLength: 60,
           }}
         />
+        <ReservationTitle />
         <UserSelect />
         <Stack
           direction="row"
@@ -170,6 +178,7 @@ export const mapStateToProps = (state) => ({
   token: state.data.token,
   usersInfo: state.data.usersInfo,
   selectedUser: state.data.selected_user,
+  reservationTitle: state.data.reservation_title,
 });
 
 export const mapDispatchToProps = (dispatch) =>

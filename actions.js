@@ -87,7 +87,7 @@ export const logOut = () => ({
 });
 
 export const showLoadingModal = () => ({
-  type: "OPEN_LOADING_MODAL",
+  type: "IS_LOADING",
 });
 
 export const closeLoadingModal = () => ({
@@ -108,12 +108,8 @@ export const toggleConfirmDeleteDialog = () => ({
   type: "TOGGLE_CONFIRM_DELETE_DIALOG"
 });
 
-export const showIsLoading = () => ({
-  type: "IS_LOADING"
-});
-
-export const updateSelectedUser = (value) => ({
-  type: "UPDATE_SELECTED_USER", value
+export const updateSelectedUser = (userId) => ({
+  type: "UPDATE_SELECTED_USER", userId
 });
 
 export const updateUser = (user, token) => ({
@@ -130,4 +126,12 @@ export const closeUpdateCredentialsModal = () => ({
 
 export const updateUserEmail = (email, token) => ({
   type: "UPDATE_EMAIL", email, token
+});
+
+export const updateToken = (token) => ({
+  type: "UPDATE_TOKEN", token
 })
+
+export const updateReservationTitle = (value) => ({
+  type: "UPDATE_RESERVATION_TITLE", value
+});

@@ -11,18 +11,37 @@ let initialState = {
   usersInfo: null,
   user_reservations: null,
   selected_user: null,
+  reservation_title: "",
+};
+//TODO: REMOVE!!
+const generateRandomColor = () => {
+  const index = Math.floor(parseInt(Math.random() * 10));
+  const colors = [
+    "#880e4f",
+    "#b71c1c",
+    "#4a148c",
+    "#0d47a1",
+    "#006064",
+    "#004d40",
+    "#f57f17",
+    "#ff6f00",
+    "#e65100",
+    "#bf360c",
+  ];
+  return colors[index];
 };
 
 const data = (state = initialState, action) => {
   let new_state = { ...state };
 
-  const { reservations, user } = state;
+  const { reservations, user, usersInfo } = state;
 
   switch (action.type) {
     case "RESERVATIONS_LOADED":
       new_state.reservations = action.reservations.map((reservation) => {
         reservation.start = new Date(reservation.start);
         reservation.end = new Date(reservation.end);
+        reservation.color = generateRandomColor();
         return reservation;
       });
       new_state.are_reservations_loaded = true;
@@ -78,9 +97,8 @@ const data = (state = initialState, action) => {
         (reservation) => reservation.id !== id
       );
       new_state.reservations = filteredReservations;
-      console.log({filteredReservations})
+      console.log({ filteredReservations });
       if (user.status === "ADMIN") {
-        console.log("In admin")
         new_state.user_reservations = filteredReservations;
       }
       new_state.user_reservations = filteredReservations.filter(
@@ -90,13 +108,14 @@ const data = (state = initialState, action) => {
       return new_state;
     case "USER_LOGIN_SUCCESS":
       const { user, token } = action.data;
+      console.log("LOGIN! ", user);
       new_state.user = user;
       new_state.token = token;
+      new_state.usersInfo = action.data.usersInfo;
       new_state.user_reservations = reservations.filter(
         (res) => res.user_id === user.id
       );
-      if (action.data["usersInfo"]) {
-        new_state.usersInfo = action.data.usersInfo;
+      if (user.status === "ADMIN") {
         new_state.user_reservations = reservations;
       }
       return new_state;
@@ -108,8 +127,18 @@ const data = (state = initialState, action) => {
       new_state.selected_user = null;
       return new_state;
     case "UPDATE_SELECTED_USER":
-      const values = action.value.split("_");
-      new_state.selected_user = { id: values[0], name: values[1] };
+      const { userId } = action;
+      console.log({ userId });
+      if (userId) {
+        let name = usersInfo.find((user) => user.id === userId)["name"];
+        new_state.selected_user = { id: userId, name };
+        console.log("Selected user: ", new_state.selected_user);
+      } else {
+        new_state.selected_user = null;
+      }
+      return new_state;
+    case "UPDATE_RESERVATION_TITLE":
+      new_state.reservation_title = action.value;
       return new_state;
     case "UPDATE_EMAIL":
       const { email } = action;
@@ -118,7 +147,11 @@ const data = (state = initialState, action) => {
       return new_state;
     case "UPDATE_USER":
       new_state.user = action.user;
-      new_state.token = action.token
+      new_state.token = action.token;
+      return new_state;
+    case "UPDATE_TOKEN":
+      console.log("Updating token!", { action });
+      new_state.token = action.token;
       return new_state;
     default:
       return state;

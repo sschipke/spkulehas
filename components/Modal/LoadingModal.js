@@ -36,7 +36,9 @@ export const LoadingModal = ({ isOpen }) => {
       BackdropComponent={Backdrop}
       style={modalStyle}
     >
+      {/* <Box style={style}> */}
       <CircularProgress />
+      {/* </Box> */}
     </Modal>
   )
 }

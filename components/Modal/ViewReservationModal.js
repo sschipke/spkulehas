@@ -67,7 +67,7 @@ export const ViewReservationModal = ({
       style={modalStyle}
       onClose={() => closeViewReservationModal()}
     >
-      <Box style={style} className="dates-picker">
+      <Box style={style} className="">
         <h3>{title}</h3>
 
         <TextField
@@ -88,17 +88,13 @@ export const ViewReservationModal = ({
           }}
           sx={{ m: "15px" }}
         />
-        {/* <div>
-          <h4>Check-out Date:</h4>
-          <p>{moment(end).format("dddd, MMMM Do YYYY")}</p>
-        </div> */}
         <TextField
           id="notes"
           label="Notes"
           multiline
           rows={3}
           value={notes}
-          placeholder="None"
+          placeholder="Checkin time, checkout, etc."
           InputProps={{
             readOnly: true,
           }}

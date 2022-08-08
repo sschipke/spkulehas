@@ -20,15 +20,17 @@ const screen = (state = initialState, action) => {
   const {
     edit_reservation_picker_open,
     new_reservation_picker_open,
-    show_toast,
     view_date,
     is_confirm_delete_dialog_open,
   } = state;
   switch (action.type) {
     case "IS_LOADING":
-      new_state.is_loading = false;
+      new_state.is_loading = true;
       return new_state;
     case "RESERVATIONS_LOADED":
+      new_state.is_loading = false;
+      return new_state;
+    case "CLOSE_LOADING_MODAL":
       new_state.is_loading = false;
       return new_state;
     case "TOGGLE_EDIT_RESERVATION_PICKER":

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import moment from "moment";
+import dynamic from "next/dynamic";
 import { TextField, Modal, Backdrop, Box, Stack, Button } from "@mui/material";
 import { DateRangePicker, DatePicker } from "@mui/lab";
 import {
@@ -15,8 +15,8 @@ import {
   formatReservation,
 } from "../../utils/helpers";
 import { postReservation } from "../../utils/apiCalls";
-import UserSelect from "../Utilities/UserSelect";
-
+const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
+const ReservationTitle = dynamic(() => import("../Utilities/ReservationTitle"));
 export const NewReservationPicker = ({
   isOpen,
   user,
@@ -27,6 +27,7 @@ export const NewReservationPicker = ({
   viewDate,
   addReservation,
   token,
+  reservationTitle,
 }) => {
   const [dates, setDates] = useState([new Date(viewDate), null]);
   const [error, setError] = useState(null);
@@ -55,6 +56,9 @@ export const NewReservationPicker = ({
       title: user.status === "ADMIN" ? selectedUser.name : name,
       notes: notes.trim(),
     };
+    if (reservationTitle) {
+      reservation.title = reservationTitle.trim();
+    }
     reservation = formatReservation(reservation, checkinDate, checkoutDate);
     try {
       const newReservation = await postReservation(reservation, token);
@@ -103,6 +107,7 @@ export const NewReservationPicker = ({
         <TextField
           id="notes"
           label="Notes"
+          placeholder="Checkin time, checkout, etc."
           multiline
           rows={1}
           value={notes}
@@ -111,6 +116,7 @@ export const NewReservationPicker = ({
             maxLength: 60,
           }}
         />
+        <ReservationTitle />
         <UserSelect />
         <Stack
           direction="row"
@@ -146,6 +152,7 @@ export const mapStateToProps = (state) => ({
   viewDate: state.screen.view_date,
   user: state.data.user,
   selectedUser: state.data.selected_user,
+  reservationTitle: state.data.reservation_title,
   token: state.data.token,
 });
 

@@ -22,7 +22,11 @@ import {
   FormControl,
 } from "@mui/material";
 import { closeUpdateCredentialsModal } from "../../actions";
-import { processPasswordChange, processEmailChange } from "../../thunks/thunks";
+import {
+  processPasswordChange,
+  processEmailChange,
+  processPasswordReset,
+} from "../../thunks/thunks";
 
 export const UpdateCredentialsModal = ({
   isOpen,
@@ -42,6 +46,7 @@ export const UpdateCredentialsModal = ({
     showPassword: false,
   };
   const [values, setValues] = useState(initialState);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isOpen) {
@@ -49,11 +54,10 @@ export const UpdateCredentialsModal = ({
     }
   }, [isOpen]);
 
-  if (!user) {
+  //TODO: CHange this!
+  if (!user && kind !== "RESET_PASSWORD") {
     return null;
   }
-
-  const dispatch = useDispatch();
 
   const clearError = () => {
     setValues({ ...values, error: null });
@@ -134,6 +138,7 @@ export const UpdateCredentialsModal = ({
         </div>
       );
       break;
+    case "RESET_PASSWORD":
     case "PASSWORD":
       content = (
         <div>
@@ -181,17 +186,26 @@ export const UpdateCredentialsModal = ({
     e.preventDefault();
     const { newEmail, newPassword, password } = values;
     setValues({ ...values, error: false });
-    if (kind === "EMAIL") {
-      dispatch(
-        processEmailChange(
-          newEmail.trim().toLowerCase(),
-          password,
-          token,
-          user.id
-        )
-      );
-    } else {
-      dispatch(processPasswordChange(newPassword, password, token, user.id));
+    switch (kind) {
+      case "EMAIL":
+        dispatch(
+          processEmailChange(
+            newEmail.trim().toLowerCase(),
+            password,
+            token,
+            user.id
+          )
+        );
+        break;
+      case "PASSWORD":
+        dispatch(processPasswordChange(newPassword, password, token, user.id));
+        break;
+      case "RESET_PASSWORD":
+        dispatch(processPasswordReset(token, newPassword));
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -204,7 +218,7 @@ export const UpdateCredentialsModal = ({
       confirmNewPassword,
       error,
     } = values;
-    if (!password) {
+    if (kind !== "RESET_PASSWORD" && !password) {
       return false;
     }
     if (kind === "EMAIL") {
@@ -212,8 +226,11 @@ export const UpdateCredentialsModal = ({
         return false;
       }
     }
-    if (kind === "PASSWORD") {
+    if (kind === "PASSWORD" || kind === "RESET_PASSWORD") {
       if (!newPassword || !confirmNewPassword) {
+        return false;
+      }
+      if (newPassword !== confirmNewPassword) {
         return false;
       }
     }
@@ -245,19 +262,21 @@ export const UpdateCredentialsModal = ({
           ) : (
             <p style={{ m: "10px", height: "15px" }}></p>
           )}
-          <TextField
-            name="password"
-            autoComplete="password"
-            label={kind === "EMAIL" ? "Password" : "Current Password"}
-            type={values.showPassword ? "text" : "password"}
-            value={values.password}
-            onChange={handleChange}
-            required
-            fullWidth
-            InputProps={{
-              maxLength: 20,
-            }}
-          />
+          {kind !== "RESET_PASSWORD" && (
+            <TextField
+              name="password"
+              autoComplete="password"
+              label={kind === "EMAIL" ? "Password" : "Current Password"}
+              type={values.showPassword ? "text" : "password"}
+              value={values.password}
+              onChange={handleChange}
+              required
+              fullWidth
+              InputProps={{
+                maxLength: 20,
+              }}
+            />
+          )}
           <FormControlLabel
             sx={{ m: "auto" }}
             control={

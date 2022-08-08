@@ -2,21 +2,25 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useRouter } from "next/router";
-import {
-  TextField,
-  Box,
-  Button,
-  Stack,
-  IconButton,
-  Paper,
-  Typography,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import dynamic from "next/dynamic";
+
+const TextField = dynamic(() =>
+  import("@mui/material").then((mod) => mod.TextField)
+);
+const Box = dynamic(() => import("@mui/material").then((mod) => mod.Box));
+const Button = dynamic(() => import("@mui/material").then((mod) => mod.Button));
+const Stack = dynamic(() => import("@mui/material").then((mod) => mod.Stack));
+const IconButton = dynamic(() =>
+  import("@mui/material").then((mod) => mod.IconButton)
+);
+const Paper = dynamic(() => import("@mui/material").then((mod) => mod.Paper));
+const Typography = dynamic(() =>
+  import("@mui/material").then((mod) => mod.Typography)
+);
+const EditIcon = dynamic(() => import("@mui/icons-material/Edit"));
 import { formatPhoneNumber } from "../utils/helpers";
 import { showToast, updateUser, showUdpateCredentialsModal } from "../actions";
 import { updateUserProfile } from "../utils/apiCalls";
-
-import UserAvatar from "../components/Utilities/UserAvatar";
 
 export const ProfilePage = ({
   user,
@@ -116,12 +120,14 @@ export const ProfilePage = ({
           value={userReference.email}
         />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-          {user.status !== "ADMIN" && <Button
-            variant="contained"
-            onClick={() => showUdpateCredentialsModal("EMAIL")}
-          >
-            Update Email
-          </Button>}
+          {user.status !== "ADMIN" && (
+            <Button
+              variant="contained"
+              onClick={() => showUdpateCredentialsModal("EMAIL")}
+            >
+              Update Email
+            </Button>
+          )}
           <Button
             variant="outlined"
             color="secondary"

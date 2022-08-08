@@ -155,7 +155,7 @@ export const updateEmail = async (newEmail, password, token, id) => {
         throw error;
       default:
         console.error("Error updating email", error);
-        throw {error: "Something went wrong."};
+        throw { error: "Something went wrong." };
     }
   }
   return res.json();
@@ -177,6 +177,7 @@ export const updatePassword = async (newPassword, password, token, id) => {
     switch (res.status) {
       case 401:
       case 404:
+      case 429:
         console.error("Error updating password: ", error);
         throw error;
       default:
@@ -187,3 +188,56 @@ export const updatePassword = async (newPassword, password, token, id) => {
   return res.json();
 };
 
+export const requestPasswordReset = async (email) => {
+  const url = `${baseUrl}user/forgot/password`;
+  console.log({email})
+  const options = {
+    method: "POST",
+    body: JSON.stringify({ email }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  let res = await fetch(url, options);
+  if (!res.ok) {
+    const error = await res.json();
+    switch (res.status) {
+      case 401:
+      case 404:
+      case 429:
+        console.error("Error requesting reset: ", error);
+        throw error;
+      default:
+        console.error("Error requesting reset", error);
+        throw new Error("Unable to request reset.");
+    }
+  }
+  return res.json();
+};
+
+export const resetPassword = async (token, newPassword) => {
+  const url = `${baseUrl}user/reset/password`;
+  const options = {
+    method: "PUT",
+    body: JSON.stringify({ newPassword }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  let res = await fetch(url, options);
+  if (!res.ok) {
+    const error = await res.json();
+    switch (res.status) {
+      case 401:
+      case 404:
+      case 429:
+        console.error("Error resetting password: ", error);
+        throw error;
+      default:
+        console.error("Error resetting password", error);
+        throw new Error("Unable to reset password.");
+    }
+  }
+  return res.json();
+};

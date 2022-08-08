@@ -1,47 +1,75 @@
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware, compose } from 'redux';
+import { Provider } from "react-redux";
+import Head from "next/head";
+import dynamic from "next/dynamic";
+import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-import { composeWithDevTools } from 'redux-devtools-extension';
-import DateAdapter from '@mui/lab/AdapterMoment';
-import { LocalizationProvider } from '@mui/lab';
-import { createTheme, ThemeProvider } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import {rootReducer} from '../reducers';
-import NavBar from '../components/NavBar/NavBar';
-import EditReservationPicker from "../components/Modal/EditReservationPicker";
-import NewReservationPicker from "../components/Modal/NewReservationPicker";
-import Toast from "../components/Messages/Toast";
-import LoginPrompt from "../components/Messages/LoginPrompt";
-import LoginModal from "../components/Modal/LoginModal";
-import ViewReservationModal from "../components/Modal/ViewReservationModal";
-import LoadingModal from "../components/Modal/LoadingModal";
-import ConfirmDeleteDialog from '../components/Messages/ConfirmDeleteDialog';
-import UpdateCredentialsModal from '../components/Modal/UpdateCredentialsModal';
-import '../styles/main.scss';
+import { composeWithDevTools } from "redux-devtools-extension";
+import DateAdapter from "@mui/lab/AdapterMoment";
+import { createTheme } from "@mui/material";
+import { rootReducer } from "../reducers";
+
+const LocalizationProvider = dynamic(() =>
+  import("@mui/lab/LocalizationProvider")
+);
+const ThemeProvider = dynamic(() =>
+  import("@mui/material").then((mui) => mui.ThemeProvider)
+);
+const CssBaseline = dynamic(() => import("@mui/material/CssBaseline"));
+const NavBar = dynamic(() => import("../components/NavBar/NavBar"));
+const LoadingModal = dynamic(() => import("../components/Modal/LoadingModal"));
+const EditReservationPicker = dynamic(() =>
+  import("../components/Modal/EditReservationPicker")
+);
+const NewReservationPicker = dynamic(() =>
+  import("../components/Modal/NewReservationPicker")
+);
+const LoginPrompt = dynamic(() => import("../components/Messages/LoginPrompt"));
+const LoginModal = dynamic(() => import("../components/Modal/LoginModal"));
+const ViewReservationModal = dynamic(() =>
+  import("../components/Modal/ViewReservationModal")
+);
+const ConfirmDeleteDialog = dynamic(() =>
+  import("../components/Messages/ConfirmDeleteDialog")
+);
+const UpdateCredentialsModal = dynamic(() =>
+  import("../components/Modal/UpdateCredentialsModal")
+);
+const Toast = dynamic(() => import("../components/Messages/Toast"));
+
+import "../styles/main.scss";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#33691e',
+      main: "#33691e",
     },
     secondary: {
-      main: '#880e4f',
+      main: "#880e4f",
     },
-  }
-})
+  },
+});
 
 const devStore = createStore(
   rootReducer,
-  composeWithDevTools(
-    applyMiddleware(thunk)
-  )
-)
+  composeWithDevTools(applyMiddleware(thunk))
+);
+
+const store =
+  process.env.NODE_ENV === "production"
+    ? createStore(rootReducer, applyMiddleware(thunk))
+    : devStore;
 
 export default function App({ Component, pageProps }) {
-  const store = process.env.NODE_ENV === 'production' ? createStore(rootReducer, applyMiddleware(thunk)) : devStore;
-
   return (
     <Provider store={store}>
+      <Head>
+        <title>SpKuLeHaS</title>
+        <meta
+          name="description"
+          content="Used for making reservations for Schipke's SpKuLeHaS members."
+        />
+        <html lang="en"></html>
+      </Head>
       <LocalizationProvider dateAdapter={DateAdapter}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -59,5 +87,5 @@ export default function App({ Component, pageProps }) {
         </ThemeProvider>
       </LocalizationProvider>
     </Provider>
-  )
+  );
 }

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import moment from "moment";
 import {
@@ -15,9 +16,11 @@ import {
   Typography,
   TablePagination,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import Visibility from "@mui/icons-material/Visibility";
+const EditIcon = dynamic(() => import("@mui/icons-material/Edit"));
+const DeleteForeverIcon = dynamic(() =>
+  import("@mui/icons-material/DeleteForever")
+);
+const Visibility = dynamic(() => import("@mui/icons-material/Visibility"));
 import "@mui/material/styles";
 import {
   setCurrentReservation,
@@ -42,8 +45,6 @@ const MyReservationsPage = ({
     }
   }, [user]);
 
-  const convertReservationData = (reservation) => {};
-
   const reservationsDataTable = () => {
     return (
       <TableContainer
@@ -53,22 +54,24 @@ const MyReservationsPage = ({
         <Table stickyHeader>
           <TableHead>
             <TableRow className="reservation-table-head-row">
-              <TableCell>Member</TableCell>
+              <TableCell>Member/Title</TableCell>
               <TableCell>Checkin Date</TableCell>
               <TableCell>Checkout Date</TableCell>
               <TableCell>Notes</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell>Edit</TableCell>
+              <TableCell>Delete</TableCell>
+              <TableCell>View In Calendar</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {userReservations.map((reservation) => (
               <TableRow
-                key={reservation.title}
+                key={reservation.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell className={user.status === "ADMIN" ? "sticky" : ""}>{reservation.title}</TableCell>
+                <TableCell className={user.status === "ADMIN" ? "sticky" : ""}>
+                  {reservation.title}
+                </TableCell>
                 <TableCell>
                   {moment(reservation.start).format("MM/DD/YY")}
                 </TableCell>
@@ -126,8 +129,16 @@ const MyReservationsPage = ({
 
   return (
     <main>
-      <Typography variant="h4" component="h4">My Reservations:</Typography>
-      {userReservations && userReservations.length ? reservationsDataTable() : <Typography variant="p" component="p">No Reservations</Typography>}
+      <Typography variant="h4" component="h4">
+        My Reservations:
+      </Typography>
+      {userReservations && userReservations.length ? (
+        reservationsDataTable()
+      ) : (
+        <Typography variant="p" component="p">
+          No Reservations
+        </Typography>
+      )}
     </main>
   );
 };
