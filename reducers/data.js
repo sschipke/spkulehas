@@ -93,17 +93,20 @@ const data = (state = initialState, action) => {
       return new_state;
     case "REMOVE_RESERVATION":
       const { id } = action;
+      let userReservations;
       const filteredReservations = reservations.filter(
         (reservation) => reservation.id !== id
       );
-      new_state.reservations = filteredReservations;
       console.log({ filteredReservations });
       if (user.status === "ADMIN") {
-        new_state.user_reservations = filteredReservations;
+        userReservations = filteredReservations;
+      } else {
+        userReservations = filteredReservations.filter(
+          (res) => res.user_id === user.id
+        );
       }
-      new_state.user_reservations = filteredReservations.filter(
-        (res) => res.user_id === user.id
-      );
+      new_state.reservations = filteredReservations;
+      new_state.user_reservations = userReservations;
       new_state.current_reservation = null;
       return new_state;
     case "USER_LOGIN_SUCCESS":
