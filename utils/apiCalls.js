@@ -149,8 +149,10 @@ export const updateEmail = async (newEmail, password, token, id) => {
     const error = await res.json();
     switch (res.status) {
       case 401:
+      case 403:
       case 404:
       case 409:
+      case 422:
         console.error("Error updating email: ", error);
         throw error;
       default:
@@ -190,7 +192,6 @@ export const updatePassword = async (newPassword, password, token, id) => {
 
 export const requestPasswordReset = async (email) => {
   const url = `${baseUrl}user/forgot/password`;
-  console.log({email})
   const options = {
     method: "POST",
     body: JSON.stringify({ email }),

@@ -17,13 +17,11 @@ const ReservationTitle = ({
     user.status === "ADMIN" &&
     selectedUser &&
     selectedUser.name === "Schipke SpKuLeHaS";
-  console.log({ shouldRender }, user.status, selectedUser);
   if (!shouldRender) {
     return null;
   }
 
   const handleChange = (e) => {
-    console.log("e", e.target.value);
     updateReservationTitle(e.target.value);
   };
 
