@@ -97,7 +97,6 @@ const data = (state = initialState, action) => {
       const filteredReservations = reservations.filter(
         (reservation) => reservation.id !== id
       );
-      console.log({ filteredReservations });
       if (user.status === "ADMIN") {
         userReservations = filteredReservations;
       } else {
@@ -110,15 +109,15 @@ const data = (state = initialState, action) => {
       new_state.current_reservation = null;
       return new_state;
     case "USER_LOGIN_SUCCESS":
-      const { user, token } = action.data;
-      console.log("LOGIN! ", user);
-      new_state.user = user;
+      const { token } = action.data;
+      const userToLogin = action.data.user;
+      new_state.user = userToLogin;
       new_state.token = token;
       new_state.usersInfo = action.data.usersInfo;
       new_state.user_reservations = reservations.filter(
-        (res) => res.user_id === user.id
+        (res) => res.user_id === userToLogin.id
       );
-      if (user.status === "ADMIN") {
+      if (userToLogin.status === "ADMIN") {
         new_state.user_reservations = reservations;
       }
       return new_state;
@@ -131,11 +130,9 @@ const data = (state = initialState, action) => {
       return new_state;
     case "UPDATE_SELECTED_USER":
       const { userId } = action;
-      console.log({ userId });
       if (userId) {
         let name = usersInfo.find((user) => user.id === userId)["name"];
         new_state.selected_user = { id: userId, name };
-        console.log("Selected user: ", new_state.selected_user);
       } else {
         new_state.selected_user = null;
       }
@@ -153,7 +150,6 @@ const data = (state = initialState, action) => {
       new_state.token = action.token;
       return new_state;
     case "UPDATE_TOKEN":
-      console.log("Updating token!", { action });
       new_state.token = action.token;
       return new_state;
     default:

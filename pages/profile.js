@@ -88,6 +88,7 @@ export const ProfilePage = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     userInfo.phone = formatPhoneNumber(userInfo.phone);
+    //TODO: Validate phone format/reset
     userInfo.name = `${userInfo.firstName} ${userInfo.lastName}`;
     try {
       let newUser = await updateUserProfile(userInfo, token);
@@ -96,6 +97,8 @@ export const ProfilePage = ({
       setIsEditting(false);
     } catch (error) {
       console.error(error);
+      let phoneNumber = user.phone;
+      updateUserInfo({ ...userInfo, phone: phoneNumber });
       showToast("Unable to update profile. " + error.error, "error");
     }
   };
@@ -207,7 +210,7 @@ export const ProfilePage = ({
             required={isEditting}
             inputProps={{
               readOnly: !isEditting,
-              maxLength: 20,
+              maxLength: 50,
               minLength: 3,
             }}
           />
