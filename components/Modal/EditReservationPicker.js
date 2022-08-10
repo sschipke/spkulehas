@@ -48,7 +48,6 @@ export const EditReservationPicker = ({
     setDates(initialValue());
     setNotes(initialNotes);
     return () => {
-      // setDates([null, null])
       setNotes("");
     };
   }, [currentReservation]);
