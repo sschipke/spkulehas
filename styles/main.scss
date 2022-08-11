@@ -68,8 +68,8 @@ input:invalid {
 .modal-large {
   position: absolute;
   transform: translate(-50% -50%);
-  height: 85vh;
-  width: 85vw;
+  height: 90vh;
+  width: 90vw;
   background-color: #FFFFFF;
   border: 2px solid #000;
   box-shadow: 24px;
@@ -78,6 +78,7 @@ input:invalid {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: scroll;
 }
 
 .demographics-container {
