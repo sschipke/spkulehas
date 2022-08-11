@@ -21,12 +21,16 @@ import {
   FormHelperText,
   FormControl,
 } from "@mui/material";
+import { validateUpdatingCredentials } from "../../utils/validators";
 import { closeUpdateCredentialsModal } from "../../actions";
 import {
   processPasswordChange,
   processEmailChange,
   processPasswordReset,
 } from "../../thunks/thunks";
+
+import PasswordCreationChecklist from "../Utilities/PasswordCreationList";
+import EmailValidationList from "../Utilities/EmailValidationList";
 
 export const UpdateCredentialsModal = ({
   isOpen,
@@ -45,6 +49,7 @@ export const UpdateCredentialsModal = ({
     error: false,
     showPassword: false,
   };
+
   const [values, setValues] = useState(initialState);
   const dispatch = useDispatch();
 
@@ -65,28 +70,6 @@ export const UpdateCredentialsModal = ({
 
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value.trim() });
-  };
-
-  const handleEmailBlur = () => {
-    const { newEmail, confirmNewEmail, error } = values;
-    if (confirmNewEmail !== newEmail) {
-      if (!error) {
-        setValues({ ...values, error: "Email does not match." });
-      }
-    } else if (error) {
-      clearError();
-    }
-  };
-
-  const handlePasswordBlur = () => {
-    const { newPassword, confirmNewPassword, error } = values;
-    if (newPassword !== confirmNewPassword) {
-      if (!error) {
-        setValues({ ...values, error: "Passwords do not match." });
-      }
-    } else if (error) {
-      clearError();
-    }
   };
 
   let content;
@@ -129,11 +112,14 @@ export const UpdateCredentialsModal = ({
             label="Confirm New Email Address"
             name="confirmNewEmail"
             autoComplete="email"
-            onBlur={handleEmailBlur}
             type="email"
             value={values.confirmNewEmail}
             error={values.error}
             onChange={handleChange}
+          />
+          <EmailValidationList
+            newEmail={values.newEmail}
+            confirmNewEmail={values.confirmNewEmail}
           />
         </div>
       );
@@ -170,11 +156,14 @@ export const UpdateCredentialsModal = ({
             type={values.showPassword ? "text" : "password"}
             value={values.confirmNewPassword}
             error={values.error}
-            onBlur={handlePasswordBlur}
             onChange={handleChange}
             InputProps={{
               maxLength: 20,
             }}
+          />
+          <PasswordCreationChecklist
+            newPassword={values.newPassword}
+            confirmNewPassword={values.confirmNewPassword}
           />
         </div>
       );
@@ -203,45 +192,15 @@ export const UpdateCredentialsModal = ({
       case "RESET_PASSWORD":
         dispatch(processPasswordReset(token, newPassword));
         break;
-
       default:
         break;
     }
   };
 
   const checkIsValid = () => {
-    const {
-      newEmail,
-      confirmNewEmail,
-      password,
-      newPassword,
-      confirmNewPassword,
-      error,
-    } = values;
-    if (kind !== "RESET_PASSWORD" && !password) {
-      return false;
-    }
-    if (kind === "EMAIL") {
-      if (!confirmNewEmail || !newEmail) {
-        return false;
-      }
-    }
-    if (kind === "PASSWORD" || kind === "RESET_PASSWORD") {
-      if (!newPassword || !confirmNewPassword) {
-        return false;
-      }
-      if (newPassword !== confirmNewPassword) {
-        return false;
-      }
-    }
-    if (error) {
-      return false;
-    }
-    return true;
+    return validateUpdatingCredentials(kind, values);
   };
-
   const isValid = checkIsValid();
-
   return (
     <Modal
       open={isOpen}
@@ -255,13 +214,6 @@ export const UpdateCredentialsModal = ({
         </Avatar>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           {content}
-          {values.error ? (
-            <FormHelperText sx={{ color: "red", m: "10px", height: "20px" }}>
-              {values.error}
-            </FormHelperText>
-          ) : (
-            <p style={{ m: "10px", height: "15px" }}></p>
-          )}
           {kind !== "RESET_PASSWORD" && (
             <TextField
               name="password"
