@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Link from 'next/Link';
+import Link from 'next/link';
 import { AppBar, Box, Toolbar } from '@mui/material'
 import { viewNextMonth, viewPreviousMonth, viewToday, updateViewDate } from '../../actions';
 import BlankAvatarMenu from './BlankAvatarMenu';
