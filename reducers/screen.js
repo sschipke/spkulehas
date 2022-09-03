@@ -1,4 +1,6 @@
 import moment from "moment";
+const minDate = process.env.NEXT_PUBLIC_MIN_DATE;
+const maxDate = process.env.NEXT_PUBLIC_MAX_DATE;
 let initialState = {
   edit_reservation_picker_open: false,
   new_reservation_picker_open: false,
@@ -41,8 +43,8 @@ const screen = (state = initialState, action) => {
       return new_state;
     case "OPEN_TOAST":
       new_state.show_toast = true;
-        new_state.toast_message = action.message;
-        new_state.toast_type = action.toastType;
+      new_state.toast_message = action.message;
+      new_state.toast_type = action.toastType;
       return new_state;
     case "HIDE_TOAST":
       new_state.show_toast = false;
@@ -54,8 +56,18 @@ const screen = (state = initialState, action) => {
       new_state.view_date = moment(view_date).subtract(1, "month").toDate();
       return new_state;
     case "UPDATE_VIEW_DATE":
-      if (action.date) {
-        new_state.view_date = moment(action.date).toDate();
+      let { date } = action;
+      if (!moment(date).isValid()) {
+        return new_state;
+      }
+      if (date) {
+        new_state.view_date = moment(date).toDate();
+      }
+      if (moment(date).isBefore(minDate)) {
+        new_state.view_date = moment(minDate).toDate();
+      }
+      if (moment(date).isAfter(maxDate)) {
+        new_state.view_date = moment(maxDate).toDate();
       }
       return new_state;
     case "VIEW_TODAY":

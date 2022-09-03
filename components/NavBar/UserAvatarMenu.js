@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import moment from "moment";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Link from "next/Link";
@@ -41,10 +40,6 @@ const UserAvatarMenu = ({ user, logOut }) => {
       page: "my_reservations",
     },
     {
-      label: "Email Preferences",
-      page: "email_preferences",
-    },
-    {
       label: "Contact Members",
       page: "members",
     },
@@ -80,10 +75,7 @@ const UserAvatarMenu = ({ user, logOut }) => {
       <Menu
         sx={{ mt: "45px" }}
         id="menu-appbar"
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
         keepMounted
         transformOrigin={{
           vertical: "top",

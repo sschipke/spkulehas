@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  List,
-  ListItemIcon,
-  ListItemText,
-  ListItem
-} from "@mui/material";
+import { List, ListItemIcon, ListItemText, ListItem } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import BlockIcon from "@mui/icons-material/Block";
 
@@ -14,22 +9,23 @@ const HAS_CAPITAL_REGEX = new RegExp(/(?=.*[A-Z])/);
 const HAS_LOWERCASE_REGEX = new RegExp(/(?=.*[a-z])/);
 const HAS_NUMBER_REGEX = new RegExp(/(?=.*[0-9])/);
 const HAS_SPECIAL_CHARACTER_REGEX = new RegExp(/(?=.*[!@#$%^&*])/);
-const HAS_WHITE_SPACE = new RegExp(/[\s]/);
 
-const successIcon = <CheckCircleIcon color="success" sx={{minWidth: "30px"}} />;
+const successIcon = (
+  <CheckCircleIcon color="success" sx={{ minWidth: "30px" }} />
+);
 const missingIcon = <BlockIcon color="error" sx={{ minWidth: "30px" }} />;
 
 const PasswordCreationChecklist = ({ newPassword, confirmNewPassword }) => {
-
-  const isValidLength = newPassword &&
+  const isValidLength =
+    newPassword &&
     newPassword.length >= MIN_PASSWORD_LENGTH &&
     newPassword.length <= MAX_PASSWORD_LENGTH;
   const hasCapital = newPassword && HAS_CAPITAL_REGEX.test(newPassword);
   const hasLowerCase = newPassword && HAS_LOWERCASE_REGEX.test(newPassword);
   const hasNumber = newPassword && HAS_NUMBER_REGEX.test(newPassword);
-  const hasSpecialCharacter = newPassword && HAS_SPECIAL_CHARACTER_REGEX.test(newPassword);
+  const hasSpecialCharacter =
+    newPassword && HAS_SPECIAL_CHARACTER_REGEX.test(newPassword);
   const doPasswordsMatch = newPassword && newPassword === confirmNewPassword;
-
   return (
     <List>
       <ListItem>
@@ -88,6 +84,6 @@ const PasswordCreationChecklist = ({ newPassword, confirmNewPassword }) => {
       </ListItem>
     </List>
   );
-}
+};
 
 export default PasswordCreationChecklist;

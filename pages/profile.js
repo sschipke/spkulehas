@@ -22,6 +22,8 @@ import { formatPhoneNumber } from "../utils/helpers";
 import { showToast, updateUser, showUdpateCredentialsModal } from "../actions";
 import { updateUserProfile } from "../utils/apiCalls";
 
+import ReceiveDeletionEmailControl from "../components/Utilities/ReceiveDeletionEmailControl";
+
 export const ProfilePage = ({
   user,
   token,
@@ -106,14 +108,14 @@ export const ProfilePage = ({
   return (
     <Paper component="main" sx={{ minHeight: "90vh" }} className="profile-page">
       <Stack sx={{ alignItems: "center" }} className="profile-page-headers">
-        <Typography component="h2" variant="h2">
+        <Typography component="h3" variant="h3">
           {userReference.name}
         </Typography>
         <Typography component="h4" variant="h4">
-          Status: {userReference.status}
+          Member Status: {userReference.status}
         </Typography>
       </Stack>
-      <Stack sx={{ alignItems: "center", height: "15vh", mt: "10px" }}>
+      <Stack sx={{ alignItems: "center", mt: "10px" }}>
         <TextField
           id="email"
           label="Email"
@@ -139,6 +141,7 @@ export const ProfilePage = ({
             Change Password
           </Button>
         </Stack>
+        <ReceiveDeletionEmailControl />
       </Stack>
       <Box
         component="form"
