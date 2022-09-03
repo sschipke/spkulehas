@@ -5,6 +5,7 @@ import {
   updatePassword,
   resetPassword,
   requestPasswordReset,
+  updateEmailSetting,
 } from "../utils/apiCalls";
 import {
   closeLoadingModal,
@@ -17,6 +18,7 @@ import {
   updateUserEmail,
   showLoginModal,
   showLoadingModal,
+  toggleEmailSettings,
 } from "../actions";
 
 export const loadReservations = () => async (dispatch) => {
@@ -92,8 +94,30 @@ export const processPasswordReset =
       dispatch(closeUpdateCredentialsModal());
       dispatch(updateToken(null));
       dispatch(showLoginModal());
+    } catch (err) {
+      const { error } = err
+      console.error("Catching process password. ", error);
+      if (error === "jwt expired") {
+        error =  "This link has expired. Please request a new email."
+      }
+      dispatch(showToast(error, "error"));
+      if (error.includes("please") || error.includes("expire")) {
+        dispatch(closeUpdateCredentialsModal());
+      }
+    }
+  };
+
+export const processEmailSettingChange =
+  (settingName, value, userId, token) => async (dispatch) => {
+    dispatch(showLoadingModal());
+    try {
+      let res = await updateEmailSetting(settingName, value, userId, token);
+      dispatch(toggleEmailSettings(settingName, value));
+      dispatch(showToast(`${res}`, "success"));
+      dispatch(closeLoadingModal());
     } catch (error) {
-      console.error("Catching process password. ", error.Error);
-      dispatch(showToast("Unable to reset password. " + error.error, "error"));
+      console.error("Catching process email setting update. ", error.Error);
+      dispatch(closeLoadingModal());
+      dispatch(showToast("Unable to updated email. " + error.error, "error"));
     }
   };

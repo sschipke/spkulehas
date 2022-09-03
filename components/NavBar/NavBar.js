@@ -11,12 +11,9 @@ const NavBar = ({ user }) => {
   const avatarMenu = user ? <UserAvatarMenu /> : <BlankAvatarMenu />;
 
   return (
-    <Box sx={{ flexGrow: 1, width: '100vw' }}>
+    <Box sx={{ flexGrow: 1, width: '100%' }}>
       <AppBar color="primary" position="sticky">
         <Toolbar style={{justifyContent: 'space-between'}}>
-          {/* <Link href="/about">
-            About
-          </Link> */}
           <Link href="/" style={{textDecoration: "none"}}>
             <h2 style={{cursor: "pointer"}}>SpKuLeHaS Inc</h2>
           </Link>

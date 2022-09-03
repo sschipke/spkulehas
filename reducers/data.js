@@ -114,6 +114,14 @@ const data = (state = initialState, action) => {
       new_state.user = userToLogin;
       new_state.token = token;
       new_state.usersInfo = action.data.usersInfo;
+      if (!action.data.emailSettings) {
+        new_state.emailSettings = {
+          setting_name: "reservation_deleted",
+          value: false,
+        };
+      } else {
+        new_state.emailSettings = action.data.emailSettings;
+      }
       new_state.user_reservations = reservations.filter(
         (res) => res.user_id === userToLogin.id
       );
@@ -151,6 +159,10 @@ const data = (state = initialState, action) => {
       return new_state;
     case "UPDATE_TOKEN":
       new_state.token = action.token;
+      return new_state;
+    case "TOGGLE_EMAIL_SETTING":
+      const { setting_name, value } = action;
+      new_state.emailSettings = { setting_name, value };
       return new_state;
     default:
       return state;

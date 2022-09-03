@@ -135,3 +135,7 @@ export const updateToken = (token) => ({
 export const updateReservationTitle = (value) => ({
   type: "UPDATE_RESERVATION_TITLE", value
 });
+
+export const toggleEmailSettings = (setting_name, value) => ({
+  type: "TOGGLE_EMAIL_SETTING", setting_name, value
+});
