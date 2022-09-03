@@ -11,7 +11,6 @@ export const validateUpdatingCredentials = (kind, values) => {
     password,
     newPassword,
     confirmNewPassword,
-    error,
   } = values;
   if (kind !== "RESET_PASSWORD" && !password) {
     return false;

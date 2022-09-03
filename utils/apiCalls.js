@@ -180,6 +180,7 @@ export const updatePassword = async (newPassword, password, token, id) => {
       case 401:
       case 404:
       case 429:
+      case 422:
         console.error("Error updating password: ", error);
         throw error;
       default:
@@ -231,13 +232,41 @@ export const resetPassword = async (token, newPassword) => {
     const error = await res.json();
     switch (res.status) {
       case 401:
+      case 403:
       case 404:
       case 429:
         console.error("Error resetting password: ", error);
         throw error;
       default:
         console.error("Error resetting password", error);
-        throw new Error("Unable to reset password.");
+        throw { error: "Unable to reset password." };
+    }
+  }
+  return res.json();
+};
+
+export const updateEmailSetting = async (settingName, value, userId, token) => {
+  const url = `${baseUrl}user/email_setting/${userId}`;
+  const options = {
+    method: "PUT",
+    body: JSON.stringify({ settingName, value }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  let res = await fetch(url, options);
+  if (!res.ok) {
+    const error = await res.json();
+    switch (res.status) {
+      case 401:
+      case 403:
+      case 422:
+        console.error("Error updating email setting: ", error);
+        throw error;
+      default:
+        console.error("Error updating email setting:", error);
+        throw new Error("Unable to update email setting.");
     }
   }
   return res.json();
