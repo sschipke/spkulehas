@@ -35,8 +35,13 @@ const CalendarNavBar = ({
   updateViewDate,
   viewDate,
 }) => {
-  const momentViewDate = moment(viewDate);
-  const calendarHeader = `${momentViewDate.format("MMMM YYYY")}`;
+  const momentViewDate = moment(viewDate, "YYYY-MM-DD");
+  console.log(
+    { minDate },
+    { maxDate },
+    momentViewDate.toDate(),
+    momentViewDate.isSameOrBefore(moment(minDate), "month")
+  );
   return (
     <Box sx={{ flexGrow: 1, width: "100vw" }}>
       <AppBar color="secondary" position="static">
