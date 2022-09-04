@@ -7,10 +7,9 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import DateAdapter from "@mui/lab/AdapterMoment";
 import { createTheme } from "@mui/material";
 import { rootReducer } from "../reducers";
+import { LocalizationProvider } from "@mui/lab";
 
-const LocalizationProvider = dynamic(() =>
-  import("@mui/lab/LocalizationProvider")
-);
+// const LocalizationProvider = import("@mui/lab/LocalizationProvider")
 const ThemeProvider = dynamic(() =>
   import("@mui/material").then((mui) => mui.ThemeProvider)
 );
@@ -49,15 +48,15 @@ const theme = createTheme({
   },
 });
 
-const devStore = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(thunk))
-);
+const createDevStore = () => {
+  console.log("Creating redux store with devtools.");
+  return createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+};
 
 const store =
   process.env.NODE_ENV === "production"
     ? createStore(rootReducer, applyMiddleware(thunk))
-    : devStore;
+    : createDevStore();
 
 export default function App({ Component, pageProps }) {
   return (
