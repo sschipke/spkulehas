@@ -7,7 +7,6 @@ import {
   AppBar,
   Box,
   Toolbar,
-  Button,
   IconButton,
   TextField,
 } from "@mui/material";
@@ -16,7 +15,6 @@ import { DatePicker } from "@mui/lab";
 
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
 
 import {
   viewNextMonth,
@@ -36,12 +34,6 @@ const CalendarNavBar = ({
   viewDate,
 }) => {
   const momentViewDate = moment(viewDate, "YYYY-MM-DD");
-  console.log(
-    { minDate },
-    { maxDate },
-    momentViewDate.toDate(),
-    momentViewDate.isSameOrBefore(moment(minDate), "month")
-  );
   return (
     <Box sx={{ flexGrow: 1, width: "100vw" }}>
       <AppBar color="secondary" position="static">

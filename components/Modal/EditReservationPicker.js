@@ -3,7 +3,15 @@ import dynamic from "next/dynamic";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import moment from "moment";
-import { TextField, Modal, Backdrop, Box, Button, Stack } from "@mui/material";
+import {
+  TextField,
+  Modal,
+  Backdrop,
+  Box,
+  Button,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { DateRangePicker, DatePicker } from "@mui/lab";
 import {
   toggleEditReservationPicker,
@@ -107,6 +115,13 @@ export const EditReservationPicker = ({
       onClose={() => toggleEditReservationPicker()}
     >
       <Box className="dates-picker modal-large">
+        <Typography
+          component="h2"
+          variant="h2"
+          sx={{ fontSize: "2rem", marginBottom: "30px", fontWeight: 400 }}
+        >
+          Update Reservation
+        </Typography>
         <DateRangePicker
           disablePast
           views={["year", "month", "day"]}
