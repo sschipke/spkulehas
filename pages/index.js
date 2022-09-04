@@ -93,6 +93,7 @@ const App = ({
     }
     if (date) {
       updateViewDate(date);
+      router.replace("/", null, { shallow: true });
     }
   }, [areReservationsLoaded, reservations, user, reset, date]);
 
