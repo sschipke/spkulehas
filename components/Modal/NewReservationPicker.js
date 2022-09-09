@@ -72,8 +72,10 @@ export const NewReservationPicker = ({
       const newReservation = await postReservation(reservation, token);
       addReservation(newReservation.reservation);
       toggleNewReservationPicker();
-    } catch (error) {
-      showToast("Unable to add reservation." + error, "error");
+    } catch (err) {
+      console.error("Error creating reservation. ", err)
+      const { error } = err;
+      showToast("Unable to add reservation. " + error, "error");
     }
   };
 

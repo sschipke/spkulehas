@@ -12,9 +12,6 @@ const UserSelect = ({
   selectedUser,
   isEditReservationModalOpen,
 }) => {
-  if (user.status !== "ADMIN" || !usersInfo) {
-    return null;
-  }
   const handleSelect = (e) => {
     updateSelectedUser(e.target.value);
   };
@@ -27,7 +24,11 @@ const UserSelect = ({
     return () => {
       updateSelectedUser(null);
     };
-  }, [isEditReservationModalOpen, currentReservation]);
+  }, [isEditReservationModalOpen, currentReservation]); // eslint-disable-line
+
+  if (user.status !== "ADMIN" || !usersInfo) {
+    return null;
+  }
 
   const options = usersInfo.map((user) => (
     <MenuItem color="secondary" key={user.id} value={user.id}>
@@ -35,7 +36,11 @@ const UserSelect = ({
     </MenuItem>
   ));
 
-  options.unshift(<MenuItem key={"none"} value="">None</MenuItem>);
+  options.unshift(
+    <MenuItem key={"none"} value="">
+      None
+    </MenuItem>
+  );
   return (
     <div style={{ width: "80%" }}>
       <InputLabel>Member</InputLabel>
