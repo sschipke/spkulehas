@@ -57,7 +57,7 @@ export const UpdateCredentialsModal = ({
     if (!isOpen) {
       setValues(initialState);
     }
-  }, [isOpen]);
+  }, [isOpen]); // eslint-disable-line
 
   //TODO: CHange this!
   if (!user && kind !== "RESET_PASSWORD") {

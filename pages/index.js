@@ -25,7 +25,9 @@ const Calendar = dynamic(() =>
 
 import moment from "moment";
 import { loadReservations } from "../thunks/thunks";
-const CalendarNavBar = dynamic(() => import("../components/CalendarNavBar/CalendarNavBar"));
+const CalendarNavBar = dynamic(() =>
+  import("../components/CalendarNavBar/CalendarNavBar")
+);
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 moment.updateLocale("en-US", {
@@ -89,13 +91,13 @@ const App = ({
     if (!user && reset) {
       updateToken(reset);
       showUdpateCredentialsModal("RESET_PASSWORD");
-      router.replace("/", null, {shallow: true});
+      router.replace("/", null, { shallow: true });
     }
     if (date) {
       updateViewDate(date);
       router.replace("/", null, { shallow: true });
     }
-  }, [areReservationsLoaded, reservations, user, reset, date]);
+  }, [areReservationsLoaded, reservations, user, reset, date]); // eslint-disable-line
 
   return (
     <div className="App">

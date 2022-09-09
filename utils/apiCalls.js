@@ -69,12 +69,13 @@ export const postReservation = async (reservation, token) => {
     const error = await res.json();
     switch (res.status) {
       case 401:
+      case 403:
       case 404:
       case 422:
         throw error;
       default:
         console.error("Error adding reservation");
-        throw new Error("Failed to adding reservation.");
+        throw { error: "Something went wrong." };
     }
   }
   return res.json();

@@ -40,7 +40,7 @@ const MembersContactPage = ({
     if (!user) {
       router.push("/");
     }
-  }, [user]);
+  }, [user]); // eslint-disable-line
 
   const contactInfoTable = () => {
     return (
@@ -63,7 +63,11 @@ const MembersContactPage = ({
               >
                 <TableCell>{member.name}</TableCell>
                 <TableCell>
-                  <a href={`mailto:${member.email}`} target="_blank">
+                  <a
+                    href={`mailto:${member.email}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     {member.email}
                   </a>
                 </TableCell>

@@ -11,7 +11,7 @@ const LoginPage = ({ showLoginModal }) => {
   useEffect(() => {
     showLoginModal();
     router.push("/");
-  }, []);
+  });
   return null;
 };
 

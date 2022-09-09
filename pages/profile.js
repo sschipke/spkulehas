@@ -43,7 +43,7 @@ export const ProfilePage = ({
     if (!user) {
       router.push("/");
     }
-  }, [isEditting, user]);
+  }, [isEditting, user, userClone]); // eslint-disable-line
 
   if (user) {
     userClone.phone = ((user && user.phone) || "").split("-").join("");

@@ -58,7 +58,7 @@ export const EditReservationPicker = ({
     return () => {
       setNotes("");
     };
-  }, [currentReservation]);
+  }, [currentReservation, initialNotes]); // eslint-disable-line
 
   if (!currentReservation || !canEdit(user, currentReservation)) {
     return null;
