@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo '🏗️👷 Linting for pre-commit'
+echo '🏗️👷 Linting for pre-push'
 
 yarn lint || 
 (
@@ -9,4 +9,4 @@ yarn lint ||
     false;
 )
 
-echo '✅✅✅✅  Put a ring on it! ✅✅✅✅'
+echo '✅✅✅✅  Push it real good! ✅✅✅✅'
