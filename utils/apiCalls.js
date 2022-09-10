@@ -55,7 +55,7 @@ export const putReservation = async (reservation, token) => {
 };
 
 export const postReservation = async (reservation, token) => {
-  const url = `${baseUrl}reservations`;
+  const url = `${baseUrl}reservations/new`;
   const options = {
     method: "POST",
     body: JSON.stringify({ reservation }),
