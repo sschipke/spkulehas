@@ -89,7 +89,7 @@ export const processRequestPasswordReset = (email) => async (dispatch) => {
 export const processPasswordReset =
   (token, newPassword) => async (dispatch) => {
     try {
-      let res = await resetPassword(token, newPassword);
+      await resetPassword(token, newPassword);
       dispatch(showToast("Reset successful. Please login.", "success"));
       dispatch(closeUpdateCredentialsModal());
       dispatch(updateToken(null));

@@ -33,9 +33,11 @@ const ConfirmDeleteDialog = ({
       );
       removeReservation(deletedReservation && currentReservation.id);
       toggleConfirmDeleteDialog();
-    } catch (error) {
-      console.error("Error in delete reservation confirmation.");
-      showToast("Unable to delete reservation.", "error");
+    } catch (err) {
+      const { error } = err;
+      const messageToDisplay = error ? error : "Something went wrong."
+      console.error("Error in delete reservation confirmation.", err, error);
+      showToast("Unable to delete reservation. " + messageToDisplay, "error");
     }
   };
 
