@@ -38,12 +38,22 @@ const data = (state = initialState, action) => {
 
   switch (action.type) {
     case "RESERVATIONS_LOADED":
-      new_state.reservations = action.reservations.map((reservation) => {
-        reservation.start = new Date(reservation.start);
-        reservation.end = new Date(reservation.end);
-        reservation.color = generateRandomColor();
-        return reservation;
-      });
+      const mappedReservationsToDate = action.reservations.map(
+        (reservation) => {
+          reservation.start = new Date(reservation.start);
+          reservation.end = new Date(reservation.end);
+          reservation.color = generateRandomColor();
+          return reservation;
+        }
+      );
+      if (user && user.status !== "ADMIN") {
+        new_state.user_reservations = mappedReservationsToDate.filter(
+          (res) => res.user_id === user.id
+        );
+      } else {
+        new_state.user_reservations = mappedReservationsToDate;
+      }
+      new_state.reservations = mappedReservationsToDate;
       new_state.are_reservations_loaded = true;
       return new_state;
     case "ADD_RESERVATION":
