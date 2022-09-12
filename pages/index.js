@@ -24,7 +24,7 @@ const Calendar = dynamic(() =>
 );
 
 import moment from "moment";
-import { loadReservations } from "../thunks/thunks";
+import { loadReservations, processValidateToken } from "../thunks/thunks";
 const CalendarNavBar = dynamic(() =>
   import("../components/CalendarNavBar/CalendarNavBar")
 );
@@ -90,7 +90,9 @@ const App = ({
     }
     if (!user && reset) {
       updateToken(reset);
-      showUdpateCredentialsModal("RESET_PASSWORD");
+      dispatch(processValidateToken(reset));
+    }
+    if (reset && user) {
       router.replace("/", null, { shallow: true });
     }
     if (date) {

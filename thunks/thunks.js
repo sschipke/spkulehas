@@ -6,6 +6,7 @@ import {
   resetPassword,
   requestPasswordReset,
   updateEmailSetting,
+  validateResetToken,
 } from "../utils/apiCalls";
 import {
   closeLoadingModal,
@@ -18,6 +19,7 @@ import {
   updateUserEmail,
   showLoginModal,
   showLoadingModal,
+  showUdpateCredentialsModal,
   toggleEmailSettings,
 } from "../actions";
 
@@ -95,17 +97,48 @@ export const processPasswordReset =
       dispatch(updateToken(null));
       dispatch(showLoginModal());
     } catch (err) {
-      const { error } = err
+      const { error } = err;
       console.error("Catching process password. ", error);
-      if (error === "jwt expired") {
-        error =  "This link has expired. Please request a new email."
+      if (error && error.includes("This session has expired.")) {
+        error = "This link has expired. Please request a new email.";
       }
       dispatch(showToast(error, "error"));
-      if (error.includes("please") || error.includes("expire")) {
+      if (
+        (error && error.includes("please")) ||
+        (error && error.includes("expire"))
+      ) {
         dispatch(closeUpdateCredentialsModal());
       }
     }
   };
+
+export const processValidateToken = (token) => async (dispatch) => {
+  console.log("VALD ", token);
+  try {
+    let isValid = await validateResetToken(token);
+    console.log({ isValid });
+    if (isValid) {
+      dispatch(showUdpateCredentialsModal("RESET_PASSWORD"));
+    } else {
+      dispatch(
+        showToast(
+          "This link is not valid. Please request another email.",
+          "error"
+        )
+      );
+    }
+  } catch (err) {
+    const { error } = err;
+    console.error("Catching validate reset token. ", err);
+    if (error && error.includes("This session has expired.")) {
+      error = "This link has expired. Please request a new email.";
+    }
+    if (!error) {
+      error = "Could not validate reset session. Please try again.";
+    }
+    dispatch(showToast(error, "error"));
+  }
+};
 
 export const processEmailSettingChange =
   (settingName, value, userId, token) => async (dispatch) => {
