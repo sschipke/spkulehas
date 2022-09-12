@@ -80,7 +80,7 @@ export const UpdateCredentialsModal = ({
           <TextField
             margin="normal"
             fullWidth
-            id="email"
+            id="email-update"
             label="Current Email Address"
             name="email"
             autoComplete="email"

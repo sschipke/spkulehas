@@ -55,8 +55,8 @@ const ConfirmDeleteDialog = ({
         justifyContent: "center",
       }}
     >
-      <DialogTitle id="confirm-dialog" sx={{ m: "auto" }}>
-        <h4>Delete this reservation?</h4>
+      <DialogTitle id="confirm-dialog" sx={{ m: "auto", fontWeight: "bold", fontSize: "1.25rem" }}>
+        Delete this reservation
       </DialogTitle>
       <DialogContent>
         <p>
