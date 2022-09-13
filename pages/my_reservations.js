@@ -43,7 +43,7 @@ const MyReservationsPage = ({
     if (!user) {
       router.push("/");
     }
-  }, [user]);
+  }, [user]); // eslint-disable-line
 
   const reservationsDataTable = () => {
     return (

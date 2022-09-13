@@ -17,13 +17,6 @@ const ReservationTitle = ({
     user.status === "ADMIN" &&
     selectedUser &&
     selectedUser.name === "Schipke SpKuLeHaS";
-  if (!shouldRender) {
-    return null;
-  }
-
-  const handleChange = (e) => {
-    updateReservationTitle(e.target.value);
-  };
 
   useEffect(() => {
     if (isEditReservationModalOpen && currentReservation) {
@@ -35,8 +28,16 @@ const ReservationTitle = ({
   }, [
     isNewReservationModalOpen,
     isEditReservationModalOpen,
-    currentReservation,
+    currentReservation, updateReservationTitle
   ]);
+
+  if (!shouldRender) {
+    return null;
+  }
+
+  const handleChange = (e) => {
+    updateReservationTitle(e.target.value);
+  };
 
   return (
     <TextField
