@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useRouter } from "next/router";
@@ -32,7 +32,7 @@ export const ProfilePage = ({
   showUdpateCredentialsModal,
 }) => {
   const router = useRouter();
-  const userClone = { ...user };
+  const userClone = useMemo(() => ({ ...user }), [user])
   const [isEditting, setIsEditting] = useState(false);
   const [userInfo, updateUserInfo] = useState(userClone);
 
@@ -43,7 +43,7 @@ export const ProfilePage = ({
     if (!user) {
       router.push("/");
     }
-  }, [isEditting, user, userClone]); // eslint-disable-line
+  }, [isEditting, user, userClone, router]);
 
   if (user) {
     userClone.phone = ((user && user.phone) || "").split("-").join("");
@@ -122,6 +122,7 @@ export const ProfilePage = ({
           inputProps={{
             readOnly: true,
           }}
+          sx={{ width: { xs: "85%", sm: "85%", md: "20%", lg: "20%" }  }}
           value={userReference.email}
         />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>

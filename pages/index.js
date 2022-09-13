@@ -24,7 +24,7 @@ const Calendar = dynamic(() =>
 );
 
 import moment from "moment";
-import { loadReservations } from "../thunks/thunks";
+import { loadReservations, processValidateToken } from "../thunks/thunks";
 const CalendarNavBar = dynamic(() =>
   import("../components/CalendarNavBar/CalendarNavBar")
 );
@@ -54,6 +54,8 @@ const App = ({
   showUdpateCredentialsModal,
   updateToken,
 }) => {
+  const minDate = moment(process.env.NEXT_PUBLIC_MIN_DATE);
+  const maxDate = moment(process.env.NEXT_PUBLIC_MAX_DATE);
   const router = useRouter();
 
   const { reset, date } = router.query;
@@ -73,7 +75,9 @@ const App = ({
         moment(date),
         moment(closestReservations[0].start),
         moment(closestReservations[0].end)
-      )
+      ) ||
+      moment(date).isBefore(minDate) ||
+      moment(date).isAfter(maxDate)
     ) {
       showToast("You cannot reserve this date.", "error");
     } else {
@@ -90,7 +94,9 @@ const App = ({
     }
     if (!user && reset) {
       updateToken(reset);
-      showUdpateCredentialsModal("RESET_PASSWORD");
+      dispatch(processValidateToken(reset));
+    }
+    if (reset && user) {
       router.replace("/", null, { shallow: true });
     }
     if (date) {

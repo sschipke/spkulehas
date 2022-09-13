@@ -18,6 +18,7 @@ export const loginUser = async (email, password) => {
   if (!res.ok) {
     switch (res.status) {
       case 401:
+      case 403:
       case 404:
         throw new Error("Invalid username or password.");
       default:
@@ -97,12 +98,15 @@ export const deleteReservation = async (reservation, token) => {
     switch (res.status) {
       case 401:
       case 404:
+      case 403:
       case 422:
         console.error("Error deleting reservation: ", error);
         throw error;
       default:
         console.error("Error deleting reservation");
-        throw new Error("Unable to delete reservation.");
+        throw new Error("Could not delete email.", {
+          error: "Something went wrong.",
+        });
     }
   }
   return res.json();
@@ -268,6 +272,34 @@ export const updateEmailSetting = async (settingName, value, userId, token) => {
       default:
         console.error("Error updating email setting:", error);
         throw new Error("Unable to update email setting.");
+    }
+  }
+  return res.json();
+};
+
+export const validateResetToken = async (token) => {
+  const url = `${baseUrl}session/reset/validate`;
+  const options = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  let res = await fetch(url, options);
+  console.log(res);
+  if (!res.ok) {
+    const error = await res.json();
+    switch (res.status) {
+      case 401:
+      case 404:
+      case 403:
+      case 422:
+      case 429:
+        console.error("Invalid reset token.", error);
+        throw error;
+      default:
+        console.error("Error validating reset token.");
+        throw { error: "This session is not valid." };
     }
   }
   return res.json();

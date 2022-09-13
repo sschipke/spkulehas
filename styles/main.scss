@@ -66,6 +66,9 @@ input:invalid {
 }
 
 .modal-large {
+  #notes {
+    margin-top: 10px;
+  }
   position: absolute;
   transform: translate(-50% -50%);
   height: 90vh;
@@ -79,10 +82,21 @@ input:invalid {
   justify-content: center;
   align-items: center;
   overflow: scroll;
+  .reservation-buttons {
+    width: 30%;
+  }
 }
 
 .demographics-container {
   div {
     margin: 10px;
   }
+}
+
+@media screen and (max-width: 600px) {
+.modal-large {
+  .reservation-buttons {
+    width: 65%;
+  }
+}
 }

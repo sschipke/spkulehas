@@ -73,7 +73,7 @@ export const NewReservationPicker = ({
       addReservation(newReservation.reservation);
       toggleNewReservationPicker();
     } catch (err) {
-      console.error("Error creating reservation. ", err)
+      console.error("Error creating reservation. ", err);
       const { error } = err;
       showToast("Unable to add reservation. " + error, "error");
     }
@@ -131,6 +131,7 @@ export const NewReservationPicker = ({
           inputProps={{
             maxLength: 60,
           }}
+          sx={{ mt: "15px" }}
         />
         <ReservationTitle />
         <UserSelect />
@@ -138,6 +139,7 @@ export const NewReservationPicker = ({
           direction="row"
           justifyContent="space-between"
           alignItems="flex-end"
+          className="reservation-buttons"
           sx={{ mt: 5 }}
         >
           <Button
