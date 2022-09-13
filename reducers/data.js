@@ -168,6 +168,9 @@ const data = (state = initialState, action) => {
       new_state.token = action.token;
       return new_state;
     case "UPDATE_TOKEN":
+      if (!action.token) {
+        return state;
+      }
       new_state.token = action.token;
       return new_state;
     case "TOGGLE_EMAIL_SETTING":

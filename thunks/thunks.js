@@ -113,10 +113,11 @@ export const processPasswordReset =
   };
 
 export const processValidateToken = (token) => async (dispatch) => {
-  console.log("VALD ", token);
+  if (!token) {
+    return;
+  }
   try {
     let isValid = await validateResetToken(token);
-    console.log({ isValid });
     if (isValid) {
       dispatch(showUdpateCredentialsModal("RESET_PASSWORD"));
     } else {
