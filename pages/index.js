@@ -51,8 +51,8 @@ const App = ({
   showLoginPrompt,
   user,
   showViewReservationModal,
-  showUdpateCredentialsModal,
   updateToken,
+  token
 }) => {
   const minDate = moment(process.env.NEXT_PUBLIC_MIN_DATE);
   const maxDate = moment(process.env.NEXT_PUBLIC_MAX_DATE);
@@ -92,8 +92,8 @@ const App = ({
       showLoadingModal();
       dispatch(loadReservations());
     }
-    if (!user && reset) {
-      updateToken(reset);
+    if (!user && reset && !token) {
+      updateToken(reset)
       dispatch(processValidateToken(reset));
     }
     if (reset && user) {
@@ -103,7 +103,7 @@ const App = ({
       updateViewDate(date);
       router.replace("/", null, { shallow: true });
     }
-  }, [areReservationsLoaded, reservations, user, reset, date]); // eslint-disable-line
+  }, [areReservationsLoaded, reservations, user, reset, date, token]); // eslint-disable-line
 
   return (
     <div className="App">
@@ -141,6 +141,7 @@ export const mapStateToProps = (state) => ({
   reservations: state.data.reservations,
   areReservationsLoaded: state.data.are_reservations_loaded,
   user: state.data.user,
+  token: state.data.token,
   viewDate: state.screen.view_date,
 });
 

@@ -286,7 +286,6 @@ export const validateResetToken = async (token) => {
     },
   };
   let res = await fetch(url, options);
-  console.log(res);
   if (!res.ok) {
     const error = await res.json();
     switch (res.status) {
