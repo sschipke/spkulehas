@@ -43,7 +43,7 @@ const screen = (state = initialState, action) => {
       return new_state;
     case "OPEN_TOAST":
       new_state.show_toast = true;
-      new_state.toast_message = action.message;
+      new_state.toast_message = action.message ? action.message : "Something went wrong";
       new_state.toast_type = action.toastType;
       return new_state;
     case "HIDE_TOAST":

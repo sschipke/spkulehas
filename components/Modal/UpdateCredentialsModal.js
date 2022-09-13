@@ -10,16 +10,8 @@ import {
   Backdrop,
   Box,
   Button,
-  Divider,
-  InputLabel,
-  Input,
-  OutlinedInput,
-  FilledInput,
-  IconButton,
   Switch,
-  FormControlLabel,
-  FormHelperText,
-  FormControl,
+  FormControlLabel
 } from "@mui/material";
 import { validateUpdatingCredentials } from "../../utils/validators";
 import { closeUpdateCredentialsModal } from "../../actions";
@@ -200,7 +192,9 @@ export const UpdateCredentialsModal = ({
   const checkIsValid = () => {
     return validateUpdatingCredentials(kind, values);
   };
+
   const isValid = checkIsValid();
+
   return (
     <Modal
       open={isOpen}
@@ -254,6 +248,13 @@ export const UpdateCredentialsModal = ({
             sx={{ mt: 3, mb: 2 }}
           >
             Update {kind === "EMAIL" ? "Email" : "Password"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => closeUpdateCredentialsModal()}
+            sx={{ color: "error.main"}}
+          >
+            Cancel
           </Button>
         </Box>
       </Box>

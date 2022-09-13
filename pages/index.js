@@ -54,6 +54,8 @@ const App = ({
   showUdpateCredentialsModal,
   updateToken,
 }) => {
+  const minDate = moment(process.env.NEXT_PUBLIC_MIN_DATE);
+  const maxDate = moment(process.env.NEXT_PUBLIC_MAX_DATE);
   const router = useRouter();
 
   const { reset, date } = router.query;
@@ -73,7 +75,9 @@ const App = ({
         moment(date),
         moment(closestReservations[0].start),
         moment(closestReservations[0].end)
-      )
+      ) ||
+      moment(date).isBefore(minDate) ||
+      moment(date).isAfter(maxDate)
     ) {
       showToast("You cannot reserve this date.", "error");
     } else {

@@ -1,5 +1,12 @@
 import moment from "moment";
 
+const WINTER_SEASON_START_2022 = "2022-10-24";
+const WINTER_SEASON_END_2022 = "2023-05-21";
+const WINTER_SEASON_START_2023 = "2023-10-23";
+const WINTER_SEASON_END_2023 = "2024-05-20";
+const WINTER_SEASON_START_2024 = "2024-10-21";
+const WINTER_SEASON_END_2024 = "2025-05-18";
+
 const NOON_HOUR = {
   hour: 12,
   minute: 0,
@@ -9,8 +16,21 @@ const NOON_HOUR = {
 
 export const isInWinter = (date) => {
   return (
-    moment(date).isBetween("2022-10-23", "2023-05-20", "day") ||
-    moment(date).isBetween("2023-10-18", "2024-05-20", "day")
+    moment(date).isBetween(
+      WINTER_SEASON_START_2022,
+      WINTER_SEASON_END_2022,
+      "day"
+    ) ||
+    moment(date).isBetween(
+      WINTER_SEASON_START_2023,
+      WINTER_SEASON_END_2023,
+      "day"
+    ) ||
+    moment(date).isBetween(
+      WINTER_SEASON_START_2024,
+      WINTER_SEASON_END_2024,
+      "day"
+    )
   );
 };
 
@@ -143,7 +163,7 @@ export const determineMinDate = (currentReservation, reservations) => {
   if (previousReservation) {
     return moment(previousReservation.end).add(1, "day");
   } else {
-    return moment("2022-01-01");
+    return moment("2022-05-20");
   }
 };
 

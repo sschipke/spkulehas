@@ -18,6 +18,7 @@ export const loginUser = async (email, password) => {
   if (!res.ok) {
     switch (res.status) {
       case 401:
+      case 403:
       case 404:
         throw new Error("Invalid username or password.");
       default:

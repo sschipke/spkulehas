@@ -122,6 +122,7 @@ export const ProfilePage = ({
           inputProps={{
             readOnly: true,
           }}
+          sx={{ width: { xs: "85%", sm: "85%", md: "20%", lg: "20%" }  }}
           value={userReference.email}
         />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
