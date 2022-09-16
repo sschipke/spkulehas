@@ -259,18 +259,6 @@ const reservations = [
         user_id: '5ddcc094-c9e2-4a59-9378-9bbfb92ac1b2'
       },
       {
-        //TODO:  DELETE THIS ONE!!!
-        id: uuid(),
-        start: moment('2022-10-26')
-        .toDate(),
-        end: moment('2022-10-24')
-          .endOf('isoWeek')
-          .toDate(),
-        title: "Sue Orwick",
-        user_id: '5ddcc094-c9e2-4a59-9378-9bbfb92ac1b2'
-      },
-      //Next Season
-      {
         id: uuid(),
         start: moment('2023-05-22')
         .startOf('isoWeek')

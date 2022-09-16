@@ -50,7 +50,6 @@ const CalendarNavBar = ({
           </IconButton>
           <DatePicker
             views={["month", "year"]}
-            // label="Go to date"
             value={moment(viewDate)}
             onChange={(newValue) => {
               if (moment(newValue).isValid()) {

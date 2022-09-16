@@ -217,3 +217,40 @@ export const formatReservation = (reservation, checkinDate, checkoutDate) => {
 export const formatPhoneNumber = (digits) => {
   return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
 };
+
+export const determineIfAdmin = (member) => {
+  return member && member.status === "ADMIN";
+};
+
+export const mapEmailSettings = (emailSettings) => {
+  if (!emailSettings) {
+    emailSettings = {
+      setting_name: "reservation_deleted",
+      value: false,
+    };
+  }
+  return emailSettings;
+};
+
+export const updateUsersInfo = (new_state, usersInfo, updatedUser) => {
+  const updatedUsersInfo = usersInfo.map((user) => {
+    if (user.id === updatedUser.id) {
+      user.name = updatedUser.name;
+      user.email = updatedUser.email;
+    }
+    return user;
+  });
+  new_state.usersInfo = [...sortByName(updatedUsersInfo)];
+};
+
+const sortByName = (usersInfo) => {
+  return usersInfo.sort((userA, userB) => {
+    if (userA.name < userB.name) {
+      return -1;
+    }
+    if (userA.name > userB.name) {
+      return 1;
+    }
+    return 0;
+  });
+};

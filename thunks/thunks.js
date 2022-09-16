@@ -7,6 +7,7 @@ import {
   requestPasswordReset,
   updateEmailSetting,
   validateResetToken,
+  fetchMemberProfile
 } from "../utils/apiCalls";
 import {
   closeLoadingModal,
@@ -21,6 +22,9 @@ import {
   showLoadingModal,
   showUdpateCredentialsModal,
   toggleEmailSettings,
+  setSelectedMember,
+  updateSelectedMemberEmailSettings,
+  updateSelectedMemberEmail
 } from "../actions";
 
 export const loadReservations = () => async (dispatch) => {
@@ -62,10 +66,14 @@ export const processPasswordChange =
   };
 
 export const processEmailChange =
-  (newEmail, password, token, id) => async (dispatch) => {
+  (newEmail, password, token, id, isSelectedMember) => async (dispatch) => {
     try {
       let res = await updateEmail(newEmail, password, token, id);
-      dispatch(updateUserEmail(res.email, res.token));
+      if (isSelectedMember) {
+        dispatch(updateSelectedMemberEmail(res.email, res.token));
+      } else {
+        dispatch(updateUserEmail(res.email, res.token));
+      }
       dispatch(showToast("Email sucessfully updated!", "success"));
       dispatch(closeUpdateCredentialsModal());
     } catch (error) {
@@ -142,16 +150,40 @@ export const processValidateToken = (token) => async (dispatch) => {
 };
 
 export const processEmailSettingChange =
-  (settingName, value, userId, token) => async (dispatch) => {
+  (settingName, value, userId, token, isSelectedMember) => async (dispatch) => {
     dispatch(showLoadingModal());
     try {
       let res = await updateEmailSetting(settingName, value, userId, token);
-      dispatch(toggleEmailSettings(settingName, value));
+      if (isSelectedMember) {
+        dispatch(updateSelectedMemberEmailSettings(settingName, value));
+      } else {
+        dispatch(toggleEmailSettings(settingName, value));
+      }
       dispatch(showToast(`${res}`, "success"));
       dispatch(closeLoadingModal());
     } catch (error) {
       console.error("Catching process email setting update. ", error.Error);
       dispatch(closeLoadingModal());
       dispatch(showToast("Unable to updated email. " + error.error, "error"));
+    }
+  };
+
+export const updateSelectedMemberProfile =
+  (member, token, router) => async (dispatch) => {
+    dispatch(showLoadingModal());
+    try {
+      const { selectedMember, selectedMemberEmailSettings } =
+        await fetchMemberProfile(member, token);
+      dispatch(setSelectedMember(selectedMember, selectedMemberEmailSettings));
+      dispatch(closeLoadingModal());
+      dispatch(
+        showToast(`${selectedMember.name} has been selected.`, "success")
+      );
+      router.push("/profile");
+    } catch ({ error }) {
+      dispatch(closeLoadingModal());
+      dispatch(
+        showToast("Unable to get selected member profile. " + error, "error")
+      );
     }
   };

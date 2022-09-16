@@ -13,16 +13,26 @@ const Stack = dynamic(() => import("@mui/material").then((mod) => mod.Stack));
 const IconButton = dynamic(() =>
   import("@mui/material").then((mod) => mod.IconButton)
 );
-const Paper = dynamic(() => import("@mui/material").then((mod) => mod.Paper));
 const Typography = dynamic(() =>
   import("@mui/material").then((mod) => mod.Typography)
 );
+const Paper = dynamic(() => import("@mui/material").then((mod) => mod.Paper));
 const EditIcon = dynamic(() => import("@mui/icons-material/Edit"));
 import { formatPhoneNumber } from "../utils/helpers";
-import { showToast, updateUser, showUdpateCredentialsModal } from "../actions";
+import {
+  showToast,
+  updateUser,
+  showUdpateCredentialsModal,
+  updateSelectedMember,
+} from "../actions";
 import { updateUserProfile } from "../utils/apiCalls";
+const ReceiveDeletionEmailControl = dynamic(() =>
+  import("../components/Utilities/ReceiveDeletionEmailControl")
+);
 
-import ReceiveDeletionEmailControl from "../components/Utilities/ReceiveDeletionEmailControl";
+const SelectStatus = dynamic(() =>
+  import("../components/Utilities/SelectStatus")
+);
 
 export const ProfilePage = ({
   user,
@@ -30,9 +40,12 @@ export const ProfilePage = ({
   updateUser,
   showToast,
   showUdpateCredentialsModal,
+  selectedMember,
+  updateSelectedMember,
 }) => {
   const router = useRouter();
-  const userClone = useMemo(() => ({ ...user }), [user])
+  const userToUpdate = selectedMember ? selectedMember : user;
+  const userClone = useMemo(() => ({ ...userToUpdate }), [userToUpdate]);
   const [isEditting, setIsEditting] = useState(false);
   const [userInfo, updateUserInfo] = useState(userClone);
 
@@ -40,14 +53,16 @@ export const ProfilePage = ({
     if (!isEditting) {
       updateUserInfo(userClone);
     }
-    if (!user) {
+    if (!userToUpdate) {
       router.push("/");
     }
-  }, [isEditting, user, userClone, router]);
+  }, [isEditting, userToUpdate, userClone, router]);
 
-  if (user) {
-    userClone.phone = ((user && user.phone) || "").split("-").join("");
-    const names = user.name.split(" ");
+  if (userToUpdate) {
+    userClone.phone = ((userToUpdate && userToUpdate.phone) || "")
+      .split("-")
+      .join("");
+    const names = userToUpdate.name.split(" ");
     userClone.firstName = names[0];
     userClone.lastName = names[1];
   } else {
@@ -89,12 +104,18 @@ export const ProfilePage = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    userInfo.phone = formatPhoneNumber(userInfo.phone);
+    userInfo.phone = formatPhoneNumber(userInfo.phone || "");
     //TODO: Validate phone format/reset
     userInfo.name = `${userInfo.firstName} ${userInfo.lastName}`;
     try {
-      let newUser = await updateUserProfile(userInfo, token);
-      updateUser(newUser.user, newUser.token);
+      const response = await updateUserProfile(userInfo, token);
+      const updatedUser = response.user;
+      const newToken = response.token;
+      if (selectedMember && updatedUser.id === selectedMember.id) {
+        updateSelectedMember(updatedUser);
+      } else {
+        updateUser(updatedUser, newToken);
+      }
       showToast("Profile updated.", "success");
       setIsEditting(false);
     } catch (error) {
@@ -111,9 +132,11 @@ export const ProfilePage = ({
         <Typography component="h3" variant="h3">
           {userReference.name}
         </Typography>
-        <Typography component="h4" variant="h4">
-          Member Status: {userReference.status}
-        </Typography>
+        <SelectStatus
+          updateUserStatus={updateUserInfo}
+          isEditting={isEditting}
+          userReference={userReference}
+        />
       </Stack>
       <Stack sx={{ alignItems: "center", mt: "10px" }}>
         <TextField
@@ -122,11 +145,11 @@ export const ProfilePage = ({
           inputProps={{
             readOnly: true,
           }}
-          sx={{ width: { xs: "85%", sm: "85%", md: "20%", lg: "20%" }  }}
+          sx={{ width: { xs: "85%", sm: "85%", md: "20%", lg: "20%" } }}
           value={userReference.email}
         />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-          {user.status !== "ADMIN" && (
+          {userToUpdate.status !== "ADMIN" && (
             <Button
               variant="contained"
               onClick={() => showUdpateCredentialsModal("EMAIL")}
@@ -134,13 +157,15 @@ export const ProfilePage = ({
               Update Email
             </Button>
           )}
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => showUdpateCredentialsModal("PASSWORD")}
-          >
-            Change Password
-          </Button>
+          {user.id === userToUpdate.id && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => showUdpateCredentialsModal("PASSWORD")}
+            >
+              Change Password
+            </Button>
+          )}
         </Stack>
         <ReceiveDeletionEmailControl />
       </Stack>
@@ -308,6 +333,7 @@ export const ProfilePage = ({
 export const mapStateToProps = (state) => ({
   user: state.data.user,
   token: state.data.token,
+  selectedMember: state.data.selected_member_profile,
 });
 
 export const mapDispatchToProps = (dispatch) =>
@@ -316,6 +342,7 @@ export const mapDispatchToProps = (dispatch) =>
       updateUser,
       showToast,
       showUdpateCredentialsModal,
+      updateSelectedMember,
     },
     dispatch
   );
