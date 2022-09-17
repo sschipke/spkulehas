@@ -78,6 +78,9 @@ export const EditReservationPicker = ({
     if (reservationTitle.trim()) {
       reservation.title = reservationTitle.trim();
     }
+    if (user.id === reservation.user_id && user.name !== reservation.title) {
+      reservation.title = user.name;
+    }
     const formattedReservation = formatReservation(
       reservation,
       checkinDate,
