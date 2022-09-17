@@ -310,7 +310,7 @@ export const fetchMemberProfile = async (member, token) => {
       error: "No member id present.",
     });
   }
-  const url = `${baseUrl}user/${member.id}`;
+  const url = `${baseUrl}user/select/${member.id}`;
   const options = {
     headers: {
       "Content-Type": "application/json",
