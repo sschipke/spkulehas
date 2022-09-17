@@ -1,7 +1,7 @@
 import { Provider } from "react-redux";
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import DateAdapter from "@mui/lab/AdapterMoment";
@@ -9,7 +9,6 @@ import { createTheme } from "@mui/material";
 import { rootReducer } from "../reducers";
 import { LocalizationProvider } from "@mui/lab";
 
-// const LocalizationProvider = import("@mui/lab/LocalizationProvider")
 const ThemeProvider = dynamic(() =>
   import("@mui/material").then((mui) => mui.ThemeProvider)
 );
@@ -50,7 +49,10 @@ const theme = createTheme({
 
 const createDevStore = () => {
   console.log("Creating redux store with devtools.");
-  return createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+  return createStore(
+    rootReducer,
+    composeWithDevTools(applyMiddleware(thunk), compose)
+  );
 };
 
 const store =

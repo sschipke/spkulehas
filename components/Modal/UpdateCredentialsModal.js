@@ -11,7 +11,7 @@ import {
   Box,
   Button,
   Switch,
-  FormControlLabel
+  FormControlLabel,
 } from "@mui/material";
 import { validateUpdatingCredentials } from "../../utils/validators";
 import { closeUpdateCredentialsModal } from "../../actions";
@@ -28,6 +28,7 @@ export const UpdateCredentialsModal = ({
   isOpen,
   user,
   closeUpdateCredentialsModal,
+  selectedMember,
   token,
   kind,
 }) => {
@@ -51,8 +52,10 @@ export const UpdateCredentialsModal = ({
     }
   }, [isOpen]); // eslint-disable-line
 
-  //TODO: CHange this!
-  if (!user && kind !== "RESET_PASSWORD") {
+  const userToUpdate = selectedMember ? selectedMember : user;
+  const isSelectedMember =
+    selectedMember && userToUpdate.id === selectedMember.id;
+  if (!userToUpdate && kind !== "RESET_PASSWORD") {
     return null;
   }
 
@@ -80,7 +83,7 @@ export const UpdateCredentialsModal = ({
               readOnly: true,
             }}
             type="email"
-            value={user.email}
+            value={userToUpdate.email}
           />
           <TextField
             margin="normal"
@@ -174,7 +177,8 @@ export const UpdateCredentialsModal = ({
             newEmail.trim().toLowerCase(),
             password,
             token,
-            user.id
+            userToUpdate.id,
+            isSelectedMember
           )
         );
         break;
@@ -252,7 +256,7 @@ export const UpdateCredentialsModal = ({
           <Button
             variant="outline"
             onClick={() => closeUpdateCredentialsModal()}
-            sx={{ color: "error.main"}}
+            sx={{ color: "error.main" }}
           >
             Cancel
           </Button>
@@ -267,6 +271,7 @@ export const mapStateToProps = (state) => ({
   token: state.data.token,
   isOpen: state.screen.show_update_credentials_modal,
   kind: state.screen.update_credentials_modal_kind,
+  selectedMember: state.data.selected_member_profile,
 });
 
 export const mapDispatchToProps = (dispatch) =>

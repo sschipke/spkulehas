@@ -303,3 +303,29 @@ export const validateResetToken = async (token) => {
   }
   return res.json();
 };
+
+export const fetchMemberProfile = async (member, token) => {
+  if (!member.id) {
+    throw new Error("No member id present.", {
+      error: "No member id present.",
+    });
+  }
+  const url = `${baseUrl}user/${member.id}`;
+  const options = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  let res = await fetch(url, options);
+  if (!res.ok) {
+    const err = res.json();
+    console.error("Unable to get member profile. ", err);
+    const { error } = err;
+    if (!error) {
+      error = "Could not fetch member profile.";
+    }
+    throw { error };
+  }
+  return res.json();
+};

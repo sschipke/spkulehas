@@ -1,6 +1,10 @@
 import moment from "moment";
-import mockReservations from "../utils/reservations";
-import { findNearestReservations, sortByStartDate } from "../utils/helpers";
+import { mapEmailSettings } from "../utils/helpers";
+import {
+  findNearestReservations,
+  sortByStartDate,
+  updateUsersInfo,
+} from "../utils/helpers";
 let initialState = {
   current_reservation: null,
   reservations: [],
@@ -11,6 +15,8 @@ let initialState = {
   usersInfo: null,
   user_reservations: null,
   selected_user: null,
+  selected_member_profile: null,
+  selected_member_email_settings: null,
   reservation_title: "",
 };
 //TODO: REMOVE!!
@@ -34,7 +40,7 @@ const generateRandomColor = () => {
 const data = (state = initialState, action) => {
   let new_state = { ...state };
 
-  const { reservations, user, usersInfo } = state;
+  const { reservations, user, usersInfo, selected_member_profile } = state;
 
   switch (action.type) {
     case "RESERVATIONS_LOADED":
@@ -124,14 +130,7 @@ const data = (state = initialState, action) => {
       new_state.user = userToLogin;
       new_state.token = token;
       new_state.usersInfo = action.data.usersInfo;
-      if (!action.data.emailSettings) {
-        new_state.emailSettings = {
-          setting_name: "reservation_deleted",
-          value: false,
-        };
-      } else {
-        new_state.emailSettings = action.data.emailSettings;
-      }
+      new_state.emailSettings = mapEmailSettings(action.data.emailSettings);
       new_state.user_reservations = reservations.filter(
         (res) => res.user_id === userToLogin.id
       );
@@ -145,6 +144,8 @@ const data = (state = initialState, action) => {
       new_state.token = null;
       new_state.usersInfo = null;
       new_state.selected_user = null;
+      new_state.selected_member_profile = null;
+      new_state.selected_member_email_settings = null;
       return new_state;
     case "UPDATE_SELECTED_USER":
       const { userId } = action;
@@ -161,10 +162,15 @@ const data = (state = initialState, action) => {
     case "UPDATE_EMAIL":
       const { email } = action;
       new_state.token = action.token;
-      new_state.user = { ...user, email };
+      const updatedUserWithEmail = { ...user, email };
+      new_state.user = updatedUserWithEmail;
+      updateUsersInfo(new_state, usersInfo, updatedUserWithEmail);
       return new_state;
     case "UPDATE_USER":
       new_state.user = action.user;
+      if (user.name !== action.user.name) {
+        updateUsersInfo(new_state, usersInfo, action.user);
+      }
       new_state.token = action.token;
       return new_state;
     case "UPDATE_TOKEN":
@@ -176,6 +182,41 @@ const data = (state = initialState, action) => {
     case "TOGGLE_EMAIL_SETTING":
       const { setting_name, value } = action;
       new_state.emailSettings = { setting_name, value };
+      return new_state;
+    case "SET_SELECTED_MEMBER":
+      const { selectedMember, selectedMemberEmailSettings } = action;
+      new_state.selected_member_profile = selectedMember;
+      new_state.selected_member_email_settings = mapEmailSettings(
+        selectedMemberEmailSettings
+      );
+      return new_state;
+    case "UPDATE_SELECTED_MEMBER":
+      new_state.selected_member_profile = action.selectedMember;
+      if (selected_member_profile.name !== action.selectedMember.name) {
+        updateUsersInfo(new_state, usersInfo, action.selectedMember);
+      }
+      return new_state;
+    case "UPDATE_SELECTED_MEMBER_EMAIL_SETTINGS":
+      const {
+        selectedMemberEmailSettingName,
+        selectedMemberEmailSettingValue,
+      } = action;
+      new_state.selected_member_email_settings = {
+        setting_name: selectedMemberEmailSettingName,
+        value: selectedMemberEmailSettingValue,
+      };
+      return new_state;
+    case "UPDATE_SELECTED_MEMBER_EMAIL":
+      const { selectedMemberEmail } = action;
+      if (action.token) {
+        new_state.token = action.token;
+      }
+      const updatedSelectedMember = {
+        ...selected_member_profile,
+        email: selectedMemberEmail,
+      };
+      new_state.selected_member_profile = updatedSelectedMember;
+      updateUsersInfo(new_state, usersInfo, updatedSelectedMember);
       return new_state;
     default:
       return state;

@@ -109,15 +109,19 @@ export const toggleConfirmDeleteDialog = () => ({
 });
 
 export const updateSelectedUser = (userId) => ({
-  type: "UPDATE_SELECTED_USER", userId
+  type: "UPDATE_SELECTED_USER",
+  userId
 });
 
 export const updateUser = (user, token) => ({
-  type: "UPDATE_USER", user, token
+  type: "UPDATE_USER",
+  user,
+  token
 });
 
 export const showUdpateCredentialsModal = (kind) => ({
-  type: "SHOW_UPDATE_CREDENTIALS_MODAL", kind
+  type: "SHOW_UPDATE_CREDENTIALS_MODAL",
+  kind
 });
 
 export const closeUpdateCredentialsModal = () => ({
@@ -125,17 +129,46 @@ export const closeUpdateCredentialsModal = () => ({
 });
 
 export const updateUserEmail = (email, token) => ({
-  type: "UPDATE_EMAIL", email, token
+  type: "UPDATE_EMAIL",
+  email,
+  token
 });
 
 export const updateToken = (token) => ({
-  type: "UPDATE_TOKEN", token
-})
+  type: "UPDATE_TOKEN",
+  token,
+});
 
 export const updateReservationTitle = (value) => ({
-  type: "UPDATE_RESERVATION_TITLE", value
+  type: "UPDATE_RESERVATION_TITLE",
+  value
 });
 
 export const toggleEmailSettings = (setting_name, value) => ({
-  type: "TOGGLE_EMAIL_SETTING", setting_name, value
+  type: "TOGGLE_EMAIL_SETTING",
+  setting_name,
+  value
+});
+
+export const setSelectedMember = (member, emailSettings) => ({
+  type: "SET_SELECTED_MEMBER",
+  selectedMember: member,
+  selectedMemberEmailSettings: emailSettings
+});
+
+export const updateSelectedMember = (member) => ({
+  type: "UPDATE_SELECTED_MEMBER",
+  selectedMember: member
+});
+
+export const updateSelectedMemberEmailSettings = (setting_name, value) => ({
+  type: "UPDATE_SELECTED_MEMBER_EMAIL_SETTINGS",
+  selectedMemberEmailSettingName: setting_name,
+  selectedMemberEmailSettingValue: value
+});
+
+export const updateSelectedMemberEmail = (email, token) => ({
+  type: "UPDATE_SELECTED_MEMBER_EMAIL",
+  selectedMemberEmail: email,
+  token
 });

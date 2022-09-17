@@ -54,7 +54,6 @@ export const ViewReservationModal = ({
   };
 
   const modalStyle = {
-    // backgroundColor: 'white',
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
