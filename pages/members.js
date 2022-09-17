@@ -1,46 +1,46 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { connect, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import moment from "moment";
-import {
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-  TablePagination,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import Visibility from "@mui/icons-material/Visibility";
-import "@mui/material/styles";
-import {
-  setCurrentReservation,
-  toggleEditReservationPicker,
-  toggleConfirmDeleteDialog,
-  updateViewDate,
-} from "../actions";
+import dynamic from "next/dynamic";
+import { determineIfAdmin } from "../utils/helpers";
 
-const MembersContactPage = ({
-  user,
-  userReservations,
-  usersInfo,
-  toggleEditReservationPicker,
-  toggleConfirmDeleteDialog,
-  updateViewDate,
-}) => {
+dynamic(() => import("@mui/material/styles"));
+
+const Button = dynamic(() => import("@mui/material").then((mui) => mui.Button));
+const Table = dynamic(() => import("@mui/material").then((mui) => mui.Table));
+const TableBody = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableBody)
+);
+const TableCell = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableCell)
+);
+const TableContainer = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableContainer)
+);
+const TableHead = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableHead)
+);
+const TableRow = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableRow)
+);
+const Paper = dynamic(() => import("@mui/material").then((mui) => mui.Paper));
+const Typography = dynamic(() =>
+  import("@mui/material").then((mui) => mui.Typography)
+);
+
+import { updateSelectedMemberProfile } from "../thunks/thunks";
+
+const MembersContactPage = ({ user, usersInfo, token }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!user) {
       router.push("/");
     }
   }, [user]); // eslint-disable-line
+
+  const isAdmin = determineIfAdmin(user);
 
   const contactInfoTable = () => {
     return (
@@ -53,6 +53,7 @@ const MembersContactPage = ({
             <TableRow className="reservation-table-head-row">
               <TableCell>Member</TableCell>
               <TableCell>Email</TableCell>
+              {isAdmin && <TableCell>Select</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -71,6 +72,20 @@ const MembersContactPage = ({
                     {member.email}
                   </a>
                 </TableCell>
+                {isAdmin && (
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        dispatch(
+                          updateSelectedMemberProfile(member, token, router)
+                        );
+                      }}
+                    >
+                      Select
+                    </Button>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
@@ -97,7 +112,8 @@ const MembersContactPage = ({
 
 export const mapStateToProps = (state) => ({
   user: state.data.user,
-  usersInfo: state.data.usersInfo
+  usersInfo: state.data.usersInfo,
+  token: state.data.token,
 });
 
 export default connect(mapStateToProps)(MembersContactPage);

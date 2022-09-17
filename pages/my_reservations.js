@@ -4,24 +4,34 @@ import { bindActionCreators } from "redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import moment from "moment";
-import {
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-  TablePagination,
-} from "@mui/material";
+
+const IconButton = dynamic(() => import("@mui/material").then((mui) => mui.IconButton));
+const Table = dynamic(() => import("@mui/material").then((mui) => mui.Table));
+const TableBody = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableBody)
+);
+const TableCell = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableCell)
+);
+const TableContainer = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableContainer)
+);
+const TableHead = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableHead)
+);
+const TableRow = dynamic(() =>
+  import("@mui/material").then((mui) => mui.TableRow)
+);
+const Paper = dynamic(() => import("@mui/material").then((mui) => mui.Paper));
+const Typography = dynamic(() =>
+  import("@mui/material").then((mui) => mui.Typography)
+);
 const EditIcon = dynamic(() => import("@mui/icons-material/Edit"));
 const DeleteForeverIcon = dynamic(() =>
   import("@mui/icons-material/DeleteForever")
 );
 const Visibility = dynamic(() => import("@mui/icons-material/Visibility"));
-import "@mui/material/styles";
+dynamic(() => import("@mui/material/styles"));
 import {
   setCurrentReservation,
   toggleEditReservationPicker,

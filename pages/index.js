@@ -17,27 +17,18 @@ import {
   showViewReservationModal,
   showLoadingModal,
 } from "../actions";
-import { isInReservation, findNearestReservations } from "../utils/helpers";
-import { momentLocalizer } from "react-big-calendar";
-const Calendar = dynamic(() =>
-  import("react-big-calendar").then((mod) => mod.Calendar)
-);
-
-import moment from "moment";
 import { loadReservations, processValidateToken } from "../thunks/thunks";
+import { isInReservation, findNearestReservations } from "../utils/helpers";
+
 const CalendarNavBar = dynamic(() =>
   import("../components/CalendarNavBar/CalendarNavBar")
 );
 
-import "react-big-calendar/lib/css/react-big-calendar.css";
-moment.updateLocale("en-US", {
-  week: {
-    dow: 1,
-    doy: 1,
-  },
-});
+const BigCalendar = dynamic(() =>
+  import("../components/BigCalendar/BigCalendar")
+);
 
-const localizer = momentLocalizer(moment);
+import moment from "moment";
 
 const App = ({
   reservations,
@@ -52,7 +43,7 @@ const App = ({
   user,
   showViewReservationModal,
   updateToken,
-  token
+  token,
 }) => {
   const minDate = moment(process.env.NEXT_PUBLIC_MIN_DATE);
   const maxDate = moment(process.env.NEXT_PUBLIC_MAX_DATE);
@@ -93,7 +84,7 @@ const App = ({
       dispatch(loadReservations());
     }
     if (!user && reset && !token) {
-      updateToken(reset)
+      updateToken(reset);
       dispatch(processValidateToken(reset));
     }
     if (reset && user) {
@@ -109,28 +100,11 @@ const App = ({
     <div className="App">
       <div className="calendar-container">
         <CalendarNavBar />
-        <Calendar
-          localizer={localizer}
-          date={viewDate}
-          views={["month"]}
-          events={reservations}
-          style={{ height: "85vh", width: "100vw" }}
-          eventPropGetter={(event, start, end, title, isSelected) => ({
-            event,
-            start,
-            end,
-            title,
-            isSelected,
-            style: { backgroundColor: event.color ? event.color : "#006064" },
-          })}
-          onSelectEvent={handleEventSelect}
-          onDrillDown={(date) => {
-            handleDrillDown(date);
-          }}
-          onNavigate={function () {}}
-          min={moment("2022-01-01").toDate()}
-          max={moment("2022-06-01").toDate()}
-          toolbar={false}
+        <BigCalendar
+          viewDate={viewDate}
+          reservations={reservations}
+          handleEventSelect={handleEventSelect}
+          handleDrillDown={handleDrillDown}
         />
       </div>
     </div>
