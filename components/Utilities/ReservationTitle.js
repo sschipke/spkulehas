@@ -19,8 +19,11 @@ const ReservationTitle = ({
     selectedUser.name === "Schipke SpKuLeHaS";
 
   useEffect(() => {
-    if (isEditReservationModalOpen && currentReservation) {
-      updateReservationTitle(currentReservation.title);
+    if (isEditReservationModalOpen && currentReservation && selectedUser) {
+      updateReservationTitle(selectedUser.name);
+    }
+    if (!shouldRender) {
+      updateReservationTitle("");
     }
     return () => {
       updateReservationTitle("");
@@ -28,7 +31,9 @@ const ReservationTitle = ({
   }, [
     isNewReservationModalOpen,
     isEditReservationModalOpen,
-    currentReservation, updateReservationTitle
+    currentReservation, updateReservationTitle,
+    selectedUser,
+    shouldRender
   ]);
 
   if (!shouldRender) {
