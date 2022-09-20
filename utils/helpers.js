@@ -175,7 +175,7 @@ export const determineMinDateForNewReservation = (previousReservation) => {
   }
 };
 
-export const determineMaxDate = (checkinDate, nextReservation) => {
+export const determineMaxDate = (checkinDate, nextReservation, isAdmin) => {
   const longestDate = isInWinter(checkinDate)
     ? moment(checkinDate).add(13, "day")
     : moment(checkinDate).add(6, "day");
@@ -184,14 +184,17 @@ export const determineMaxDate = (checkinDate, nextReservation) => {
   )
     .set(NOON_HOUR)
     .subtract(1, "day");
-  if (
-    nextReservationStart.isValid() &&
-    nextReservationStart.isBefore(longestDate)
-  ) {
-    return nextReservationStart;
-  } else {
-    return longestDate;
+  if (isAdmin && nextReservationStart.isValid()) {
+    return moment(process.env.NEXT_PUBLIC_MAX_DATE);
   }
+    if (
+      nextReservationStart.isValid() &&
+      nextReservationStart.isBefore(longestDate)
+    ) {
+      return nextReservationStart;
+    } else {
+      return longestDate;
+    }
 };
 
 export const canEdit = (user, reservation) => {

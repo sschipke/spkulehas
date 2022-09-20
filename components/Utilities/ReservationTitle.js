@@ -11,14 +11,14 @@ const ReservationTitle = ({
   selectedUser,
   isEditReservationModalOpen,
   isNewReservationModalOpen,
-  currentReservation,
+  currentReservation
 }) => {
-  let shouldRender =
-    user.status === "ADMIN" &&
-    selectedUser &&
-    selectedUser.name === "Schipke SpKuLeHaS";
+  let shouldRender = user.status === "ADMIN" && selectedUser;
 
   useEffect(() => {
+    if (isEditReservationModalOpen && currentReservation && selectedUser) {
+      updateReservationTitle(selectedUser.name);
+    }
     if (isEditReservationModalOpen && currentReservation && selectedUser) {
       updateReservationTitle(selectedUser.name);
     }
@@ -31,7 +31,8 @@ const ReservationTitle = ({
   }, [
     isNewReservationModalOpen,
     isEditReservationModalOpen,
-    currentReservation, updateReservationTitle,
+    currentReservation,
+    updateReservationTitle,
     selectedUser,
     shouldRender
   ]);
@@ -52,7 +53,7 @@ const ReservationTitle = ({
       value={reservationTitle}
       onChange={handleChange}
       inputProps={{
-        maxLength: 20,
+        maxLength: 20
       }}
       sx={{ width: "20%" }}
     />
@@ -65,7 +66,7 @@ export const mapStateToProps = (state) => ({
   currentReservation: state.data.current_reservation,
   reservationTitle: state.data.reservation_title,
   isEditReservationModalOpen: state.screen.edit_reservation_picker_open,
-  isNewReservationModalOpen: state.screen.new_reservation_picker_open,
+  isNewReservationModalOpen: state.screen.new_reservation_picker_open
 });
 
 export const mapDispatchToProps = (dispatch) =>

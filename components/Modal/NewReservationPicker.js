@@ -9,18 +9,19 @@ import {
   Box,
   Stack,
   Button,
-  Typography,
+  Typography
 } from "@mui/material";
-import { DateRangePicker, DatePicker } from "@mui/lab";
+import { DateRangePicker, DatePicker, PickersDay } from "@mui/lab";
 import {
   addReservation,
   toggleNewReservationPicker,
-  showToast,
+  showToast
 } from "../../actions";
 import {
   determineMinDateForNewReservation,
   determineMaxDate,
   formatReservation,
+  determineIfAdmin
 } from "../../utils/helpers";
 import { postReservation } from "../../utils/apiCalls";
 const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
@@ -35,7 +36,7 @@ export const NewReservationPicker = ({
   viewDate,
   addReservation,
   token,
-  reservationTitle,
+  reservationTitle
 }) => {
   const [dates, setDates] = useState([new Date(viewDate), null]);
   const [error, setError] = useState(null);
@@ -54,7 +55,7 @@ export const NewReservationPicker = ({
   }
 
   const [checkinDate, checkoutDate] = dates;
-
+  // TODO: Update logic here! IF user is admin check for selected user!
   const canSubmit = checkinDate && checkoutDate && user;
 
   const handleSubmit = async () => {
@@ -62,7 +63,7 @@ export const NewReservationPicker = ({
     const reservation = {
       user_id: user.status === "ADMIN" ? selectedUser.id : id,
       title: user.status === "ADMIN" ? selectedUser.name : name,
-      notes: notes.trim(),
+      notes: notes.trim()
     };
     if (reservationTitle) {
       reservation.title = reservationTitle.trim();
@@ -81,8 +82,12 @@ export const NewReservationPicker = ({
 
   const [previousReservation, nextReservation] = surroundingReservations;
 
-  const maxDate = determineMaxDate(checkinDate, nextReservation);
   const minDate = determineMinDateForNewReservation(previousReservation);
+  const maxDate = determineMaxDate(
+    checkinDate,
+    nextReservation,
+    determineIfAdmin(user)
+  );
 
   return (
     <Modal
@@ -129,7 +134,7 @@ export const NewReservationPicker = ({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           inputProps={{
-            maxLength: 60,
+            maxLength: 60
           }}
           sx={{ mt: "15px" }}
         />
@@ -171,7 +176,7 @@ export const mapStateToProps = (state) => ({
   user: state.data.user,
   selectedUser: state.data.selected_user,
   reservationTitle: state.data.reservation_title,
-  token: state.data.token,
+  token: state.data.token
 });
 
 export const mapDispatchToProps = (dispatch) =>

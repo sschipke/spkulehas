@@ -10,20 +10,21 @@ import {
   Box,
   Button,
   Stack,
-  Typography,
+  Typography
 } from "@mui/material";
-import { DateRangePicker, DatePicker } from "@mui/lab";
+import { DateRangePicker, DateRangePickerDay } from "@mui/lab";
 import {
   toggleEditReservationPicker,
   updateReservation,
   closeViewReservationModal,
-  showToast,
+  showToast
 } from "../../actions";
 import {
   determineMinDate,
   determineMaxDate,
   canEdit,
   formatReservation,
+  determineIfAdmin
 } from "../../utils/helpers";
 import { putReservation } from "../../utils/apiCalls";
 const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
@@ -41,7 +42,7 @@ export const EditReservationPicker = ({
   user,
   selectedUser,
   reservationTitle,
-  token,
+  token
 }) => {
   const initialValue = () => {
     if (!currentReservation) {
@@ -107,8 +108,12 @@ export const EditReservationPicker = ({
 
   const nextReservation = surroundingReservations[1];
 
-  const maxDate = determineMaxDate(checkinDate, nextReservation);
   const minDate = determineMinDate(currentReservation, reservations);
+  const maxDate = determineMaxDate(
+    checkinDate,
+    nextReservation,
+    determineIfAdmin(user)
+  );
 
   return (
     <Modal
@@ -130,7 +135,7 @@ export const EditReservationPicker = ({
           views={["year", "month", "day"]}
           startText="Check-in"
           endText="Check-out"
-          label="Basic example"
+          label="Edit Reservation Dates"
           value={dates}
           onChange={(newValue) => {
             setDates(newValue);
@@ -154,7 +159,7 @@ export const EditReservationPicker = ({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           inputProps={{
-            maxLength: 60,
+            maxLength: 60
           }}
           sx={{ mt: "15px" }}
         />
@@ -197,7 +202,7 @@ export const mapStateToProps = (state) => ({
   token: state.data.token,
   usersInfo: state.data.usersInfo,
   selectedUser: state.data.selected_user,
-  reservationTitle: state.data.reservation_title,
+  reservationTitle: state.data.reservation_title
 });
 
 export const mapDispatchToProps = (dispatch) =>
@@ -206,7 +211,7 @@ export const mapDispatchToProps = (dispatch) =>
       toggleEditReservationPicker,
       showToast,
       updateReservation,
-      closeViewReservationModal,
+      closeViewReservationModal
     },
     dispatch
   );
