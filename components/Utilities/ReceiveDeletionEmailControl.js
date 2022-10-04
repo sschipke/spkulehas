@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect, useDispatch } from "react-redux";
 import { processEmailSettingChange } from "../../thunks/thunks";
 import { Switch, FormGroup, FormControlLabel } from "@mui/material";

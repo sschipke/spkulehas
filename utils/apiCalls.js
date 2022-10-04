@@ -11,8 +11,8 @@ export const loginUser = async (email, password) => {
     method: "POST",
     body: JSON.stringify({ email, password }),
     headers: {
-      "Content-Type": "application/json",
-    },
+      "Content-Type": "application/json"
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -36,8 +36,8 @@ export const putReservation = async (reservation, token) => {
     body: JSON.stringify({ reservation }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -62,8 +62,8 @@ export const postReservation = async (reservation, token) => {
     body: JSON.stringify({ reservation }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -82,15 +82,19 @@ export const postReservation = async (reservation, token) => {
   return res.json();
 };
 
-export const deleteReservation = async (reservation, token) => {
+export const deleteReservation = async (
+  reservation,
+  token,
+  shouldSendDeletionEmail
+) => {
   const url = `${baseUrl}reservations/${reservation.id}`;
   const options = {
     method: "DELETE",
-    body: JSON.stringify({ reservation }),
+    body: JSON.stringify({ reservation, shouldSendDeletionEmail }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -105,7 +109,7 @@ export const deleteReservation = async (reservation, token) => {
       default:
         console.error("Error deleting reservation");
         throw new Error("Could not delete email.", {
-          error: "Something went wrong.",
+          error: "Something went wrong."
         });
     }
   }
@@ -119,8 +123,8 @@ export const updateUserProfile = async (user, token) => {
     body: JSON.stringify({ user }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -146,8 +150,8 @@ export const updateEmail = async (newEmail, password, token, id) => {
     body: JSON.stringify({ newEmail, password }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -175,8 +179,8 @@ export const updatePassword = async (newPassword, password, token, id) => {
     body: JSON.stringify({ newPassword, password }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -202,8 +206,8 @@ export const requestPasswordReset = async (email) => {
     method: "POST",
     body: JSON.stringify({ email }),
     headers: {
-      "Content-Type": "application/json",
-    },
+      "Content-Type": "application/json"
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -229,8 +233,8 @@ export const resetPassword = async (token, newPassword) => {
     body: JSON.stringify({ newPassword }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -257,8 +261,8 @@ export const updateEmailSetting = async (settingName, value, userId, token) => {
     body: JSON.stringify({ settingName, value }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -282,8 +286,8 @@ export const validateResetToken = async (token) => {
   const options = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
@@ -307,15 +311,15 @@ export const validateResetToken = async (token) => {
 export const fetchMemberProfile = async (member, token) => {
   if (!member.id) {
     throw new Error("No member id present.", {
-      error: "No member id present.",
+      error: "No member id present."
     });
   }
   const url = `${baseUrl}user/select/${member.id}`;
   const options = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
   let res = await fetch(url, options);
   if (!res.ok) {

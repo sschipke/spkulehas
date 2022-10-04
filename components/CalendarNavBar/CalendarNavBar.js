@@ -29,7 +29,6 @@ const maxDate = process.env.NEXT_PUBLIC_MAX_DATE;
 const CalendarNavBar = ({
   viewNextMonth,
   viewPreviousMonth,
-  viewToday,
   updateViewDate,
   viewDate,
 }) => {

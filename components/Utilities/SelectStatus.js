@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Select, MenuItem, InputLabel } from "@mui/material";
 import dynamic from "next/dynamic";
@@ -12,7 +12,7 @@ const SelectStatus = ({
   selectedMember,
   isEditting,
   updateUserStatus,
-  userReference,
+  userReference
 }) => {
   const handleSelect = (e) => {
     updateUserStatus({ ...userReference, status: e.target.value });
@@ -25,7 +25,6 @@ const SelectStatus = ({
   if (
     user.status === "ADMIN" &&
     selectedMember &&
-    userReference.status !== "ADMIN" &&
     userReference.id === selectedMember.id &&
     isEditting
   ) {
@@ -71,7 +70,7 @@ const SelectStatus = ({
 
 export const mapStateToProps = (state) => ({
   user: state.data.user,
-  selectedMember: state.data.selected_member_profile,
+  selectedMember: state.data.selected_member_profile
 });
 
 export default connect(mapStateToProps)(SelectStatus);

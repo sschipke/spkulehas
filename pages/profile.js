@@ -23,7 +23,7 @@ import {
   showToast,
   updateUser,
   showUdpateCredentialsModal,
-  updateSelectedMember,
+  updateSelectedMember
 } from "../actions";
 import { updateUserProfile } from "../utils/apiCalls";
 const ReceiveDeletionEmailControl = dynamic(() =>
@@ -41,7 +41,7 @@ export const ProfilePage = ({
   showToast,
   showUdpateCredentialsModal,
   selectedMember,
-  updateSelectedMember,
+  updateSelectedMember
 }) => {
   const router = useRouter();
   const userToUpdate = selectedMember ? selectedMember : user;
@@ -143,13 +143,13 @@ export const ProfilePage = ({
           id="email"
           label="Email"
           inputProps={{
-            readOnly: true,
+            readOnly: true
           }}
           sx={{ width: { xs: "85%", sm: "85%", md: "20%", lg: "20%" } }}
           value={userReference.email}
         />
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-          {userToUpdate.status !== "ADMIN" && (
+          {userToUpdate.email !== "spkulehas@gmail.com" && (
             <Button
               variant="contained"
               onClick={() => showUdpateCredentialsModal("EMAIL")}
@@ -177,7 +177,7 @@ export const ProfilePage = ({
           display: "flex",
           justifyContent: "center",
           flexWrap: "wrap",
-          flexDirection: "column",
+          flexDirection: "column"
         }}
       >
         <Stack
@@ -189,7 +189,7 @@ export const ProfilePage = ({
             id="firstName"
             label="First Name"
             inputProps={{
-              readOnly: !isEditting,
+              readOnly: !isEditting
             }}
             onChange={handleChange}
             value={userReference.firstName}
@@ -199,7 +199,7 @@ export const ProfilePage = ({
             id="lastName"
             label="Last Name"
             inputProps={{
-              readOnly: !isEditting,
+              readOnly: !isEditting
             }}
             onChange={handleChange}
             value={userReference.lastName}
@@ -216,7 +216,7 @@ export const ProfilePage = ({
             height: "100%",
             justifyContent: "center",
             flexWrap: "wrap",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
           <TextField
@@ -224,7 +224,7 @@ export const ProfilePage = ({
             label="Street Address"
             helperText={isEditting ? "U.S. Addresses Only" : ""}
             inputProps={{
-              readOnly: !isEditting,
+              readOnly: !isEditting
             }}
             onChange={handleChange}
             value={userReference.street}
@@ -240,7 +240,7 @@ export const ProfilePage = ({
             inputProps={{
               readOnly: !isEditting,
               maxLength: 50,
-              minLength: 3,
+              minLength: 3
             }}
           />
           <TextField
@@ -257,7 +257,7 @@ export const ProfilePage = ({
               maxLength: 2,
               minLength: 2,
               pattern:
-                "^(([Aa][EeLlKkSsZzRr])|([Cc][AaOoTt])|([Dd][EeCc])|([Ff][MmLl])|([Gg][AaUu])|([Hh][Ii])|([Ii][DdLlNnAa])|([Kk][SsYy])|([Ll][Aa])|([Mm][EeHhDdAaIiNnSsOoTt])|([Nn][EeVvHhJjMmYyCcDd])|([Mm][Pp])|([Oo][HhKkRr])|([Pp][WwAaRr])|([Rr][Ii])|([Ss][CcDd])|([Tt][NnXx])|([Uu][Tt])|([Vv][TtIiAa])|([Ww][AaVvIiYy]))$",
+                "^(([Aa][EeLlKkSsZzRr])|([Cc][AaOoTt])|([Dd][EeCc])|([Ff][MmLl])|([Gg][AaUu])|([Hh][Ii])|([Ii][DdLlNnAa])|([Kk][SsYy])|([Ll][Aa])|([Mm][EeHhDdAaIiNnSsOoTt])|([Nn][EeVvHhJjMmYyCcDd])|([Mm][Pp])|([Oo][HhKkRr])|([Pp][WwAaRr])|([Rr][Ii])|([Ss][CcDd])|([Tt][NnXx])|([Uu][Tt])|([Vv][TtIiAa])|([Ww][AaVvIiYy]))$"
             }}
           />
           <TextField
@@ -273,7 +273,7 @@ export const ProfilePage = ({
               inputMode: "numeric",
               maxLength: 5,
               minLength: 5,
-              pattern: "[0-9]{5}",
+              pattern: "[0-9]{5}"
             }}
           />
           <TextField
@@ -289,7 +289,7 @@ export const ProfilePage = ({
               inputMode: "numeric",
               minLength: phoneFormat.length,
               maxLength: phoneFormat.length,
-              pattern: phoneFormat.pattern,
+              pattern: phoneFormat.pattern
             }}
           />
         </Stack>
@@ -333,7 +333,7 @@ export const ProfilePage = ({
 export const mapStateToProps = (state) => ({
   user: state.data.user,
   token: state.data.token,
-  selectedMember: state.data.selected_member_profile,
+  selectedMember: state.data.selected_member_profile
 });
 
 export const mapDispatchToProps = (dispatch) =>
@@ -342,7 +342,7 @@ export const mapDispatchToProps = (dispatch) =>
       updateUser,
       showToast,
       showUdpateCredentialsModal,
-      updateSelectedMember,
+      updateSelectedMember
     },
     dispatch
   );
