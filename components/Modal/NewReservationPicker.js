@@ -21,7 +21,8 @@ import {
   determineMinDateForNewReservation,
   determineMaxDate,
   formatReservation,
-  determineIfAdmin
+  determineIfAdmin,
+  canSubmitReservation
 } from "../../utils/helpers";
 import { postReservation } from "../../utils/apiCalls";
 const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
@@ -55,8 +56,13 @@ export const NewReservationPicker = ({
   }
 
   const [checkinDate, checkoutDate] = dates;
-  // TODO: Update logic here! IF user is admin check for selected user!
-  const canSubmit = checkinDate && checkoutDate && user;
+
+  const canSubmit = canSubmitReservation(
+    user,
+    selectedUser,
+    checkinDate,
+    checkoutDate
+  );
 
   const handleSubmit = async () => {
     const { name, id } = user;

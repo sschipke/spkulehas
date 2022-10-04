@@ -24,7 +24,8 @@ import {
   determineMaxDate,
   canEdit,
   formatReservation,
-  determineIfAdmin
+  determineIfAdmin,
+  canSubmitReservation
 } from "../../utils/helpers";
 import { putReservation } from "../../utils/apiCalls";
 const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
@@ -52,12 +53,13 @@ export const EditReservationPicker = ({
   const [dates, setDates] = useState(initialValue());
   const initialNotes = currentReservation ? currentReservation.notes : "";
   const [notes, setNotes] = useState(initialNotes);
-  const [error, setError] = useState("");
+  const [hasError, setError] = useState(false);
   useEffect(() => {
     setDates(initialValue());
     setNotes(initialNotes);
     return () => {
       setNotes("");
+      setError(false);
     };
   }, [currentReservation, initialNotes]); // eslint-disable-line
 
@@ -67,7 +69,12 @@ export const EditReservationPicker = ({
 
   const [checkinDate, checkoutDate] = dates;
 
-  const canSubmit = checkinDate && checkoutDate && user;
+  const canSubmit = canSubmitReservation(
+    user,
+    selectedUser,
+    checkinDate,
+    checkoutDate
+  );
 
   const handleSubmit = async () => {
     const reservation = { ...currentReservation };
@@ -76,11 +83,11 @@ export const EditReservationPicker = ({
       reservation.title = selectedUser.name;
       reservation.user_id = selectedUser.id;
     }
-    if (reservationTitle.trim()) {
-      reservation.title = reservationTitle.trim();
-    }
     if (user.id === reservation.user_id && user.name !== reservation.title) {
       reservation.title = user.name;
+    }
+    if (reservationTitle.trim()) {
+      reservation.title = reservationTitle.trim();
     }
     const formattedReservation = formatReservation(
       reservation,
@@ -140,6 +147,9 @@ export const EditReservationPicker = ({
           onChange={(newValue) => {
             setDates(newValue);
           }}
+          onError={() => {
+            setError(true);
+          }}
           minDate={minDate}
           maxDate={maxDate}
           style={{ display: "flex", margin: "auto", flexDirection: "column" }}
@@ -186,7 +196,6 @@ export const EditReservationPicker = ({
           >
             Submit
           </Button>
-          {error && <p color="red">{error}</p>}
         </Stack>
       </Box>
     </Modal>
