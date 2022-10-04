@@ -47,7 +47,7 @@ const App = ({
   user,
   showViewReservationModal,
   updateToken,
-  token
+  token,
 }) => {
   const minDate = moment(process.env.NEXT_PUBLIC_MIN_DATE);
   const maxDate = moment(process.env.NEXT_PUBLIC_MAX_DATE);
