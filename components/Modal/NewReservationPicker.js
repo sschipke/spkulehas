@@ -11,7 +11,7 @@ import {
   Button,
   Typography
 } from "@mui/material";
-import { DateRangePicker, DatePicker, PickersDay } from "@mui/lab";
+import { DateRangePicker } from "@mui/lab";
 import {
   addReservation,
   toggleNewReservationPicker,
@@ -40,6 +40,7 @@ export const NewReservationPicker = ({
   reservationTitle
 }) => {
   const [dates, setDates] = useState([new Date(viewDate), null]);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [notes, setNotes] = useState("");
   useEffect(() => {
@@ -66,7 +67,7 @@ export const NewReservationPicker = ({
 
   const handleSubmit = async () => {
     const { name, id } = user;
-    const reservation = {
+    let reservation = {
       user_id: user.status === "ADMIN" ? selectedUser.id : id,
       title: user.status === "ADMIN" ? selectedUser.name : name,
       notes: notes.trim()

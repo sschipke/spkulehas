@@ -12,7 +12,7 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { DateRangePicker, DateRangePickerDay } from "@mui/lab";
+import { DateRangePicker } from "@mui/lab";
 import {
   toggleEditReservationPicker,
   updateReservation,
@@ -53,6 +53,7 @@ export const EditReservationPicker = ({
   const [dates, setDates] = useState(initialValue());
   const initialNotes = currentReservation ? currentReservation.notes : "";
   const [notes, setNotes] = useState(initialNotes);
+  // eslint-disable-next-line no-unused-vars
   const [hasError, setError] = useState(false);
   useEffect(() => {
     setDates(initialValue());
