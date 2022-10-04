@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Modal, Box, Backdrop, CircularProgress } from "@mui/material";
+import { Modal, Backdrop, CircularProgress } from "@mui/material";
 
 export const LoadingModal = ({ isOpen }) => {
   const style = {

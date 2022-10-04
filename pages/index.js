@@ -15,7 +15,7 @@ import {
   updateToken,
   showLoginPrompt,
   showViewReservationModal,
-  showLoadingModal,
+  showLoadingModal
 } from "../actions";
 import { loadReservations, processValidateToken } from "../thunks/thunks";
 import { isInReservation, findNearestReservations } from "../utils/helpers";
@@ -26,6 +26,10 @@ const CalendarNavBar = dynamic(() =>
 
 const BigCalendar = dynamic(() =>
   import("../components/BigCalendar/BigCalendar")
+);
+
+const LoadingReservationsMessage = dynamic(() =>
+  import("../components/Utilities/LoadingReservationsMessage")
 );
 
 import moment from "moment";
@@ -43,7 +47,7 @@ const App = ({
   user,
   showViewReservationModal,
   updateToken,
-  token,
+  token
 }) => {
   const minDate = moment(process.env.NEXT_PUBLIC_MIN_DATE);
   const maxDate = moment(process.env.NEXT_PUBLIC_MAX_DATE);
@@ -100,12 +104,15 @@ const App = ({
     <div className="App">
       <div className="calendar-container">
         <CalendarNavBar />
-        <BigCalendar
-          viewDate={viewDate}
-          reservations={reservations}
-          handleEventSelect={handleEventSelect}
-          handleDrillDown={handleDrillDown}
-        />
+        {areReservationsLoaded && (
+          <BigCalendar
+            viewDate={viewDate}
+            reservations={reservations}
+            handleEventSelect={handleEventSelect}
+            handleDrillDown={handleDrillDown}
+          />
+        )}
+        {!areReservationsLoaded && <LoadingReservationsMessage />}
       </div>
     </div>
   );
@@ -116,7 +123,7 @@ export const mapStateToProps = (state) => ({
   areReservationsLoaded: state.data.are_reservations_loaded,
   user: state.data.user,
   token: state.data.token,
-  viewDate: state.screen.view_date,
+  viewDate: state.screen.view_date
 });
 
 export const mapDispatchToProps = (dispatch) =>
@@ -133,7 +140,7 @@ export const mapDispatchToProps = (dispatch) =>
       showViewReservationModal,
       showLoadingModal,
       showUdpateCredentialsModal,
-      updateToken,
+      updateToken
     },
     dispatch
   );
