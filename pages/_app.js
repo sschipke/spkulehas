@@ -39,12 +39,12 @@ import "../styles/main.scss";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#33691e",
+      main: "#33691e"
     },
     secondary: {
-      main: "#880e4f",
-    },
-  },
+      main: "#880e4f"
+    }
+  }
 });
 
 const createDevStore = () => {
