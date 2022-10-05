@@ -2,17 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Link from "next/link";
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  Button,
-  IconButton,
-  TextField,
-  Menu,
-  MenuItem,
-  Tooltip,
-} from "@mui/material";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { logOut } from "../../actions";
 import UserAvatar from "../Utilities/UserAvatar";
 
@@ -33,16 +23,16 @@ const UserAvatarMenu = ({ user, logOut }) => {
   const links = [
     {
       label: "My Profile",
-      page: "profile",
+      page: "profile"
     },
     {
       label: "My Reservations",
-      page: "my_reservations",
+      page: "my_reservations"
     },
     {
       label: "Contact Members",
-      page: "members",
-    },
+      page: "members"
+    }
   ];
 
   const menuItems = links.map((link) => {
@@ -79,7 +69,7 @@ const UserAvatarMenu = ({ user, logOut }) => {
         keepMounted
         transformOrigin={{
           vertical: "top",
-          horizontal: "right",
+          horizontal: "right"
         }}
         open={isMenuOpen}
         onClose={handleClose}
@@ -91,7 +81,7 @@ const UserAvatarMenu = ({ user, logOut }) => {
 };
 
 export const mapStateToProps = (state) => ({
-  user: state.data.user,
+  user: state.data.user
 });
 
 export const mapDispatchToProps = (dispatch) =>

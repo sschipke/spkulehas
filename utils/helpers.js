@@ -11,7 +11,7 @@ const NOON_HOUR = {
   hour: 12,
   minute: 0,
   second: 0,
-  millisecond: 0,
+  millisecond: 0
 };
 
 export const isInWinter = (date) => {
@@ -175,7 +175,7 @@ export const determineMinDateForNewReservation = (previousReservation) => {
   }
 };
 
-export const determineMaxDate = (checkinDate, nextReservation) => {
+export const determineMaxDate = (checkinDate, nextReservation, isAdmin) => {
   const longestDate = isInWinter(checkinDate)
     ? moment(checkinDate).add(13, "day")
     : moment(checkinDate).add(6, "day");
@@ -184,6 +184,11 @@ export const determineMaxDate = (checkinDate, nextReservation) => {
   )
     .set(NOON_HOUR)
     .subtract(1, "day");
+  if (nextReservationStart && isAdmin && nextReservationStart.isValid()) {
+    return nextReservationStart;
+  } else if (nextReservation && isAdmin && !!nextReservation.isValid()) {
+    return moment(process.env.NEXT_PUBLIC_MAX_DATE);
+  }
   if (
     nextReservationStart.isValid() &&
     nextReservationStart.isBefore(longestDate)
@@ -226,7 +231,7 @@ export const mapEmailSettings = (emailSettings) => {
   if (!emailSettings) {
     emailSettings = {
       setting_name: "reservation_deleted",
-      value: false,
+      value: false
     };
   }
   return emailSettings;
@@ -253,4 +258,19 @@ const sortByName = (usersInfo) => {
     }
     return 0;
   });
+};
+
+export const canSubmitReservation = (
+  user,
+  selectedUser,
+  checkinDate,
+  checkoutDate
+) => {
+  if (!user || !checkinDate || !checkoutDate) {
+    return false;
+  }
+  if (user.status === "ADMIN" && !selectedUser) {
+    return false;
+  }
+  return true;
 };

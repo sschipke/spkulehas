@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import { IconButton, Avatar, Tooltip } from "@mui/material";
 import { showLoginModal } from "../../actions";
 
-const BlankAvatarMenu = ({ user, showLoginModal }) => {
+const BlankAvatarMenu = ({ showLoginModal }) => {
   const handleOpen = () => {
     showLoginModal();
   };
@@ -21,7 +21,7 @@ const BlankAvatarMenu = ({ user, showLoginModal }) => {
 };
 
 export const mapStateToProps = (state) => ({
-  user: state.data.user,
+  user: state.data.user
 });
 
 export const mapDispatchToProps = (dispatch) =>

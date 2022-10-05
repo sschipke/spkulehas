@@ -59,10 +59,6 @@ export const UpdateCredentialsModal = ({
     return null;
   }
 
-  const clearError = () => {
-    setValues({ ...values, error: null });
-  };
-
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value.trim() });
   };
@@ -162,6 +158,7 @@ export const UpdateCredentialsModal = ({
           />
         </div>
       );
+      break;
     default:
       break;
   }
