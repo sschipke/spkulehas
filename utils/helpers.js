@@ -184,9 +184,9 @@ export const determineMaxDate = (checkinDate, nextReservation, isAdmin) => {
   )
     .set(NOON_HOUR)
     .subtract(1, "day");
-  if (isAdmin && nextReservationStart.isValid()) {
+  if (nextReservationStart && isAdmin && nextReservationStart.isValid()) {
     return nextReservationStart;
-  } else if (isAdmin && !nextReservation.isValid()) {
+  } else if (nextReservation && isAdmin && !!nextReservation.isValid()) {
     return moment(process.env.NEXT_PUBLIC_MAX_DATE);
   }
   if (
