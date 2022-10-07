@@ -1,20 +1,18 @@
 import React from "react";
 import { Avatar } from "@mui/material";
 
-const UserAvatar = ({ name }) => {
+const UserAvatar = ({ user }) => {
+  function stringAvatar(user) {
+    const { firstName, lastName } = user;
+    return {
+      sx: {
+        bgcolor: "secondary.main"
+      },
+      children: `${firstName[0]}${lastName[0]}`
+    };
+  }
 
-function stringAvatar(name) {
-  return {
-    sx: {
-      bgcolor: "secondary.main",
-    },
-    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
-  };
-}
-
-  return (
-    <Avatar {...stringAvatar(name)} />
-  )
-}
+  return <Avatar {...stringAvatar(user)} />;
+};
 
 export default UserAvatar;
