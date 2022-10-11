@@ -37,7 +37,6 @@ const SearchBar = ({ searchText, updateSearchText }) => {
         value={searchText}
         placeholder="Search"
         onChange={handleChange}
-        onBlur={() => clearInput()}
         startAdornment={
           <InputAdornment position="start">
             {searchText ? <ClearButton /> : <SearchIcon />}
