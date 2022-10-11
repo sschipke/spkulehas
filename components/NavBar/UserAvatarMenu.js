@@ -59,7 +59,7 @@ const UserAvatarMenu = ({ user, logOut }) => {
     <>
       <Tooltip title="User Settings">
         <IconButton onClick={() => handleOpen()} sx={{ p: 0 }}>
-          <UserAvatar name={user.name} />
+          <UserAvatar user={user} />
         </IconButton>
       </Tooltip>
       <Menu

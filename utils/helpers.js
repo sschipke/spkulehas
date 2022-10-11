@@ -274,3 +274,29 @@ export const canSubmitReservation = (
   }
   return true;
 };
+
+export const handleNameChangeReservationTitles = (
+  newState,
+  updatedReservations,
+  user
+) => {
+  const { reservations } = newState;
+  const reservationsWithNewName = reservations.map((reservation) => {
+    const correspondingReservation = updatedReservations.find(
+      (newReservation) => newReservation.id === reservation.id
+    );
+    if (correspondingReservation) {
+      reservation.title = correspondingReservation.title;
+    }
+    return reservation;
+  });
+  newState.reservations = [...reservationsWithNewName];
+  if (user && user.status !== "ADMIN") {
+    let updatedUserReservations = reservationsWithNewName.filter(
+      (res) => res.user_id === user.id
+    );
+    newState.user_reservations = [...updatedUserReservations];
+  } else {
+    newState.user_reservations = [...reservationsWithNewName];
+  }
+};

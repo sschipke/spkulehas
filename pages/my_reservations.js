@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import moment from "moment";
 
-const IconButton = dynamic(() => import("@mui/material").then((mui) => mui.IconButton));
+const IconButton = dynamic(() =>
+  import("@mui/material").then((mui) => mui.IconButton)
+);
 const Table = dynamic(() => import("@mui/material").then((mui) => mui.Table));
 const TableBody = dynamic(() =>
   import("@mui/material").then((mui) => mui.TableBody)
@@ -31,12 +33,13 @@ const DeleteForeverIcon = dynamic(() =>
   import("@mui/icons-material/DeleteForever")
 );
 const Visibility = dynamic(() => import("@mui/icons-material/Visibility"));
+const SearchBar = dynamic(() => import("../components/Utilities/SearchBar"));
 dynamic(() => import("@mui/material/styles"));
 import {
   setCurrentReservation,
   toggleEditReservationPicker,
   toggleConfirmDeleteDialog,
-  updateViewDate,
+  updateViewDate
 } from "../actions";
 
 const MyReservationsPage = ({
@@ -45,9 +48,10 @@ const MyReservationsPage = ({
   setCurrentReservation,
   toggleEditReservationPicker,
   toggleConfirmDeleteDialog,
-  updateViewDate,
+  updateViewDate
 }) => {
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     if (!user) {
@@ -55,12 +59,19 @@ const MyReservationsPage = ({
     }
   }, [user]); // eslint-disable-line
 
+  const reservationsToDisplay = (userReservations || []).filter((reservation) =>
+    reservation.title.includes(searchText)
+  );
+
   const reservationsDataTable = () => {
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "70vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "scroll" }}
       >
+        {user && user.status === "ADMIN" && (
+          <SearchBar searchText={searchText} updateSearchText={setSearchText} />
+        )}
         <Table stickyHeader>
           <TableHead>
             <TableRow className="reservation-table-head-row">
@@ -74,7 +85,7 @@ const MyReservationsPage = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {userReservations.map((reservation) => (
+            {reservationsToDisplay.map((reservation) => (
               <TableRow
                 key={reservation.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -155,7 +166,7 @@ const MyReservationsPage = ({
 
 export const mapStateToProps = (state) => ({
   user: state.data.user,
-  userReservations: state.data.user_reservations,
+  userReservations: state.data.user_reservations
 });
 
 export const mapDispatchToProps = (dispatch) =>
@@ -164,7 +175,7 @@ export const mapDispatchToProps = (dispatch) =>
       setCurrentReservation,
       toggleEditReservationPicker,
       toggleConfirmDeleteDialog,
-      updateViewDate,
+      updateViewDate
     },
     dispatch
   );
