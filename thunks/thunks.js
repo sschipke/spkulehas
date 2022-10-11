@@ -54,7 +54,7 @@ export const processLogin = (email, password) => async (dispatch) => {
 export const processPasswordChange =
   (newPassword, password, token, id) => async (dispatch) => {
     try {
-      let data = await updatePassword(newPassword, password, token, id);
+      await updatePassword(newPassword, password, token, id);
       dispatch(showToast("Password sucessfully updated!", "success"));
       dispatch(closeUpdateCredentialsModal());
     } catch (error) {
@@ -105,7 +105,7 @@ export const processPasswordReset =
       dispatch(updateToken(null));
       dispatch(showLoginModal());
     } catch (err) {
-      const { error } = err;
+      let { error } = err;
       console.error("Catching process password. ", error);
       if (error && error.includes("This session has expired.")) {
         error = "This link has expired. Please request a new email.";

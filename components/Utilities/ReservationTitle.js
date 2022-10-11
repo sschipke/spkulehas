@@ -44,6 +44,7 @@ const ReservationTitle = ({
   ]);
 
   if (!shouldRender) {
+    updateReservationTitle("");
     return null;
   }
 

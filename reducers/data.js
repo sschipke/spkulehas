@@ -1,9 +1,13 @@
+/* eslint-disable no-case-declarations */
 import moment from "moment";
-import { mapEmailSettings } from "../utils/helpers";
+import {
+  mapEmailSettings,
+  handleNameChangeReservationTitles
+} from "../utils/helpers";
 import {
   findNearestReservations,
   sortByStartDate,
-  updateUsersInfo,
+  updateUsersInfo
 } from "../utils/helpers";
 let initialState = {
   current_reservation: null,
@@ -17,7 +21,7 @@ let initialState = {
   selected_user: null,
   selected_member_profile: null,
   selected_member_email_settings: null,
-  reservation_title: "",
+  reservation_title: ""
 };
 //TODO: REMOVE!!
 const generateRandomColor = () => {
@@ -32,7 +36,7 @@ const generateRandomColor = () => {
     "#f57f17",
     "#ff6f00",
     "#e65100",
-    "#bf360c",
+    "#bf360c"
   ];
   return colors[index];
 };
@@ -199,11 +203,11 @@ const data = (state = initialState, action) => {
     case "UPDATE_SELECTED_MEMBER_EMAIL_SETTINGS":
       const {
         selectedMemberEmailSettingName,
-        selectedMemberEmailSettingValue,
+        selectedMemberEmailSettingValue
       } = action;
       new_state.selected_member_email_settings = {
         setting_name: selectedMemberEmailSettingName,
-        value: selectedMemberEmailSettingValue,
+        value: selectedMemberEmailSettingValue
       };
       return new_state;
     case "UPDATE_SELECTED_MEMBER_EMAIL":
@@ -213,10 +217,17 @@ const data = (state = initialState, action) => {
       }
       const updatedSelectedMember = {
         ...selected_member_profile,
-        email: selectedMemberEmail,
+        email: selectedMemberEmail
       };
       new_state.selected_member_profile = updatedSelectedMember;
       updateUsersInfo(new_state, usersInfo, updatedSelectedMember);
+      return new_state;
+    case "UPDATE_RESERVATION_TITLES_NEW_NAME":
+      handleNameChangeReservationTitles(
+        new_state,
+        action.updatedReservations,
+        user
+      );
       return new_state;
     default:
       return state;

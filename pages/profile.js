@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useRouter } from "next/router";
+import { updateReservationTitles } from "../actions";
 import dynamic from "next/dynamic";
 
 const TextField = dynamic(() =>
@@ -41,7 +42,8 @@ export const ProfilePage = ({
   showToast,
   showUdpateCredentialsModal,
   selectedMember,
-  updateSelectedMember
+  updateSelectedMember,
+  updateReservationTitles
 }) => {
   const router = useRouter();
   const userToUpdate = selectedMember ? selectedMember : user;
@@ -62,9 +64,6 @@ export const ProfilePage = ({
     userClone.phone = ((userToUpdate && userToUpdate.phone) || "")
       .split("-")
       .join("");
-    const names = userToUpdate.name.split(" ");
-    userClone.firstName = names[0];
-    userClone.lastName = names[1];
   } else {
     return null;
   }
@@ -93,6 +92,10 @@ export const ProfilePage = ({
         break;
       case "firstName":
       case "lastName":
+        if (e.target.value.length === 1) {
+          inputValue = e.target.value.trim().toUpperCase();
+          break;
+        }
         inputValue = e.target.value;
         break;
       default:
@@ -106,11 +109,12 @@ export const ProfilePage = ({
     e.preventDefault();
     userInfo.phone = formatPhoneNumber(userInfo.phone || "");
     //TODO: Validate phone format/reset
-    userInfo.name = `${userInfo.firstName} ${userInfo.lastName}`;
     try {
       const response = await updateUserProfile(userInfo, token);
       const updatedUser = response.user;
       const newToken = response.token;
+      const { updatedReservations } = response;
+      updateReservationTitles(updatedReservations);
       if (selectedMember && updatedUser.id === selectedMember.id) {
         updateSelectedMember(updatedUser);
       } else {
@@ -189,7 +193,9 @@ export const ProfilePage = ({
             id="firstName"
             label="First Name"
             inputProps={{
-              readOnly: !isEditting
+              readOnly: !isEditting,
+              maxLength: 29,
+              minLength: 1
             }}
             onChange={handleChange}
             value={userReference.firstName}
@@ -199,7 +205,9 @@ export const ProfilePage = ({
             id="lastName"
             label="Last Name"
             inputProps={{
-              readOnly: !isEditting
+              readOnly: !isEditting,
+              maxLength: 30,
+              minLength: 1
             }}
             onChange={handleChange}
             value={userReference.lastName}
@@ -342,7 +350,8 @@ export const mapDispatchToProps = (dispatch) =>
       updateUser,
       showToast,
       showUdpateCredentialsModal,
-      updateSelectedMember
+      updateSelectedMember,
+      updateReservationTitles
     },
     dispatch
   );
