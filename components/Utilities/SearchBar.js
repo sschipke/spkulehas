@@ -3,7 +3,7 @@ import { FormControl, Input, InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 
-const SearchBar = ({ searchText, updateSearchText }) => {
+const SearchBar = ({ searchText, updateSearchText, widths }) => {
   const handleChange = (e) => {
     const inputValue = e.target.value;
     if (e.target.value.length === 1) {
@@ -28,9 +28,7 @@ const SearchBar = ({ searchText, updateSearchText }) => {
     </IconButton>
   );
   return (
-    <FormControl
-      sx={{ m: 1, width: { xs: "90%", sm: "90%", md: "50%", lg: "25%" } }}
-    >
+    <FormControl sx={{ m: 1, width: widths }}>
       <Input
         id="outlined-adornment-password"
         type="text"
