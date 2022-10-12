@@ -10,7 +10,7 @@ const UserSelect = ({
   updateSelectedUser,
   currentReservation,
   selectedUser,
-  isEditReservationModalOpen,
+  isEditReservationModalOpen
 }) => {
   const handleSelect = (e) => {
     updateSelectedUser(e.target.value);
@@ -62,7 +62,7 @@ export const mapStateToProps = (state) => ({
   usersInfo: state.data.usersInfo,
   selectedUser: state.data.selected_user,
   currentReservation: state.data.current_reservation,
-  isEditReservationModalOpen: state.screen.edit_reservation_picker_open,
+  isEditReservationModalOpen: state.screen.edit_reservation_picker_open
 });
 
 export const mapDispatchToProps = (dispatch) =>
