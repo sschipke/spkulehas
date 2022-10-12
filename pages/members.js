@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
@@ -27,12 +27,14 @@ const Paper = dynamic(() => import("@mui/material").then((mui) => mui.Paper));
 const Typography = dynamic(() =>
   import("@mui/material").then((mui) => mui.Typography)
 );
+const SearchBar = dynamic(() => import("../components/Utilities/SearchBar"));
 
 import { updateSelectedMemberProfile } from "../thunks/thunks";
 
 const MembersContactPage = ({ user, usersInfo, token }) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [searchMember, setSearchMember] = useState("");
 
   useEffect(() => {
     if (!user) {
@@ -42,12 +44,26 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
 
   const isAdmin = determineIfAdmin(user);
 
+  const membersToDisplay = (usersInfo || []).filter((member) =>
+    member.name.includes(searchMember)
+  );
+
   const contactInfoTable = () => {
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "70vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "scroll" }}
       >
+        <SearchBar
+          searchText={searchMember}
+          updateSearchText={setSearchMember}
+          widths={{
+            xs: "90%",
+            sm: "90%",
+            md: "50%",
+            lg: "25%"
+          }}
+        />
         <Table stickyHeader>
           <TableHead>
             <TableRow className="reservation-table-head-row">
@@ -57,7 +73,7 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {usersInfo.map((member) => (
+            {membersToDisplay.map((member) => (
               <TableRow
                 key={member.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -113,7 +129,7 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
 export const mapStateToProps = (state) => ({
   user: state.data.user,
   usersInfo: state.data.usersInfo,
-  token: state.data.token,
+  token: state.data.token
 });
 
 export default connect(mapStateToProps)(MembersContactPage);

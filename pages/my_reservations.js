@@ -70,7 +70,16 @@ const MyReservationsPage = ({
         sx={{ maxHeight: "80vh", overflow: "scroll" }}
       >
         {user && user.status === "ADMIN" && (
-          <SearchBar searchText={searchText} updateSearchText={setSearchText} />
+          <SearchBar
+            searchText={searchText}
+            updateSearchText={setSearchText}
+            widths={{
+              xs: "90%",
+              sm: "90%",
+              md: "50%",
+              lg: "25%"
+            }}
+          />
         )}
         <Table stickyHeader>
           <TableHead>

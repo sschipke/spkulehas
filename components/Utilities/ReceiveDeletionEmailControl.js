@@ -8,7 +8,7 @@ export const ReceiveDeletionEmailControl = ({
   userId,
   selectedMember,
   selectedMemberEmailSettings,
-  token,
+  token
 }) => {
   const currentEmailSettings =
     selectedMember && selectedMemberEmailSettings
@@ -49,7 +49,7 @@ export const mapStateToProps = (state) => ({
   userId: state.data.user.id,
   selectedMember: state.data.selected_member_profile,
   selectedMemberEmailSettings: state.data.selected_member_email_settings,
-  token: state.data.token,
+  token: state.data.token
 });
 
 export default connect(mapStateToProps)(ReceiveDeletionEmailControl);

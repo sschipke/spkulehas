@@ -35,7 +35,7 @@ const Toast = ({ isOpen, message, type, hideToast }) => {
 export const mapStateToProps = (state) => ({
   isOpen: state.screen.show_toast,
   message: state.screen.toast_message,
-  type: state.screen.toast_type,
+  type: state.screen.toast_type
 });
 
 export const mapDispatchToProps = (dispatch) =>
