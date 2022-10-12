@@ -19,7 +19,7 @@ const LoginPage = ({ showLoginModal }) => {
 export const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      showLoginModal,
+      showLoginModal
     },
     dispatch
   );
