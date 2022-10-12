@@ -9,7 +9,7 @@ import {
   Box,
   Button,
   Stack,
-  IconButton,
+  IconButton
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -19,7 +19,7 @@ import {
   toggleConfirmDeleteDialog,
   updateReservation,
   showViewReservationModal,
-  closeViewReservationModal,
+  closeViewReservationModal
 } from "../../actions";
 
 export const ViewReservationModal = ({
@@ -28,7 +28,7 @@ export const ViewReservationModal = ({
   currentReservation,
   closeViewReservationModal,
   toggleEditReservationPicker,
-  toggleConfirmDeleteDialog,
+  toggleConfirmDeleteDialog
 }) => {
   if (!currentReservation) {
     return null;
@@ -50,13 +50,13 @@ export const ViewReservationModal = ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   };
 
   const modalStyle = {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   };
 
   return (
@@ -74,7 +74,7 @@ export const ViewReservationModal = ({
           label="Check-in Date"
           value={moment(start).format("ddd, MMMM Do")}
           InputProps={{
-            readOnly: true,
+            readOnly: true
           }}
           sx={{ m: "15px" }}
         />
@@ -83,7 +83,7 @@ export const ViewReservationModal = ({
           label="Check-out Date"
           value={moment(end).format("ddd, MMMM Do")}
           InputProps={{
-            readOnly: true,
+            readOnly: true
           }}
           sx={{ m: "15px" }}
         />
@@ -95,7 +95,7 @@ export const ViewReservationModal = ({
           value={notes}
           placeholder="Checkin time, checkout, etc."
           InputProps={{
-            readOnly: true,
+            readOnly: true
           }}
           sx={{ m: "15px" }}
         />
@@ -103,7 +103,7 @@ export const ViewReservationModal = ({
           direction="row"
           justifyContent="space-between"
           alignItems="flex-end"
-          sx={{ 
+          sx={{
             m: 3,
             justifyContent: "space-evenly"
           }}
@@ -153,7 +153,7 @@ export const mapStateToProps = (state) => ({
   isOpen: state.screen.view_reservation_modal_open,
   currentReservation: state.data.current_reservation,
   surroundingReservations: state.data.surrounding_reservations,
-  user: state.data.user,
+  user: state.data.user
 });
 
 export const mapDispatchToProps = (dispatch) =>
@@ -163,7 +163,7 @@ export const mapDispatchToProps = (dispatch) =>
       updateReservation,
       showViewReservationModal,
       closeViewReservationModal,
-      toggleConfirmDeleteDialog,
+      toggleConfirmDeleteDialog
     },
     dispatch
   );

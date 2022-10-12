@@ -13,7 +13,7 @@ import {
   IconButton,
   Typography,
   InputAdornment,
-  FormHelperText,
+  FormHelperText
 } from "@mui/material";
 import { closeLoginModal } from "../../actions";
 import { processLogin, processRequestPasswordReset } from "../../thunks/thunks";
@@ -27,7 +27,7 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
     password: "",
     error: false,
     showPassword: false,
-    resetPassword: false,
+    resetPassword: false
   };
   const [values, setValues] = useState(initialState);
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
   const handleClickShowPassword = () => {
     setValues({
       ...values,
-      showPassword: !values.showPassword,
+      showPassword: !values.showPassword
     });
   };
 
@@ -121,7 +121,7 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
                       {values.showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                ),
+                )
               }}
             />
           )}
@@ -144,7 +144,10 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
                 color="secondary"
                 edge="end"
                 onClick={() => setValues({ ...values, resetPassword: true })}
-                sx={{ m: "auto", width: { xs: "85%", sm: "60%", md: "50%", lg: "40%" } }}
+                sx={{
+                  m: "auto",
+                  width: { xs: "85%", sm: "60%", md: "50%", lg: "40%" }
+                }}
               >
                 Forgot password?
               </Button>
@@ -163,7 +166,7 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
 
 export const mapStateToProps = (state) => ({
   user: state.data.user,
-  isOpen: state.screen.show_login_modal,
+  isOpen: state.screen.show_login_modal
 });
 
 export const mapDispatchToProps = (dispatch) =>

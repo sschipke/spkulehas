@@ -11,14 +11,14 @@ import {
   Box,
   Button,
   Switch,
-  FormControlLabel,
+  FormControlLabel
 } from "@mui/material";
 import { validateUpdatingCredentials } from "../../utils/validators";
 import { closeUpdateCredentialsModal } from "../../actions";
 import {
   processPasswordChange,
   processEmailChange,
-  processPasswordReset,
+  processPasswordReset
 } from "../../thunks/thunks";
 
 import PasswordCreationChecklist from "../Utilities/PasswordCreationList";
@@ -30,7 +30,7 @@ export const UpdateCredentialsModal = ({
   closeUpdateCredentialsModal,
   selectedMember,
   token,
-  kind,
+  kind
 }) => {
   const initialState = {
     email: "",
@@ -40,7 +40,7 @@ export const UpdateCredentialsModal = ({
     newPassword: "",
     confirmNewPassword: "",
     error: false,
-    showPassword: false,
+    showPassword: false
   };
 
   const [values, setValues] = useState(initialState);
@@ -76,7 +76,7 @@ export const UpdateCredentialsModal = ({
             name="email"
             autoComplete="email"
             inputProps={{
-              readOnly: true,
+              readOnly: true
             }}
             type="email"
             value={userToUpdate.email}
@@ -133,7 +133,7 @@ export const UpdateCredentialsModal = ({
             onChange={handleChange}
             autoFocus
             InputProps={{
-              maxLength: 20,
+              maxLength: 20
             }}
           />
           <TextField
@@ -149,7 +149,7 @@ export const UpdateCredentialsModal = ({
             error={values.error}
             onChange={handleChange}
             InputProps={{
-              maxLength: 20,
+              maxLength: 20
             }}
           />
           <PasswordCreationChecklist
@@ -220,7 +220,7 @@ export const UpdateCredentialsModal = ({
               required
               fullWidth
               InputProps={{
-                maxLength: 20,
+                maxLength: 20
               }}
             />
           )}
@@ -234,7 +234,7 @@ export const UpdateCredentialsModal = ({
                 onChange={(e) => {
                   setValues({
                     ...values,
-                    showPassword: e.target.checked,
+                    showPassword: e.target.checked
                   });
                 }}
               />
@@ -268,7 +268,7 @@ export const mapStateToProps = (state) => ({
   token: state.data.token,
   isOpen: state.screen.show_update_credentials_modal,
   kind: state.screen.update_credentials_modal_kind,
-  selectedMember: state.data.selected_member_profile,
+  selectedMember: state.data.selected_member_profile
 });
 
 export const mapDispatchToProps = (dispatch) =>

@@ -3,13 +3,7 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  IconButton,
-  TextField,
-} from "@mui/material";
+import { AppBar, Box, Toolbar, IconButton, TextField } from "@mui/material";
 
 import { DatePicker } from "@mui/lab";
 
@@ -20,7 +14,7 @@ import {
   viewNextMonth,
   viewPreviousMonth,
   viewToday,
-  updateViewDate,
+  updateViewDate
 } from "../../actions";
 
 const minDate = process.env.NEXT_PUBLIC_MIN_DATE;
@@ -30,7 +24,7 @@ const CalendarNavBar = ({
   viewNextMonth,
   viewPreviousMonth,
   updateViewDate,
-  viewDate,
+  viewDate
 }) => {
   const momentViewDate = moment(viewDate, "YYYY-MM-DD");
   return (
@@ -66,14 +60,14 @@ const CalendarNavBar = ({
               width: "30%",
               flexDirection: "column",
               backgroundColor: "white",
-              color: "white",
+              color: "white"
             }}
             renderInput={(params) => (
               <TextField
                 sx={{
                   svg: { color: "white" },
                   input: { color: "white" },
-                  label: { color: "white" },
+                  label: { color: "white" }
                 }}
                 {...params}
               />
@@ -97,7 +91,7 @@ const CalendarNavBar = ({
 };
 
 export const mapStateToProps = (state) => ({
-  viewDate: state.screen.view_date,
+  viewDate: state.screen.view_date
 });
 
 export const mapDispatchToProps = (dispatch) =>
