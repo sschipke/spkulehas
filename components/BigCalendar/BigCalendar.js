@@ -10,8 +10,8 @@ const Calendar = dynamic(() =>
 moment.updateLocale("en-US", {
   week: {
     dow: 1,
-    doy: 1,
-  },
+    doy: 1
+  }
 });
 
 const localizer = momentLocalizer(moment);
@@ -19,7 +19,7 @@ const BigCalendar = ({
   viewDate,
   reservations,
   handleEventSelect,
-  handleDrillDown,
+  handleDrillDown
 }) => {
   return (
     <Calendar
@@ -34,7 +34,7 @@ const BigCalendar = ({
         end,
         title,
         isSelected,
-        style: { backgroundColor: event.color ? event.color : "#006064" },
+        style: { backgroundColor: event.color ? event.color : "#006064" }
       })}
       onSelectEvent={handleEventSelect}
       onDrillDown={(date) => {

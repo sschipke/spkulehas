@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { Modal, Backdrop, CircularProgress } from "@mui/material";
 
 export const LoadingModal = ({ isOpen }) => {
-
   const modalStyle = {
     display: "flex",
     justifyContent: "center",
