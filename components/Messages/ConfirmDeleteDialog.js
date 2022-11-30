@@ -78,7 +78,7 @@ const ConfirmDeleteDialog = ({
           </strong>
           ?
         </p>
-        {user && user.status === "ADMIN" && (
+        {user && user.isAdmin && (
           <FormGroup sx={{ padding: 2 }}>
             <FormControlLabel
               sx={{ margin: "0 auto" }}

@@ -68,8 +68,8 @@ export const NewReservationPicker = ({
   const handleSubmit = async () => {
     const { name, id } = user;
     let reservation = {
-      user_id: user.status === "ADMIN" ? selectedUser.id : id,
-      title: user.status === "ADMIN" ? selectedUser.name : name,
+      user_id: user.isAdmin ? selectedUser.id : id,
+      title: user.isAdmin ? selectedUser.name : name,
       notes: notes.trim()
     };
     if (reservationTitle) {
@@ -112,7 +112,6 @@ export const NewReservationPicker = ({
           Create New Reservation
         </Typography>
         <DateRangePicker
-          disablePast
           views={["year", "month", "day"]}
           startText="Check-in"
           endText="Check-out"
@@ -121,7 +120,6 @@ export const NewReservationPicker = ({
           onChange={(newValue) => {
             setDates(newValue);
           }}
-          // onError={() => setError(true)}
           minDate={minDate}
           maxDate={maxDate}
           sx={{ display: "flex", margin: "auto", flexDirection: "column" }}

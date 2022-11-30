@@ -27,14 +27,19 @@ const BigCalendar = ({
       date={viewDate}
       views={["month"]}
       events={reservations}
-      style={{ height: "85vh", width: "100vw" }}
+      className="big-calendar-container"
+      style={{ flexGrow: 1, width: "100%" }}
       eventPropGetter={(event, start, end, title, isSelected) => ({
         event,
         start,
         end,
         title,
         isSelected,
-        style: { backgroundColor: event.color ? event.color : "#006064" }
+        style: {
+          backgroundColor: event.color ? event.color : "#006064",
+          lineHeight: 1.5,
+          textAlign: "center"
+        }
       })}
       onSelectEvent={handleEventSelect}
       onDrillDown={(date) => {
