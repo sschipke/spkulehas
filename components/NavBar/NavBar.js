@@ -19,7 +19,9 @@ const NavBar = ({ user }) => {
       <AppBar color="primary" position="sticky">
         <Toolbar style={{ justifyContent: "space-between" }}>
           <Link href="/" style={{ textDecoration: "none" }}>
-            <h2 style={{ cursor: "pointer" }}>SpKuLeHaS Inc</h2>
+            <h2 style={{ cursor: "pointer", lineHeight: 0.5 }}>
+              SpKuLeHaS Inc
+            </h2>
           </Link>
           <Box sx={{ flexGrow: 0 }}>{avatarMenu}</Box>
         </Toolbar>

@@ -15,7 +15,7 @@ const LoadingReservationsMessage = () => (
     >
       Loading Reservations...
     </Typography>
-    <CircularProgress inderminate color="secondary" />
+    <CircularProgress color="secondary" />
   </Stack>
 );
 

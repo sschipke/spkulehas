@@ -80,7 +80,8 @@ export const EditReservationPicker = ({
   const handleSubmit = async () => {
     const reservation = { ...currentReservation };
     reservation.notes = notes;
-    if (user.status === "ADMIN" && selectedUser) {
+    //TODO: Create a helper function to handle the title.
+    if (user.isAdmin && selectedUser) {
       reservation.title = selectedUser.name;
       reservation.user_id = selectedUser.id;
     }
@@ -93,7 +94,7 @@ export const EditReservationPicker = ({
     if (
       user.id === reservation.user_id &&
       user.name !== reservation.title &&
-      user.status !== "ADMIN"
+      !user.isAdmin
     ) {
       reservation.title = user.name;
     }
@@ -146,7 +147,6 @@ export const EditReservationPicker = ({
           Update Reservation
         </Typography>
         <DateRangePicker
-          disablePast
           views={["year", "month", "day"]}
           startText="Check-in"
           endText="Check-out"
