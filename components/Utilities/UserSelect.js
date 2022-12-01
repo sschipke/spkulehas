@@ -26,7 +26,7 @@ const UserSelect = ({
     };
   }, [isEditReservationModalOpen, currentReservation]); // eslint-disable-line
 
-  if (user.status !== "ADMIN" || !usersInfo) {
+  if (!user.isAdmin || !usersInfo) {
     return null;
   }
 

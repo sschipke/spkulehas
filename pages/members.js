@@ -111,7 +111,7 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
   };
 
   return (
-    <main>
+    <main className="main-container">
       <Typography variant="h4" component="h4">
         Members Contact Info
       </Typography>

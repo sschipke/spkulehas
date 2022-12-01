@@ -23,7 +23,7 @@ const SelectStatus = ({
   }
 
   if (
-    user.status === "ADMIN" &&
+    user.isAdmin &&
     selectedMember &&
     userReference.id === selectedMember.id &&
     isEditting
@@ -38,9 +38,6 @@ const SelectStatus = ({
           onChange={handleSelect}
           sx={{ width: "100%" }}
         >
-          <MenuItem color="secondary" value="ADMIN">
-            Admin
-          </MenuItem>
           <MenuItem color="secondary" value="S1">
             S1
           </MenuItem>

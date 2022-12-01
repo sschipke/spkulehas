@@ -131,7 +131,11 @@ export const ProfilePage = ({
   };
 
   return (
-    <Paper component="main" sx={{ minHeight: "90vh" }} className="profile-page">
+    <Paper
+      component="main"
+      sx={{ minHeight: "90vh" }}
+      className="profile-page main-container"
+    >
       <Stack sx={{ alignItems: "center" }} className="profile-page-headers">
         <Typography component="h3" variant="h3">
           {userReference.name}

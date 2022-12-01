@@ -203,7 +203,7 @@ export const canEdit = (user, reservation) => {
   if (!user || !reservation) {
     return false;
   }
-  return user.status === "ADMIN" || user.id === reservation.user_id;
+  return user.isAdmin || user.id === reservation.user_id;
 };
 
 export const sortByStartDate = (reservations) =>
@@ -224,7 +224,7 @@ export const formatPhoneNumber = (digits) => {
 };
 
 export const determineIfAdmin = (member) => {
-  return member && member.status === "ADMIN";
+  return member && member.isAdmin;
 };
 
 export const mapEmailSettings = (emailSettings) => {
@@ -269,7 +269,7 @@ export const canSubmitReservation = (
   if (!user || !checkinDate || !checkoutDate) {
     return false;
   }
-  if (user.status === "ADMIN" && !selectedUser) {
+  if (user.isAdmin && !selectedUser) {
     return false;
   }
   return true;
@@ -291,7 +291,7 @@ export const handleNameChangeReservationTitles = (
     return reservation;
   });
   newState.reservations = [...reservationsWithNewName];
-  if (user && user.status !== "ADMIN") {
+  if (user && !user.isAdmin) {
     let updatedUserReservations = reservationsWithNewName.filter(
       (res) => res.user_id === user.id
     );

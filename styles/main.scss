@@ -21,6 +21,11 @@ main {
   min-height: 50vh;
 }
 
+.main-container {
+  height: calc(100vh - 64px);
+  min-height: auto;
+}
+
 .hover {
   cursor: pointer;
 }
@@ -103,5 +108,8 @@ input:invalid {
   .calendar-container {
   height: calc(100vh - 112px);
   min-height: 75vh;
-}
+  }
+  .main-container {
+    height: auto;
+  }
 }

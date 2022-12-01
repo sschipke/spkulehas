@@ -56,7 +56,7 @@ const data = (state = initialState, action) => {
           return reservation;
         }
       );
-      if (user && user.status !== "ADMIN") {
+      if (user && !user.isAdmin) {
         new_state.user_reservations = mappedReservationsToDate.filter(
           (res) => res.user_id === user.id
         );
@@ -70,11 +70,7 @@ const data = (state = initialState, action) => {
       reservations.push(action.reservation);
       const newSortedReservations = sortByStartDate(reservations);
       new_state.reservations = [...newSortedReservations];
-      if (
-        user &&
-        user.status !== "ADMIN" &&
-        action.reservation.user_id === user.id
-      ) {
+      if (user && !user.isAdmin && action.reservation.user_id === user.id) {
         new_state.user_reservations = newSortedReservations.filter(
           (res) => res.user_id === user.id
         );
@@ -102,7 +98,7 @@ const data = (state = initialState, action) => {
         }
         return reservation;
       });
-      if (user.status !== "ADMIN") {
+      if (!user.isAdmin) {
         new_state.user_reservations = updatedReservations.filter(
           (res) => res.user_id === user.id
         );
@@ -117,7 +113,7 @@ const data = (state = initialState, action) => {
       const filteredReservations = reservations.filter(
         (reservation) => reservation.id !== id
       );
-      if (user.status === "ADMIN") {
+      if (user.isAdmin) {
         userReservations = filteredReservations;
       } else {
         userReservations = filteredReservations.filter(
@@ -138,7 +134,7 @@ const data = (state = initialState, action) => {
       new_state.user_reservations = reservations.filter(
         (res) => res.user_id === userToLogin.id
       );
-      if (userToLogin.status === "ADMIN") {
+      if (userToLogin.isAdmin) {
         new_state.user_reservations = reservations;
       }
       return new_state;

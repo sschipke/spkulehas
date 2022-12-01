@@ -69,7 +69,7 @@ const MyReservationsPage = ({
         component={Paper}
         sx={{ maxHeight: "80vh", overflow: "scroll" }}
       >
-        {user && user.status === "ADMIN" && (
+        {user && user.isAdmin && (
           <SearchBar
             searchText={searchText}
             updateSearchText={setSearchText}
@@ -99,7 +99,7 @@ const MyReservationsPage = ({
                 key={reservation.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell className={user.status === "ADMIN" ? "sticky" : ""}>
+                <TableCell className={user.isAdmin ? "sticky" : ""}>
                   {reservation.title}
                 </TableCell>
                 <TableCell>
@@ -158,7 +158,7 @@ const MyReservationsPage = ({
   };
 
   return (
-    <main>
+    <main className="main-container">
       <Typography variant="h4" component="h4">
         My Reservations:
       </Typography>
