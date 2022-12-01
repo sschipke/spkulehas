@@ -15,6 +15,7 @@ const ReservationTitle = ({
 }) => {
   let shouldRender =
     user.status === "ADMIN" &&
+    user.isAdmin &&
     selectedUser &&
     selectedUser.name === "Schipke SpKuLeHaS";
 
