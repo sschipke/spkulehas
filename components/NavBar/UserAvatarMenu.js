@@ -30,8 +30,12 @@ const UserAvatarMenu = ({ user, logOut }) => {
       page: "my_reservations"
     },
     {
-      label: "Contact Members",
+      label: user && user.isAdmin ? "Update Members Info" : "Contact Members",
       page: "members"
+    },
+    {
+      label: "Search Reservations",
+      page: "all_reservations"
     }
   ];
 
@@ -48,6 +52,10 @@ const UserAvatarMenu = ({ user, logOut }) => {
       </MenuItem>
     );
   });
+
+  if (user && user.isAdmin) {
+    menuItems.pop();
+  }
 
   menuItems.push(
     <MenuItem key={"logout-button"} onClick={handleLogout}>
