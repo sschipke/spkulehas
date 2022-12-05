@@ -30,7 +30,9 @@ import { updateUserProfile } from "../utils/apiCalls";
 const ReceiveDeletionEmailControl = dynamic(() =>
   import("../components/Utilities/ReceiveDeletionEmailControl")
 );
-
+const MakeAdminControlSwitch = dynamic(() =>
+  import("../components/Utilities/MakeAdminControlSwitch")
+);
 const SelectStatus = dynamic(() =>
   import("../components/Utilities/SelectStatus")
 );
@@ -144,6 +146,12 @@ export const ProfilePage = ({
           updateUserStatus={updateUserInfo}
           isEditting={isEditting}
           userReference={userReference}
+        />
+        <MakeAdminControlSwitch
+          user={user}
+          userInfo={userInfo}
+          updateUserInfo={updateUserInfo}
+          disabled={!isEditting}
         />
       </Stack>
       <Stack sx={{ alignItems: "center", mt: "10px" }}>

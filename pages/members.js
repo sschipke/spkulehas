@@ -45,7 +45,7 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
   const isAdmin = determineIfAdmin(user);
 
   const membersToDisplay = (usersInfo || []).filter((member) =>
-    member.name.includes(searchMember)
+    member.name.toLowerCase().includes(searchMember.toLowerCase())
   );
 
   const contactInfoTable = () => {
