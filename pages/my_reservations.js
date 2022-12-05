@@ -60,7 +60,7 @@ const MyReservationsPage = ({
   }, [user]); // eslint-disable-line
 
   const reservationsToDisplay = (userReservations || []).filter((reservation) =>
-    reservation.title.includes(searchText)
+    reservation.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const reservationsDataTable = () => {
