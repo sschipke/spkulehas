@@ -69,18 +69,6 @@ const MyReservationsPage = ({
         component={Paper}
         sx={{ maxHeight: "80vh", overflow: "scroll" }}
       >
-        {user && user.isAdmin && (
-          <SearchBar
-            searchText={searchText}
-            updateSearchText={setSearchText}
-            widths={{
-              xs: "90%",
-              sm: "90%",
-              md: "50%",
-              lg: "25%"
-            }}
-          />
-        )}
         <Table stickyHeader>
           <TableHead>
             <TableRow className="reservation-table-head-row">
@@ -162,6 +150,9 @@ const MyReservationsPage = ({
       <Typography variant="h4" component="h4">
         My Reservations:
       </Typography>
+      {user && user.isAdmin && (
+        <SearchBar searchText={searchText} updateSearchText={setSearchText} />
+      )}
       {userReservations && userReservations.length ? (
         reservationsDataTable()
       ) : (

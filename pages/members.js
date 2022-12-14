@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
-import { determineIfAdmin } from "../utils/helpers";
 
 dynamic(() => import("@mui/material/styles"));
 
-const Button = dynamic(() => import("@mui/material").then((mui) => mui.Button));
 const Table = dynamic(() => import("@mui/material").then((mui) => mui.Table));
 const TableBody = dynamic(() =>
   import("@mui/material").then((mui) => mui.TableBody)
@@ -29,11 +27,9 @@ const Typography = dynamic(() =>
 );
 const SearchBar = dynamic(() => import("../components/Utilities/SearchBar"));
 
-import { updateSelectedMemberProfile } from "../thunks/thunks";
-
-const MembersContactPage = ({ user, usersInfo, token }) => {
+const MembersContactPage = ({ user, usersInfo }) => {
   const router = useRouter();
-  const dispatch = useDispatch();
+
   const [searchMember, setSearchMember] = useState("");
 
   useEffect(() => {
@@ -41,8 +37,6 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
       router.push("/");
     }
   }, [user]); // eslint-disable-line
-
-  const isAdmin = determineIfAdmin(user);
 
   const membersToDisplay = (usersInfo || []).filter((member) =>
     member.name.toLowerCase().includes(searchMember.toLowerCase())
@@ -54,22 +48,11 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
         component={Paper}
         sx={{ maxHeight: "80vh", overflow: "scroll" }}
       >
-        <SearchBar
-          searchText={searchMember}
-          updateSearchText={setSearchMember}
-          widths={{
-            xs: "90%",
-            sm: "90%",
-            md: "50%",
-            lg: "25%"
-          }}
-        />
         <Table stickyHeader>
           <TableHead>
             <TableRow className="reservation-table-head-row">
               <TableCell>Member</TableCell>
               <TableCell>Email</TableCell>
-              {isAdmin && <TableCell>Select</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -88,20 +71,6 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
                     {member.email}
                   </a>
                 </TableCell>
-                {isAdmin && (
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        dispatch(
-                          updateSelectedMemberProfile(member, token, router)
-                        );
-                      }}
-                    >
-                      Select
-                    </Button>
-                  </TableCell>
-                )}
               </TableRow>
             ))}
           </TableBody>
@@ -115,6 +84,7 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
       <Typography variant="h4" component="h4">
         Members Contact Info
       </Typography>
+      <SearchBar searchText={searchMember} updateSearchText={setSearchMember} />
       {usersInfo && usersInfo.length ? (
         contactInfoTable()
       ) : (
@@ -128,8 +98,7 @@ const MembersContactPage = ({ user, usersInfo, token }) => {
 
 export const mapStateToProps = (state) => ({
   user: state.data.user,
-  usersInfo: state.data.usersInfo,
-  token: state.data.token
+  usersInfo: state.data.usersInfo
 });
 
 export default connect(mapStateToProps)(MembersContactPage);

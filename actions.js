@@ -179,3 +179,8 @@ export const updateReservationTitles = (updatedReservations) => {
   }
   return { type: "UPDATE_RESERVATION_TITLES_NEW_NAME", updatedReservations };
 };
+
+export const loadMemberDetails = (memberDetails) => ({
+  type: "LOAD_MEMBER_DETAILS",
+  memberDetails
+});
