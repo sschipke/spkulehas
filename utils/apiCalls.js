@@ -314,7 +314,7 @@ export const fetchMemberProfile = async (member, token) => {
       error: "No member id present."
     });
   }
-  const url = `${baseUrl}user/select/${member.id}`;
+  const url = `${baseUrl}admin/select/${member.id}`;
   const options = {
     headers: {
       "Content-Type": "application/json",
@@ -325,9 +325,35 @@ export const fetchMemberProfile = async (member, token) => {
   if (!res.ok) {
     const err = res.json();
     console.error("Unable to get member profile. ", err);
-    const { error } = err;
+    let { error } = err;
     if (!error) {
       error = "Could not fetch member profile.";
+    }
+    throw { error };
+  }
+  return res.json();
+};
+
+export const fetchMemberDetailsForAdmin = async (token) => {
+  if (!token) {
+    throw new Error("A jwt must be present.", {
+      error: "No jwt present."
+    });
+  }
+  const url = `${baseUrl}admin/member_details`;
+  const options = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  };
+  let res = await fetch(url, options);
+  if (!res.ok) {
+    const err = res.json();
+    console.error("Error fetching member details. ", err);
+    let { error } = err;
+    if (!error) {
+      error = "Could not get member details.";
     }
     throw { error };
   }
