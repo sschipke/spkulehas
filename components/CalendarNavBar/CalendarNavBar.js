@@ -28,7 +28,7 @@ const CalendarNavBar = ({
 }) => {
   const momentViewDate = moment(viewDate, "YYYY-MM-DD");
   return (
-    <Box sx={{ flexGrow: 1, width: "100vw" }}>
+    <Box sx={{ flexGrow: 1, width: "100%" }}>
       <AppBar color="secondary" position="static">
         <Toolbar style={{ justifyContent: "center" }}>
           <IconButton

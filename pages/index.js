@@ -28,8 +28,8 @@ const BigCalendar = dynamic(() =>
   import("../components/BigCalendar/BigCalendar")
 );
 
-const LoadingReservationsMessage = dynamic(() =>
-  import("../components/Utilities/LoadingReservationsMessage")
+const LoadingDataMessage = dynamic(() =>
+  import("../components/Utilities/LoadingDataMessage")
 );
 
 import moment from "moment";
@@ -112,7 +112,9 @@ const App = ({
             handleDrillDown={handleDrillDown}
           />
         )}
-        {!areReservationsLoaded && <LoadingReservationsMessage />}
+        {!areReservationsLoaded && (
+          <LoadingDataMessage message={"Reservations"} />
+        )}
       </div>
     </div>
   );

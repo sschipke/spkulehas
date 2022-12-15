@@ -17,6 +17,15 @@ const SearchBar = ({ searchText, updateSearchText, widths }) => {
     updateSearchText("");
   };
 
+  if (!widths) {
+    widths = {
+      xs: "90%",
+      sm: "90%",
+      md: "50%",
+      lg: "25%"
+    };
+  }
+
   const ClearButton = () => (
     <IconButton
       aria-label="clear search text"

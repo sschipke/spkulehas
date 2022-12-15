@@ -28,26 +28,15 @@ const Paper = dynamic(() => import("@mui/material").then((mui) => mui.Paper));
 const Typography = dynamic(() =>
   import("@mui/material").then((mui) => mui.Typography)
 );
-const EditIcon = dynamic(() => import("@mui/icons-material/Edit"));
-const DeleteForeverIcon = dynamic(() =>
-  import("@mui/icons-material/DeleteForever")
-);
 const Visibility = dynamic(() => import("@mui/icons-material/Visibility"));
 const SearchBar = dynamic(() => import("../components/Utilities/SearchBar"));
 dynamic(() => import("@mui/material/styles"));
-import {
-  setCurrentReservation,
-  toggleEditReservationPicker,
-  toggleConfirmDeleteDialog,
-  updateViewDate
-} from "../actions";
+import { setCurrentReservation, updateViewDate } from "../actions";
 
-const MyReservationsPage = ({
+const AllReservationsPage = ({
   user,
-  userReservations,
+  reservations,
   setCurrentReservation,
-  toggleEditReservationPicker,
-  toggleConfirmDeleteDialog,
   updateViewDate
 }) => {
   const router = useRouter();
@@ -59,7 +48,7 @@ const MyReservationsPage = ({
     }
   }, [user]); // eslint-disable-line
 
-  const reservationsToDisplay = (userReservations || []).filter((reservation) =>
+  const reservationsToDisplay = (reservations || []).filter((reservation) =>
     reservation.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
@@ -69,18 +58,6 @@ const MyReservationsPage = ({
         component={Paper}
         sx={{ maxHeight: "80vh", overflow: "scroll" }}
       >
-        {user && user.status === "ADMIN" && (
-          <SearchBar
-            searchText={searchText}
-            updateSearchText={setSearchText}
-            widths={{
-              xs: "90%",
-              sm: "90%",
-              md: "50%",
-              lg: "25%"
-            }}
-          />
-        )}
         <Table stickyHeader>
           <TableHead>
             <TableRow className="reservation-table-head-row">
@@ -88,8 +65,6 @@ const MyReservationsPage = ({
               <TableCell>Checkin Date</TableCell>
               <TableCell>Checkout Date</TableCell>
               <TableCell>Notes</TableCell>
-              <TableCell>Edit</TableCell>
-              <TableCell>Delete</TableCell>
               <TableCell>View In Calendar</TableCell>
             </TableRow>
           </TableHead>
@@ -116,32 +91,6 @@ const MyReservationsPage = ({
                     color="info"
                     onClick={() => {
                       setCurrentReservation(reservation);
-                      toggleEditReservationPicker();
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    size="large"
-                    edge="end"
-                    color="error"
-                    onClick={() => {
-                      setCurrentReservation(reservation);
-                      toggleConfirmDeleteDialog();
-                    }}
-                  >
-                    <DeleteForeverIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    size="large"
-                    edge="end"
-                    color="info"
-                    onClick={() => {
-                      setCurrentReservation(reservation);
                       updateViewDate(reservation.start);
                       router.push("/");
                     }}
@@ -160,16 +109,14 @@ const MyReservationsPage = ({
   return (
     <main className="main-container">
       <Typography variant="h4" component="h4">
-        My Reservations:
+        All Reservations:
       </Typography>
-      {user && user.isAdmin && (
-        <SearchBar searchText={searchText} updateSearchText={setSearchText} />
-      )}
-      {userReservations && userReservations.length ? (
+      <SearchBar searchText={searchText} updateSearchText={setSearchText} />
+      {user && reservations && reservations.length ? (
         reservationsDataTable()
       ) : (
         <Typography variant="p" component="p">
-          No Reservations
+          No Reservations to display
         </Typography>
       )}
     </main>
@@ -178,18 +125,19 @@ const MyReservationsPage = ({
 
 export const mapStateToProps = (state) => ({
   user: state.data.user,
-  userReservations: state.data.user_reservations
+  reservations: state.data.reservations
 });
 
 export const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setCurrentReservation,
-      toggleEditReservationPicker,
-      toggleConfirmDeleteDialog,
       updateViewDate
     },
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyReservationsPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AllReservationsPage);

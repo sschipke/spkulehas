@@ -2,12 +2,11 @@
 import moment from "moment";
 import {
   mapEmailSettings,
-  handleNameChangeReservationTitles
-} from "../utils/helpers";
-import {
+  handleNameChangeReservationTitles,
+  updateMemberDetails,
+  updateUsersInfo,
   findNearestReservations,
-  sortByStartDate,
-  updateUsersInfo
+  sortByStartDate
 } from "../utils/helpers";
 let initialState = {
   current_reservation: null,
@@ -21,7 +20,8 @@ let initialState = {
   selected_user: null,
   selected_member_profile: null,
   selected_member_email_settings: null,
-  reservation_title: ""
+  reservation_title: "",
+  member_details: null
 };
 //TODO: REMOVE!!
 const generateRandomColor = () => {
@@ -44,7 +44,13 @@ const generateRandomColor = () => {
 const data = (state = initialState, action) => {
   let new_state = { ...state };
 
-  const { reservations, user, usersInfo, selected_member_profile } = state;
+  const {
+    reservations,
+    user,
+    usersInfo,
+    selected_member_profile,
+    member_details
+  } = state;
 
   switch (action.type) {
     case "RESERVATIONS_LOADED":
@@ -56,7 +62,7 @@ const data = (state = initialState, action) => {
           return reservation;
         }
       );
-      if (user && user.status !== "ADMIN") {
+      if (user && !user.isAdmin) {
         new_state.user_reservations = mappedReservationsToDate.filter(
           (res) => res.user_id === user.id
         );
@@ -70,11 +76,7 @@ const data = (state = initialState, action) => {
       reservations.push(action.reservation);
       const newSortedReservations = sortByStartDate(reservations);
       new_state.reservations = [...newSortedReservations];
-      if (
-        user &&
-        user.status !== "ADMIN" &&
-        action.reservation.user_id === user.id
-      ) {
+      if (user && !user.isAdmin && action.reservation.user_id === user.id) {
         new_state.user_reservations = newSortedReservations.filter(
           (res) => res.user_id === user.id
         );
@@ -102,7 +104,7 @@ const data = (state = initialState, action) => {
         }
         return reservation;
       });
-      if (user.status !== "ADMIN") {
+      if (!user.isAdmin) {
         new_state.user_reservations = updatedReservations.filter(
           (res) => res.user_id === user.id
         );
@@ -117,7 +119,7 @@ const data = (state = initialState, action) => {
       const filteredReservations = reservations.filter(
         (reservation) => reservation.id !== id
       );
-      if (user.status === "ADMIN") {
+      if (user.isAdmin) {
         userReservations = filteredReservations;
       } else {
         userReservations = filteredReservations.filter(
@@ -138,7 +140,7 @@ const data = (state = initialState, action) => {
       new_state.user_reservations = reservations.filter(
         (res) => res.user_id === userToLogin.id
       );
-      if (userToLogin.status === "ADMIN") {
+      if (userToLogin.isAdmin) {
         new_state.user_reservations = reservations;
       }
       return new_state;
@@ -150,6 +152,7 @@ const data = (state = initialState, action) => {
       new_state.selected_user = null;
       new_state.selected_member_profile = null;
       new_state.selected_member_email_settings = null;
+      new_state.member_details = null;
       return new_state;
     case "UPDATE_SELECTED_USER":
       const { userId } = action;
@@ -196,9 +199,7 @@ const data = (state = initialState, action) => {
       return new_state;
     case "UPDATE_SELECTED_MEMBER":
       new_state.selected_member_profile = action.selectedMember;
-      if (selected_member_profile.name !== action.selectedMember.name) {
-        updateUsersInfo(new_state, usersInfo, action.selectedMember);
-      }
+      updateMemberDetails(new_state, member_details, action.selectedMember);
       return new_state;
     case "UPDATE_SELECTED_MEMBER_EMAIL_SETTINGS":
       const {
@@ -220,7 +221,7 @@ const data = (state = initialState, action) => {
         email: selectedMemberEmail
       };
       new_state.selected_member_profile = updatedSelectedMember;
-      updateUsersInfo(new_state, usersInfo, updatedSelectedMember);
+      updateMemberDetails(new_state, member_details, updatedSelectedMember);
       return new_state;
     case "UPDATE_RESERVATION_TITLES_NEW_NAME":
       handleNameChangeReservationTitles(
@@ -228,6 +229,9 @@ const data = (state = initialState, action) => {
         action.updatedReservations,
         user
       );
+      return new_state;
+    case "LOAD_MEMBER_DETAILS":
+      new_state.member_details = action.memberDetails;
       return new_state;
     default:
       return state;

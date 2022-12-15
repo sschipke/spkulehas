@@ -30,7 +30,9 @@ import { updateUserProfile } from "../utils/apiCalls";
 const ReceiveDeletionEmailControl = dynamic(() =>
   import("../components/Utilities/ReceiveDeletionEmailControl")
 );
-
+const MakeAdminControlSwitch = dynamic(() =>
+  import("../components/Utilities/MakeAdminControlSwitch")
+);
 const SelectStatus = dynamic(() =>
   import("../components/Utilities/SelectStatus")
 );
@@ -131,7 +133,11 @@ export const ProfilePage = ({
   };
 
   return (
-    <Paper component="main" sx={{ minHeight: "90vh" }} className="profile-page">
+    <Paper
+      component="main"
+      sx={{ minHeight: "90vh" }}
+      className="profile-page main-container"
+    >
       <Stack sx={{ alignItems: "center" }} className="profile-page-headers">
         <Typography component="h3" variant="h3">
           {userReference.name}
@@ -140,6 +146,12 @@ export const ProfilePage = ({
           updateUserStatus={updateUserInfo}
           isEditting={isEditting}
           userReference={userReference}
+        />
+        <MakeAdminControlSwitch
+          user={user}
+          userInfo={userInfo}
+          updateUserInfo={updateUserInfo}
+          disabled={!isEditting}
         />
       </Stack>
       <Stack sx={{ alignItems: "center", mt: "10px" }}>

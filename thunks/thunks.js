@@ -7,7 +7,8 @@ import {
   requestPasswordReset,
   updateEmailSetting,
   validateResetToken,
-  fetchMemberProfile
+  fetchMemberProfile,
+  fetchMemberDetailsForAdmin
 } from "../utils/apiCalls";
 import {
   closeLoadingModal,
@@ -24,7 +25,8 @@ import {
   toggleEmailSettings,
   setSelectedMember,
   updateSelectedMemberEmailSettings,
-  updateSelectedMemberEmail
+  updateSelectedMemberEmail,
+  loadMemberDetails
 } from "../actions";
 
 export const loadReservations = () => async (dispatch) => {
@@ -137,7 +139,7 @@ export const processValidateToken = (token) => async (dispatch) => {
       );
     }
   } catch (err) {
-    const { error } = err;
+    let { error } = err;
     console.error("Catching validate reset token. ", err);
     if (error && error.includes("This session has expired.")) {
       error = "This link has expired. Please request a new email.";
@@ -187,3 +189,17 @@ export const updateSelectedMemberProfile =
       );
     }
   };
+
+export const processGetMemberDetails = (token) => async (dispatch) => {
+  dispatch(showLoadingModal());
+  try {
+    const { memberDetails } = await fetchMemberDetailsForAdmin(token);
+    dispatch(loadMemberDetails(memberDetails));
+    dispatch(closeLoadingModal());
+    dispatch(showToast("Member details loaded!", "success"));
+  } catch (error) {
+    console.error("ERROR getting member details: ", error);
+    dispatch(closeLoadingModal());
+    dispatch(showToast("Unabe to fetch member details.", "error"));
+  }
+};

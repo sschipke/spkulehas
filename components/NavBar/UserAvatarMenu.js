@@ -23,15 +23,19 @@ const UserAvatarMenu = ({ user, logOut }) => {
   const links = [
     {
       label: "My Profile",
-      page: "profile"
+      page: "/profile"
     },
     {
       label: "My Reservations",
-      page: "my_reservations"
+      page: "/my_reservations"
     },
     {
       label: "Contact Members",
-      page: "members"
+      page: "/members"
+    },
+    {
+      label: "Search Reservations",
+      page: "/all_reservations"
     }
   ];
 
@@ -48,6 +52,22 @@ const UserAvatarMenu = ({ user, logOut }) => {
       </MenuItem>
     );
   });
+
+  if (user && user.isAdmin) {
+    menuItems.pop();
+    menuItems.pop();
+    menuItems.push(
+      <MenuItem
+        key="amin_view_members"
+        className="unstyled-link"
+        onClick={() => handleClose()}
+      >
+        <Link href="/admin/view_members" ariaRole="link">
+          Member Details
+        </Link>
+      </MenuItem>
+    );
+  }
 
   menuItems.push(
     <MenuItem key={"logout-button"} onClick={handleLogout}>

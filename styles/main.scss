@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  line-height: normal;
 }
 button:disabled {
   &:hover {
@@ -13,6 +14,16 @@ a {
 
 main {
   padding: 10px;
+}
+
+.calendar-container {
+  height: calc(100vh - 128px);
+  min-height: 50vh;
+}
+
+.main-container {
+  height: calc(100vh - 64px);
+  min-height: auto;
 }
 
 .hover {
@@ -89,9 +100,16 @@ input:invalid {
 }
 
 @media screen and (max-width: 600px) {
-.modal-large {
-  .reservation-buttons {
-    width: 65%;
+  .modal-large {
+    .reservation-buttons {
+      width: 65%;
+    }
   }
-}
+  .calendar-container {
+  height: calc(100vh - 112px);
+  min-height: 75vh;
+  }
+  .main-container {
+    height: auto;
+  }
 }
