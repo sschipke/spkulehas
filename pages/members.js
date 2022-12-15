@@ -47,16 +47,6 @@ const MembersContactPage = ({ user, usersInfo }) => {
         component={Paper}
         sx={{ maxHeight: "80vh", overflow: "scroll" }}
       >
-        <SearchBar
-          searchText={searchMember}
-          updateSearchText={setSearchMember}
-          widths={{
-            xs: "90%",
-            sm: "90%",
-            md: "50%",
-            lg: "25%"
-          }}
-        />
         <Table stickyHeader>
           <TableHead>
             <TableRow className="reservation-table-head-row">
