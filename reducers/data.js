@@ -2,12 +2,11 @@
 import moment from "moment";
 import {
   mapEmailSettings,
-  handleNameChangeReservationTitles
-} from "../utils/helpers";
-import {
+  handleNameChangeReservationTitles,
+  updateMemberDetails,
+  updateUsersInfo,
   findNearestReservations,
-  sortByStartDate,
-  updateUsersInfo
+  sortByStartDate
 } from "../utils/helpers";
 let initialState = {
   current_reservation: null,
@@ -45,7 +44,13 @@ const generateRandomColor = () => {
 const data = (state = initialState, action) => {
   let new_state = { ...state };
 
-  const { reservations, user, usersInfo, selected_member_profile } = state;
+  const {
+    reservations,
+    user,
+    usersInfo,
+    selected_member_profile,
+    member_details
+  } = state;
 
   switch (action.type) {
     case "RESERVATIONS_LOADED":
@@ -194,9 +199,7 @@ const data = (state = initialState, action) => {
       return new_state;
     case "UPDATE_SELECTED_MEMBER":
       new_state.selected_member_profile = action.selectedMember;
-      if (selected_member_profile.name !== action.selectedMember.name) {
-        updateUsersInfo(new_state, usersInfo, action.selectedMember);
-      }
+      updateMemberDetails(new_state, member_details, action.selectedMember);
       return new_state;
     case "UPDATE_SELECTED_MEMBER_EMAIL_SETTINGS":
       const {
@@ -218,7 +221,7 @@ const data = (state = initialState, action) => {
         email: selectedMemberEmail
       };
       new_state.selected_member_profile = updatedSelectedMember;
-      updateUsersInfo(new_state, usersInfo, updatedSelectedMember);
+      updateMemberDetails(new_state, member_details, updatedSelectedMember);
       return new_state;
     case "UPDATE_RESERVATION_TITLES_NEW_NAME":
       handleNameChangeReservationTitles(
