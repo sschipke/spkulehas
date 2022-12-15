@@ -29,7 +29,6 @@ const SearchBar = dynamic(() => import("../components/Utilities/SearchBar"));
 
 const MembersContactPage = ({ user, usersInfo }) => {
   const router = useRouter();
-
   const [searchMember, setSearchMember] = useState("");
 
   useEffect(() => {
