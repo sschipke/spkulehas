@@ -248,6 +248,23 @@ export const updateUsersInfo = (new_state, usersInfo, updatedUser) => {
   new_state.usersInfo = [...sortByName(updatedUsersInfo)];
 };
 
+export const updateMemberDetails = (
+  new_state,
+  memberDetails,
+  updatedMember
+) => {
+  if (!memberDetails || (memberDetails || []).length === 0) {
+    return;
+  }
+  const updatedMemberDetails = memberDetails.map((user) => {
+    if (user.id === updatedMember.id) {
+      user = { ...updatedMember };
+    }
+    return user;
+  });
+  new_state.member_details = [...sortByName(updatedMemberDetails)];
+};
+
 const sortByName = (usersInfo) => {
   return usersInfo.sort((userA, userB) => {
     if (userA.name < userB.name) {
