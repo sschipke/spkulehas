@@ -6,7 +6,8 @@ import {
   updateMemberDetails,
   updateUsersInfo,
   findNearestReservations,
-  sortByStartDate
+  sortByStartDate,
+  convertToMountainTimeDate
 } from "../utils/helpers";
 let initialState = {
   current_reservation: null,
@@ -56,8 +57,8 @@ const data = (state = initialState, action) => {
     case "RESERVATIONS_LOADED":
       const mappedReservationsToDate = action.reservations.map(
         (reservation) => {
-          reservation.start = new Date(reservation.start);
-          reservation.end = new Date(reservation.end);
+          reservation.start = convertToMountainTimeDate(reservation.start);
+          reservation.end = convertToMountainTimeDate(reservation.end);
           reservation.color = generateRandomColor();
           return reservation;
         }
@@ -99,8 +100,8 @@ const data = (state = initialState, action) => {
       const updatedReservations = reservations.map((reservation) => {
         if (reservation.id === reservationToUpdate.id) {
           reservation = reservationToUpdate;
-          reservation.start = new Date(reservationToUpdate.start);
-          reservation.end = new Date(reservation.end);
+          reservation.start = convertToMountainTimeDate(reservation.start);
+          reservation.end = convertToMountainTimeDate(reservation.end);
         }
         return reservation;
       });

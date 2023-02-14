@@ -14,7 +14,7 @@ let initialState = {
   update_credentials_modal_kind: null,
   is_loading: false,
   is_confirm_delete_dialog_open: false,
-  view_date: new Date(),
+  view_date: new Date()
 };
 
 const screen = (state = initialState, action) => {
@@ -23,7 +23,7 @@ const screen = (state = initialState, action) => {
     edit_reservation_picker_open,
     new_reservation_picker_open,
     view_date,
-    is_confirm_delete_dialog_open,
+    is_confirm_delete_dialog_open
   } = state;
   switch (action.type) {
     case "IS_LOADING":
@@ -43,7 +43,9 @@ const screen = (state = initialState, action) => {
       return new_state;
     case "OPEN_TOAST":
       new_state.show_toast = true;
-      new_state.toast_message = action.message ? action.message : "Something went wrong";
+      new_state.toast_message = action.message
+        ? action.message
+        : "Something went wrong";
       new_state.toast_type = action.toastType;
       return new_state;
     case "HIDE_TOAST":

@@ -1,4 +1,5 @@
-import moment from "moment";
+import * as moment from "moment-timezone";
+import { MOUNTAIN_TZ } from "./constants";
 
 const WINTER_SEASON_START_2022 = "2022-10-24";
 const WINTER_SEASON_END_2022 = "2023-05-21";
@@ -163,7 +164,7 @@ export const determineMinDate = (currentReservation, reservations) => {
   if (previousReservation) {
     return moment(previousReservation.end).add(1, "day");
   } else {
-    return moment("2022-05-20");
+    return moment("2022-05-20").tz(MOUNTAIN_TZ);
   }
 };
 
@@ -182,6 +183,7 @@ export const determineMaxDate = (checkinDate, nextReservation, isAdmin) => {
   const nextReservationStart = moment(
     nextReservation ? nextReservation.start : null
   )
+    .tz(MOUNTAIN_TZ)
     .set(NOON_HOUR)
     .subtract(1, "day");
   if (nextReservationStart && isAdmin && nextReservationStart.isValid()) {
@@ -214,8 +216,8 @@ export const sortByStartDate = (reservations) =>
 export const formatReservation = (reservation, checkinDate, checkoutDate) => {
   const start = checkinDate ? moment(checkinDate) : moment(reservation.start);
   const end = checkoutDate ? moment(checkoutDate) : moment(reservation.end);
-  reservation.start = start.set(NOON_HOUR).toISOString();
-  reservation.end = end.set(NOON_HOUR).toISOString();
+  reservation.start = start.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
+  reservation.end = end.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
   return reservation;
 };
 
@@ -262,7 +264,7 @@ export const updateMemberDetails = (
     }
     return user;
   });
-  new_state.member_details = [...sortByName(updatedMemberDetails)];
+  new_state.member_details = [...updatedMemberDetails];
 };
 
 const sortByName = (usersInfo) => {
@@ -317,3 +319,10 @@ export const handleNameChangeReservationTitles = (
     newState.user_reservations = [...reservationsWithNewName];
   }
 };
+
+export const convertToMountainTimeDate = (dateString) =>
+  new Date(
+    new Date(dateString).toLocaleString("en-US", {
+      timeZone: MOUNTAIN_TZ
+    })
+  );
