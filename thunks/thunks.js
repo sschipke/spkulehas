@@ -8,7 +8,8 @@ import {
   updateEmailSetting,
   validateResetToken,
   fetchMemberProfile,
-  fetchMemberDetailsForAdmin
+  fetchMemberDetailsForAdmin,
+  createNewMember
 } from "../utils/apiCalls";
 import {
   closeLoadingModal,
@@ -26,7 +27,10 @@ import {
   setSelectedMember,
   updateSelectedMemberEmailSettings,
   updateSelectedMemberEmail,
-  loadMemberDetails
+  loadMemberDetails,
+  setNewMember,
+  clearNewMemberInfo,
+  toggleConfirmAddMemberDialog
 } from "../actions";
 
 export const loadReservations = () => async (dispatch) => {
@@ -203,3 +207,31 @@ export const processGetMemberDetails = (token) => async (dispatch) => {
     dispatch(showToast("Unabe to fetch member details.", "error"));
   }
 };
+
+export const handleAddNewMember =
+  (member, password, token, router) => async (dispatch) => {
+    dispatch(showLoadingModal());
+    try {
+      const { newMember } = await createNewMember(member, password, token);
+      dispatch(setNewMember(newMember));
+      dispatch(setSelectedMember(newMember));
+      dispatch(clearNewMemberInfo());
+      dispatch(toggleConfirmAddMemberDialog());
+      dispatch(
+        showToast(
+          `${newMember.name} has been created and their email has been sent.`,
+          "success"
+        )
+      );
+      dispatch(closeLoadingModal());
+      router.push("/profile");
+    } catch (err) {
+      let { error } = err;
+      console.error("Error handling adding new member: ", err);
+      if (!error) {
+        error = "Something went wrong";
+      }
+      dispatch(closeLoadingModal());
+      dispatch(showToast("Unable to add new member: " + error, "error"));
+    }
+  };

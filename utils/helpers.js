@@ -8,6 +8,8 @@ const WINTER_SEASON_END_2023 = "2024-05-20";
 const WINTER_SEASON_START_2024 = "2024-10-21";
 const WINTER_SEASON_END_2024 = "2025-05-18";
 
+const PHONE_REGEX = new RegExp(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);
+
 const NOON_HOUR = {
   hour: 12,
   minute: 0,
@@ -222,6 +224,9 @@ export const formatReservation = (reservation, checkinDate, checkoutDate) => {
 };
 
 export const formatPhoneNumber = (digits) => {
+  if (PHONE_REGEX.test(digits)) {
+    return digits;
+  }
   return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
 };
 

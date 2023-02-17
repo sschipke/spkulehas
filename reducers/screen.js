@@ -14,6 +14,7 @@ let initialState = {
   update_credentials_modal_kind: null,
   is_loading: false,
   is_confirm_delete_dialog_open: false,
+  is_confirm_add_member_dialog_open: false,
   view_date: new Date()
 };
 
@@ -23,7 +24,8 @@ const screen = (state = initialState, action) => {
     edit_reservation_picker_open,
     new_reservation_picker_open,
     view_date,
-    is_confirm_delete_dialog_open
+    is_confirm_delete_dialog_open,
+    is_confirm_add_member_dialog_open
   } = state;
   switch (action.type) {
     case "IS_LOADING":
@@ -95,6 +97,10 @@ const screen = (state = initialState, action) => {
       return new_state;
     case "TOGGLE_CONFIRM_DELETE_DIALOG":
       new_state.is_confirm_delete_dialog_open = !is_confirm_delete_dialog_open;
+      return new_state;
+    case "TOGGLE_CONFIRM_ADD_MEMBER_DIALOG":
+      new_state.is_confirm_add_member_dialog_open =
+        !is_confirm_add_member_dialog_open;
       return new_state;
     case "SHOW_UPDATE_CREDENTIALS_MODAL":
       new_state.show_update_credentials_modal = true;
