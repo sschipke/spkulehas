@@ -108,6 +108,10 @@ export const toggleConfirmDeleteDialog = () => ({
   type: "TOGGLE_CONFIRM_DELETE_DIALOG"
 });
 
+export const toggleConfirmAddMemberDialog = () => ({
+  type: "TOGGLE_CONFIRM_ADD_MEMBER_DIALOG"
+});
+
 export const updateSelectedUser = (userId) => ({
   type: "UPDATE_SELECTED_USER",
   userId
@@ -183,4 +187,18 @@ export const updateReservationTitles = (updatedReservations) => {
 export const loadMemberDetails = (memberDetails) => ({
   type: "LOAD_MEMBER_DETAILS",
   memberDetails
+});
+
+export const setNewMember = (newMember) => ({
+  type: "SET_NEW_MEMBER",
+  newMember
+});
+
+export const setNewMemberInfo = (newMemberInfo) => ({
+  type: "SET_NEW_MEMBER_INFO",
+  newMemberInfo
+});
+
+export const clearNewMemberInfo = () => ({
+  type: "CLEAR_NEW_MEMBER_INFO"
 });

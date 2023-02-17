@@ -29,6 +29,9 @@ const ViewReservationModal = dynamic(() =>
 const ConfirmDeleteDialog = dynamic(() =>
   import("../components/Messages/ConfirmDeleteDialog")
 );
+const ConfirmAddMemberDialog = dynamic(() =>
+  import("../components/Messages/ConfirmAddMemberDialog")
+);
 const UpdateCredentialsModal = dynamic(() =>
   import("../components/Modal/UpdateCredentialsModal")
 );
@@ -84,6 +87,7 @@ export default function App({ Component, pageProps }) {
           <ViewReservationModal />
           <LoadingModal />
           <ConfirmDeleteDialog />
+          <ConfirmAddMemberDialog />
           <UpdateCredentialsModal />
         </ThemeProvider>
       </LocalizationProvider>

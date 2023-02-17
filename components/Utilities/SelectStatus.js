@@ -12,11 +12,46 @@ const SelectStatus = ({
   selectedMember,
   isEditting,
   updateUserStatus,
-  userReference
+  userReference,
+  addNewMember
 }) => {
   const handleSelect = (e) => {
     updateUserStatus({ ...userReference, status: e.target.value });
   };
+
+  if (!user) {
+    return null;
+  }
+
+  const selectStatusMenu = (
+    <div>
+      <InputLabel>Status</InputLabel>
+      <Select
+        label="Status"
+        value={userReference ? userReference.status : "U"}
+        id="selectUserId"
+        onChange={handleSelect}
+        sx={{ width: "100%" }}
+        required
+      >
+        <MenuItem color="secondary" value="S1">
+          S1
+        </MenuItem>
+        <MenuItem color="secondary" value="S2">
+          S2
+        </MenuItem>
+        <MenuItem color="secondary" value="D1">
+          D1
+        </MenuItem>
+        <MenuItem color="secondary" value="D2">
+          D2
+        </MenuItem>
+        <MenuItem color="secondary" value="U">
+          U
+        </MenuItem>
+      </Select>
+    </div>
+  );
 
   if (!user) {
     return null;
@@ -28,34 +63,9 @@ const SelectStatus = ({
     userReference.id === selectedMember.id &&
     isEditting
   ) {
-    return (
-      <div>
-        <InputLabel>Status</InputLabel>
-        <Select
-          label="Status"
-          value={userReference ? userReference.status : "U"}
-          id="selectUserId"
-          onChange={handleSelect}
-          sx={{ width: "100%" }}
-        >
-          <MenuItem color="secondary" value="S1">
-            S1
-          </MenuItem>
-          <MenuItem color="secondary" value="S2">
-            S2
-          </MenuItem>
-          <MenuItem color="secondary" value="D1">
-            D1
-          </MenuItem>
-          <MenuItem color="secondary" value="D2">
-            D2
-          </MenuItem>
-          <MenuItem color="secondary" value="U">
-            U
-          </MenuItem>
-        </Select>
-      </div>
-    );
+    return selectStatusMenu;
+  } else if (addNewMember) {
+    return selectStatusMenu;
   } else {
     return (
       <Typography component="h4" variant="h4">
