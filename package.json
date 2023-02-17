@@ -24,6 +24,7 @@
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
     "moment": "^2.29.1",
+    "moment-timezone": "^0.5.40",
     "next": "12.1.6",
     "react": "17.0.2",
     "react-big-calendar": "^0.38.9",

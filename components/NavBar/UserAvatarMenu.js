@@ -20,7 +20,7 @@ const UserAvatarMenu = ({ user, logOut }) => {
     logOut();
   };
 
-  const links = [
+  let links = [
     {
       label: "My Profile",
       page: "/profile"
@@ -39,6 +39,29 @@ const UserAvatarMenu = ({ user, logOut }) => {
     }
   ];
 
+  const calendarLink = {
+    label: "Calendar",
+    page: "/"
+  };
+
+  const adminLinks = [
+    {
+      label: "Member Details",
+      page: "/admin/view_members"
+    },
+    {
+      label: "Add New Member",
+      page: "/admin/add_member"
+    }
+  ];
+
+  if (user && user.isAdmin) {
+    links.pop();
+    links = links.concat(adminLinks);
+  }
+
+  links.push(calendarLink);
+
   const menuItems = links.map((link) => {
     return (
       <MenuItem
@@ -52,22 +75,6 @@ const UserAvatarMenu = ({ user, logOut }) => {
       </MenuItem>
     );
   });
-
-  if (user && user.isAdmin) {
-    menuItems.pop();
-    menuItems.pop();
-    menuItems.push(
-      <MenuItem
-        key="amin_view_members"
-        className="unstyled-link"
-        onClick={() => handleClose()}
-      >
-        <Link href="/admin/view_members" ariaRole="link">
-          Member Details
-        </Link>
-      </MenuItem>
-    );
-  }
 
   menuItems.push(
     <MenuItem key={"logout-button"} onClick={handleLogout}>

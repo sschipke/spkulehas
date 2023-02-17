@@ -359,3 +359,37 @@ export const fetchMemberDetailsForAdmin = async (token) => {
   }
   return res.json();
 };
+
+export const createNewMember = async (member, password, token) => {
+  if (!member.email) {
+    throw new Error("No new member email present.", {
+      error: "No member email present."
+    });
+  }
+  if (!token) {
+    throw { error: "A token is required for this action." };
+  }
+  const url = new URL(`${baseUrl}admin/add_member`);
+  const options = {
+    method: "POST",
+    body: JSON.stringify({ user: member, password }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  };
+  let res = await fetch(url.href, options);
+  if (!res.ok) {
+    const err = await res.json();
+    console.error("Unable to add new member.", err);
+    let { error } = err;
+    if (!error) {
+      error = "Failed to add new member.";
+    }
+    if (res.status === 401) {
+      error = "Unauthorized";
+    }
+    throw { error };
+  }
+  return res.json();
+};
