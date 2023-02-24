@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const IconButton = dynamic(() =>
   import("@mui/material").then((mui) => mui.IconButton)
@@ -78,10 +78,10 @@ const AllReservationsPage = ({
                   {reservation.title}
                 </TableCell>
                 <TableCell>
-                  {moment(reservation.start).format("MM/DD/YY")}
+                  {dayjs(reservation.start).format("MM/DD/YY")}
                 </TableCell>
                 <TableCell>
-                  {moment(reservation.end).format("MM/DD/YY")}
+                  {dayjs(reservation.end).format("MM/DD/YY")}
                 </TableCell>
                 <TableCell>{reservation.notes}</TableCell>
                 <TableCell>

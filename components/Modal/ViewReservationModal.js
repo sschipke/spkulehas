@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import moment from "moment";
+import dayjs from "dayjs";
 import {
   TextField,
   Modal,
@@ -72,7 +72,7 @@ export const ViewReservationModal = ({
         <TextField
           id="check-in-date"
           label="Check-in Date"
-          value={moment(start).format("ddd, MMMM Do")}
+          value={dayjs(start).format("ddd, MMMM D")}
           InputProps={{
             readOnly: true
           }}
@@ -81,7 +81,7 @@ export const ViewReservationModal = ({
         <TextField
           id="check-out-date"
           label="Check-out Date"
-          value={moment(end).format("ddd, MMMM Do")}
+          value={dayjs(end).format("ddd, MMMM D")}
           InputProps={{
             readOnly: true
           }}

@@ -1,20 +1,21 @@
 import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import dynamic from "next/dynamic";
-import moment from "moment";
-import { momentLocalizer } from "react-big-calendar";
+import dayjs from "dayjs";
+import { dayjsLocalizer } from "react-big-calendar";
+import updateLocale from "dayjs/plugin/updateLocale";
+
 const Calendar = dynamic(() =>
   import("react-big-calendar").then((mod) => mod.Calendar)
 );
 
-moment.updateLocale("en-US", {
-  week: {
-    dow: 1,
-    doy: 1
-  }
+dayjs.extend(updateLocale);
+
+dayjs.updateLocale("en", {
+  weekStart: 1
 });
 
-const localizer = momentLocalizer(moment);
+const localizer = dayjsLocalizer(dayjs);
 const BigCalendar = ({
   viewDate,
   reservations,
@@ -46,8 +47,8 @@ const BigCalendar = ({
         handleDrillDown(date);
       }}
       onNavigate={function () {}}
-      min={moment("2022-01-01").toDate()}
-      max={moment("2022-06-01").toDate()}
+      min={dayjs("2022-01-01").toDate()}
+      max={dayjs("2022-06-01").toDate()}
       toolbar={false}
     />
   );

@@ -32,7 +32,7 @@ const LoadingDataMessage = dynamic(() =>
   import("../components/Utilities/LoadingDataMessage")
 );
 
-import moment from "moment";
+import dayjs from "dayjs";
 
 const App = ({
   reservations,
@@ -49,8 +49,8 @@ const App = ({
   updateToken,
   token
 }) => {
-  const minDate = moment(process.env.NEXT_PUBLIC_MIN_DATE);
-  const maxDate = moment(process.env.NEXT_PUBLIC_MAX_DATE);
+  const minDate = dayjs(process.env.NEXT_PUBLIC_MIN_DATE);
+  const maxDate = dayjs(process.env.NEXT_PUBLIC_MAX_DATE);
   const router = useRouter();
 
   const { reset, date } = router.query;
@@ -67,12 +67,12 @@ const App = ({
     const closestReservations = findNearestReservations(date, reservations);
     if (
       isInReservation(
-        moment(date),
-        moment(closestReservations[0].start),
-        moment(closestReservations[0].end)
+        dayjs(date),
+        dayjs(closestReservations[0].start),
+        dayjs(closestReservations[0].end)
       ) ||
-      moment(date).isBefore(minDate) ||
-      moment(date).isAfter(maxDate)
+      dayjs(date).isBefore(minDate) ||
+      dayjs(date).isAfter(maxDate)
     ) {
       showToast("You cannot reserve this date.", "error");
     } else {

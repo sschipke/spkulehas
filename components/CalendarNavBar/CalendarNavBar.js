@@ -1,5 +1,8 @@
 import React from "react";
-import moment from "moment";
+import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
@@ -17,6 +20,9 @@ import {
   updateViewDate
 } from "../../actions";
 
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+
 const minDate = process.env.NEXT_PUBLIC_MIN_DATE;
 const maxDate = process.env.NEXT_PUBLIC_MAX_DATE;
 
@@ -26,7 +32,7 @@ const CalendarNavBar = ({
   updateViewDate,
   viewDate
 }) => {
-  const momentViewDate = moment(viewDate, "YYYY-MM-DD");
+  const dayJsViewDate = dayjs(viewDate);
   return (
     <Box sx={{ flexGrow: 1, width: "100%" }}>
       <AppBar color="secondary" position="static">
@@ -37,23 +43,23 @@ const CalendarNavBar = ({
             color="inherit"
             aria-label="previous month"
             onClick={viewPreviousMonth}
-            disabled={momentViewDate.isSameOrBefore(moment(minDate), "month")}
+            disabled={dayJsViewDate.isSameOrBefore(dayjs(minDate), "month")}
           >
             <ArrowBackIosNewRoundedIcon />
           </IconButton>
           <DatePicker
             views={["month", "year"]}
-            value={moment(viewDate)}
+            value={dayjs(viewDate)}
             onChange={(newValue) => {
-              if (moment(newValue).isValid()) {
+              if (dayjs(newValue).isValid()) {
                 updateViewDate(newValue);
               }
             }}
             showTodayButton
             todayText="Today"
             variant="filled"
-            minDate={moment(minDate)}
-            maxDate={moment(maxDate)}
+            minDate={dayjs(minDate)}
+            maxDate={dayjs(maxDate)}
             sx={{
               display: "flex",
               border: "none",
@@ -80,7 +86,7 @@ const CalendarNavBar = ({
             aria-label="next month"
             sx={{ mr: 2 }}
             onClick={viewNextMonth}
-            disabled={momentViewDate.isSameOrAfter(moment(maxDate), "month")}
+            disabled={dayJsViewDate.isSameOrAfter(maxDate, "month")}
           >
             <ArrowForwardIosRoundedIcon />
           </IconButton>

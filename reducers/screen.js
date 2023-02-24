@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from "dayjs";
 const minDate = process.env.NEXT_PUBLIC_MIN_DATE;
 const maxDate = process.env.NEXT_PUBLIC_MAX_DATE;
 let initialState = {
@@ -54,24 +54,24 @@ const screen = (state = initialState, action) => {
       new_state.show_toast = false;
       return new_state;
     case "VIEW_NEXT_MONTH":
-      new_state.view_date = moment(view_date).add(1, "month").toDate();
+      new_state.view_date = dayjs(view_date).add(1, "month").toDate();
       return new_state;
     case "VIEW_PREVIOUS_MONTH":
-      new_state.view_date = moment(view_date).subtract(1, "month").toDate();
+      new_state.view_date = dayjs(view_date).subtract(1, "month").toDate();
       return new_state;
     case "UPDATE_VIEW_DATE":
       let { date } = action;
-      if (!moment(date).isValid()) {
+      if (!dayjs(date).isValid()) {
         return new_state;
       }
       if (date) {
-        new_state.view_date = moment(date).toDate();
+        new_state.view_date = dayjs(date).toDate();
       }
-      if (moment(date).isBefore(minDate)) {
-        new_state.view_date = moment(minDate).toDate();
+      if (dayjs(date).isBefore(minDate)) {
+        new_state.view_date = dayjs(minDate).toDate();
       }
-      if (moment(date).isAfter(maxDate)) {
-        new_state.view_date = moment(maxDate).toDate();
+      if (dayjs(date).isAfter(maxDate)) {
+        new_state.view_date = dayjs(maxDate).toDate();
       }
       return new_state;
     case "VIEW_TODAY":

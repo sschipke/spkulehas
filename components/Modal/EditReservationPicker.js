@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import moment from "moment";
+import dayjs from "dayjs";
 import {
   TextField,
   Modal,
@@ -47,7 +47,7 @@ export const EditReservationPicker = ({
 }) => {
   const initialValue = () => {
     if (!currentReservation) {
-      return [moment().startOf("isoWeek"), moment().endOf("isoWeek")];
+      return [dayjs().startOf("week"), dayjs().endOf("week")];
     } else return [currentReservation.start, currentReservation.end];
   };
   const [dates, setDates] = useState(initialValue());

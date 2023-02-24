@@ -9,7 +9,7 @@ import {
   DialogContent,
   DialogTitle
 } from "@mui/material";
-import moment from "moment";
+import dayjs from "dayjs";
 import {
   toggleConfirmDeleteDialog,
   removeReservation,
@@ -70,11 +70,11 @@ const ConfirmDeleteDialog = ({
           Would you like to dete this reservation for{" "}
           <strong>{currentReservation.title}</strong> beginning on{" "}
           <strong>
-            {moment(currentReservation.start).format("dddd, MMMM DD, YYYY")}
+            {dayjs(currentReservation.start).format("dddd, MMMM DD, YYYY")}
           </strong>{" "}
           and ending{" "}
           <strong>
-            {moment(currentReservation.end).format("dddd, MMMM DD, YYYY")}
+            {dayjs(currentReservation.end).format("dddd, MMMM DD, YYYY")}
           </strong>
           ?
         </p>
