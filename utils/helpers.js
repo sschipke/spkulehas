@@ -20,6 +20,10 @@ const PHONE_REGEX = new RegExp(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);
 
 const NOON_HOUR = 12;
 
+const CABIN_ADDRESS = process.env.NEXT_PUBLIC_CABIN_ADDRESS;
+
+const FE_BASE_URL = process.env.NEXT_PUBLIC_FRONTEND_BASE_URL;
+
 export const isInWinter = (date) => {
   return (
     dayjs(date).isBetween(
@@ -337,3 +341,20 @@ export const convertToMountainTimeDate = (dateString) =>
       timeZone: MOUNTAIN_TZ
     })
   );
+
+export const generateGoogleCalendarLink = (reservation) => {
+  const startDate = new Date(reservation.start)
+    .toISOString()
+    .replace(/-|:|\.\d+/g, "");
+  const endDate = new Date(reservation.end)
+    .toISOString()
+    .replace(/-|:|\.\d+/g, "");
+
+  const feLinkToReservation = new URL(
+    `${FE_BASE_URL}?date=${reservation.start.toLocaleDateString()}`
+  ).href;
+
+  const link = `https://www.google.com/calendar/render?action=TEMPLATE&dates=${startDate}/${endDate}&text=${reservation.title} At The Cabin&location=${CABIN_ADDRESS}&details=${feLinkToReservation}`;
+
+  return new URL(link).href;
+};

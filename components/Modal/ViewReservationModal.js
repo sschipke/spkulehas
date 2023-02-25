@@ -13,7 +13,9 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { canEdit } from "../../utils/helpers";
+import GoogleIcon from "@mui/icons-material/Google";
+
+import { canEdit, generateGoogleCalendarLink } from "../../utils/helpers";
 import {
   toggleEditReservationPicker,
   toggleConfirmDeleteDialog,
@@ -59,6 +61,8 @@ export const ViewReservationModal = ({
     alignItems: "center"
   };
 
+  const googleCalendarLink = generateGoogleCalendarLink(currentReservation);
+
   return (
     <Modal
       open={isOpen}
@@ -99,6 +103,16 @@ export const ViewReservationModal = ({
           }}
           sx={{ m: "15px" }}
         />
+        <Button
+          sx={{ borderRadius: 10 }}
+          variant="contained"
+          color="info"
+          endIcon={<GoogleIcon />}
+          href={googleCalendarLink}
+          target="_blank"
+        >
+          Add to Calendar
+        </Button>
         <Stack
           direction="row"
           justifyContent="space-between"
@@ -110,6 +124,7 @@ export const ViewReservationModal = ({
         >
           <Button
             variant="outlined"
+            color="secondary"
             onClick={() => closeViewReservationModal()}
           >
             Back
