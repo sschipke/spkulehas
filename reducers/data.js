@@ -159,8 +159,8 @@ const data = (state = initialState, action) => {
     case "UPDATE_SELECTED_USER":
       const { userId } = action;
       if (userId) {
-        let name = usersInfo.find((user) => user.id === userId)["name"];
-        new_state.selected_user = { id: userId, name };
+        let newSelectedUser = usersInfo.find((user) => user.id === userId);
+        new_state.selected_user = newSelectedUser;
       } else {
         new_state.selected_user = null;
       }
