@@ -342,19 +342,69 @@ export const convertToMountainTimeDate = (dateString) =>
     })
   );
 
-export const generateGoogleCalendarLink = (reservation) => {
-  const startDate = new Date(reservation.start)
-    .toISOString()
-    .replace(/-|:|\.\d+/g, "");
-  const endDate = new Date(reservation.end)
-    .toISOString()
-    .replace(/-|:|\.\d+/g, "");
+export const generateCalendarLinks = (reservation) => {
+  const feLink = createFeLinkToReservation(reservation);
 
-  const feLinkToReservation = new URL(
-    `${FE_BASE_URL}?date=${reservation.start.toLocaleDateString()}`
-  ).href;
+  const calendarEvent = {
+    id: reservation.id,
+    start: reservation.start.toISOString().replace(/-|:|\.\d+/g, ""),
+    end: reservation.end.toISOString().replace(/-|:|\.\d+/g, ""),
+    title: `${reservation.title} at the Cabin`,
+    description: `${feLink}
+    ${reservation.notes}`,
+    location: CABIN_ADDRESS
+  };
+  const googleCalendarLink = generateGoogleCalendarLink(calendarEvent);
+  const outLookLink = generateOutlookCalendarLink(reservation, calendarEvent);
+  const appleLink = generateAppleCalendarLink(calendarEvent);
 
-  const link = `https://www.google.com/calendar/render?action=TEMPLATE&dates=${startDate}/${endDate}&text=${reservation.title} At The Cabin&location=${CABIN_ADDRESS}&details=${feLinkToReservation}`;
+  return { googleCalendarLink, outLookLink, appleLink };
+
+};
+
+export const generateGoogleCalendarLink = (event) => {
+  const link = `https://www.google.com/calendar/render?action=TEMPLATE&dates=${event.start}/${event.start}&text=${event.title}&location=${event.location}&details=${event.description}`;
 
   return new URL(link).href;
 };
+
+export const generateOutlookCalendarLink = (reservation, event) => {
+  const outlookEvent = {
+    start: reservation.start.toISOString(),
+    end: reservation.end.toISOString()
+  };
+
+  const outlookLink = `https://outlook.office.com/calendar/action/compose?subject=${encodeURIComponent(
+    event.title
+  )}&body=${encodeURI(event.description)}&location=${encodeURIComponent(
+    event.location
+  )}&startdt=${encodeURIComponent(
+    outlookEvent.start
+  )}&enddt=${encodeURIComponent(outlookEvent.end)}`;
+
+  return outlookLink;
+};
+
+export const generateAppleCalendarLink = (event) => {
+  // TODO: Add notes & url in here
+  const icsFileContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+PRODID:${event.id}
+DTSTAMP:${event.start}
+DTSTART:${event.start}
+DTEND:${event.end}
+SUMMARY:${event.title}
+LOCATION:${event.location}
+NOTES:${event.description}
+END:VEVENT
+END:VCALENDAR`;
+
+  const dataURI = `data:text/calendar;charset=utf-8,${encodeURIComponent(
+    icsFileContent
+  )}`;
+  return dataURI;
+};
+
+export const createFeLinkToReservation = (reservation) =>
+  new URL(`${FE_BASE_URL}?reservationId=${reservation.id}`).href;

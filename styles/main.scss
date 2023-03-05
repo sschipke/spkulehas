@@ -99,6 +99,10 @@ input:invalid {
   }
 }
 
+.view-reservation-add-calendar-modal {
+  min-width: 50%;
+}
+
 @media screen and (max-width: 600px) {
   .modal-large {
     .reservation-buttons {
@@ -111,5 +115,8 @@ input:invalid {
   }
   .main-container {
     height: auto;
+  }
+  .view-reservation-add-calendar-modal {
+    min-width: 80%;
   }
 }

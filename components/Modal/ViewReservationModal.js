@@ -13,15 +13,15 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import GoogleIcon from "@mui/icons-material/Google";
 
-import { canEdit, generateGoogleCalendarLink } from "../../utils/helpers";
+import { canEdit } from "../../utils/helpers";
 import {
   toggleEditReservationPicker,
   toggleConfirmDeleteDialog,
   updateReservation,
   showViewReservationModal,
-  closeViewReservationModal
+  closeViewReservationModal,
+  toggleAddToCalendarModal
 } from "../../actions";
 
 export const ViewReservationModal = ({
@@ -30,7 +30,8 @@ export const ViewReservationModal = ({
   currentReservation,
   closeViewReservationModal,
   toggleEditReservationPicker,
-  toggleConfirmDeleteDialog
+  toggleConfirmDeleteDialog,
+  toggleAddToCalendarModal
 }) => {
   if (!currentReservation) {
     return null;
@@ -43,8 +44,7 @@ export const ViewReservationModal = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    minHeight: "50%",
-    minWidth: "50%",
+    // minHeight: "50%",
     backgroundColor: "white",
     border: "2px solid #000",
     boxShadow: 24,
@@ -61,8 +61,6 @@ export const ViewReservationModal = ({
     alignItems: "center"
   };
 
-  const googleCalendarLink = generateGoogleCalendarLink(currentReservation);
-
   return (
     <Modal
       open={isOpen}
@@ -70,7 +68,7 @@ export const ViewReservationModal = ({
       style={modalStyle}
       onClose={() => closeViewReservationModal()}
     >
-      <Box style={style} className="">
+      <Box style={style} className="view-reservation-add-calendar-modal">
         <h3>{title}</h3>
 
         <TextField
@@ -107,9 +105,7 @@ export const ViewReservationModal = ({
           sx={{ borderRadius: 10 }}
           variant="contained"
           color="info"
-          endIcon={<GoogleIcon />}
-          href={googleCalendarLink}
-          target="_blank"
+          onClick={() => toggleAddToCalendarModal()}
         >
           Add to Calendar
         </Button>
@@ -178,7 +174,8 @@ export const mapDispatchToProps = (dispatch) =>
       updateReservation,
       showViewReservationModal,
       closeViewReservationModal,
-      toggleConfirmDeleteDialog
+      toggleConfirmDeleteDialog,
+      toggleAddToCalendarModal
     },
     dispatch
   );

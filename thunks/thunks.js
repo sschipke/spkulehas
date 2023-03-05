@@ -30,7 +30,10 @@ import {
   loadMemberDetails,
   setNewMember,
   clearNewMemberInfo,
-  toggleConfirmAddMemberDialog
+  toggleConfirmAddMemberDialog,
+  showViewReservationModal,
+  updateViewDate,
+  setCurrentReservation
 } from "../actions";
 
 export const loadReservations = () => async (dispatch) => {
@@ -233,5 +236,21 @@ export const handleAddNewMember =
       }
       dispatch(closeLoadingModal());
       dispatch(showToast("Unable to add new member: " + error, "error"));
+    }
+  };
+
+export const handleReservationIdFromUrl =
+  (reservationId, reservations) => (dispatch) => {
+    console.log("Looking for reservation!!: ", reservationId);
+    const reservationNumber = Number(reservationId);
+    const reservationFromUrl = reservations.find(
+      (reservation) => reservation.id === reservationNumber
+    );
+    if (reservationFromUrl) {
+      dispatch(updateViewDate(reservationFromUrl.start));
+      dispatch(setCurrentReservation(reservationFromUrl));
+      dispatch(showViewReservationModal());
+    } else {
+      dispatch(showToast("Unable to load reservation.", "error"));
     }
   };

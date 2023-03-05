@@ -36,6 +36,9 @@ const UpdateCredentialsModal = dynamic(() =>
   import("../components/Modal/UpdateCredentialsModal")
 );
 const Toast = dynamic(() => import("../components/Messages/Toast"));
+const AddToCalendarModal = dynamic(() =>
+  import("../components/Modal/AddToCalendarModal")
+);
 
 import "../styles/main.scss";
 
@@ -46,6 +49,10 @@ const theme = createTheme({
     },
     secondary: {
       main: "#880e4f"
+    },
+    black: {
+      main: "#000",
+      contrastText: "#fff"
     }
   }
 });
@@ -89,6 +96,7 @@ export default function App({ Component, pageProps }) {
           <ConfirmDeleteDialog />
           <ConfirmAddMemberDialog />
           <UpdateCredentialsModal />
+          <AddToCalendarModal />
         </ThemeProvider>
       </LocalizationProvider>
     </Provider>
