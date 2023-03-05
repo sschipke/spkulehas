@@ -7,7 +7,8 @@ import {
   updateUsersInfo,
   findNearestReservations,
   sortByStartDate,
-  convertToMountainTimeDate
+  convertToMountainTimeDate,
+  convertReservationTimesToDates
 } from "../utils/helpers";
 let initialState = {
   current_reservation: null,
@@ -75,6 +76,7 @@ const data = (state = initialState, action) => {
       new_state.are_reservations_loaded = true;
       return new_state;
     case "ADD_RESERVATION":
+      convertReservationTimesToDates(action.reservation);
       reservations.push(action.reservation);
       const newSortedReservations = sortByStartDate(reservations);
       new_state.reservations = [...newSortedReservations];

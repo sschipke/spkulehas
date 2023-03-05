@@ -223,8 +223,10 @@ export const sortByStartDate = (reservations) =>
   );
 
 export const formatReservation = (reservation, checkinDate, checkoutDate) => {
-  const start = checkinDate ? dayjs(checkinDate) : dayjs(reservation.start);
-  const end = checkoutDate ? dayjs(checkoutDate) : dayjs(reservation.end);
+  let start = checkinDate ? dayjs(checkinDate) : dayjs(reservation.start);
+  let end = checkoutDate ? dayjs(checkoutDate) : dayjs(reservation.end);
+  start = start.set("hour", NOON_HOUR);
+  end = end.set("hour", NOON_HOUR);
   reservation.start = start
     .tz(MOUNTAIN_TZ)
     .set("hour", NOON_HOUR)
@@ -408,3 +410,9 @@ END:VCALENDAR`;
 
 export const createFeLinkToReservation = (reservation) =>
   new URL(`${FE_BASE_URL}?reservationId=${reservation.id}`).href;
+
+export const convertReservationTimesToDates = (reservation) => {
+  reservation.start = convertToMountainTimeDate(reservation.start);
+  reservation.end = convertToMountainTimeDate(reservation.end);
+  return reservation;
+};
