@@ -18,9 +18,9 @@ import {
   showLoadingModal
 } from "../actions";
 import {
-  loadReservations,
   processValidateToken,
-  handleReservationIdFromUrl
+  handleReservationIdFromUrl,
+  handleReservationLoading
 } from "../thunks/thunks";
 import { isInReservation, findNearestReservations } from "../utils/helpers";
 
@@ -90,7 +90,7 @@ const App = ({
   useEffect(() => {
     if (!areReservationsLoaded) {
       showLoadingModal();
-      dispatch(loadReservations());
+      dispatch(handleReservationLoading());
     }
     if (!user && reset && !token) {
       updateToken(reset);

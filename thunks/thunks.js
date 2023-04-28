@@ -9,7 +9,8 @@ import {
   validateResetToken,
   fetchMemberProfile,
   fetchMemberDetailsForAdmin,
-  createNewMember
+  createNewMember,
+  validateReservationsEtag
 } from "../utils/apiCalls";
 import {
   closeLoadingModal,
@@ -35,10 +36,16 @@ import {
   updateViewDate,
   setCurrentReservation
 } from "../actions";
+import {
+  cacheReservationData,
+  getCachedReservations,
+  getCachedReservationsEtag
+} from "../utils/localStorage";
 
 export const loadReservations = () => async (dispatch) => {
   return getReservations()
     .then((res) => {
+      cacheReservationData(res);
       dispatch(setReservations(res.reservations));
       dispatch(closeLoadingModal());
     })
@@ -46,6 +53,20 @@ export const loadReservations = () => async (dispatch) => {
       console.error("Unable to fetch reservations", err);
       dispatch(showToast("Unable to fetch reservations.", "error"));
     });
+};
+
+export const handleReservationLoading = () => async (dispatch) => {
+  const cachedReservations = getCachedReservations();
+  const reservationsEtag = getCachedReservationsEtag();
+  if (cachedReservations && cachedReservations.length && reservationsEtag) {
+    const isEtagValid = await validateReservationsEtag(reservationsEtag);
+    if (isEtagValid) {
+      dispatch(setReservations(cachedReservations));
+      dispatch(closeLoadingModal());
+    } else dispatch(loadReservations());
+  } else {
+    dispatch(loadReservations());
+  }
 };
 
 export const processLogin = (email, password) => async (dispatch) => {

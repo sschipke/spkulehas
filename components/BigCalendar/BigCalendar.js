@@ -47,8 +47,8 @@ const BigCalendar = ({
         handleDrillDown(date);
       }}
       onNavigate={function () {}}
-      min={dayjs("2022-01-01").toDate()}
-      max={dayjs("2022-06-01").toDate()}
+      min={new Date("2022-01-01")}
+      max={new Date("2022-06-01")}
       toolbar={false}
     />
   );

@@ -42,14 +42,14 @@ const CalendarNavBar = ({
             edge="start"
             color="inherit"
             aria-label="previous month"
-            onClick={viewPreviousMonth}
-            disabled={dayJsViewDate.isSameOrBefore(dayjs(minDate), "month")}
+            onClick={() => viewPreviousMonth()}
+            disabled={dayJsViewDate.isSameOrBefore(minDate, "month")}
           >
             <ArrowBackIosNewRoundedIcon />
           </IconButton>
           <DatePicker
             views={["month", "year"]}
-            value={dayjs(viewDate)}
+            value={dayJsViewDate}
             onChange={(newValue) => {
               if (dayjs(newValue).isValid()) {
                 updateViewDate(newValue);
@@ -85,7 +85,7 @@ const CalendarNavBar = ({
             color="inherit"
             aria-label="next month"
             sx={{ mr: 2 }}
-            onClick={viewNextMonth}
+            onClick={() => viewNextMonth()}
             disabled={dayJsViewDate.isSameOrAfter(maxDate, "month")}
           >
             <ArrowForwardIosRoundedIcon />
