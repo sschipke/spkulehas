@@ -365,7 +365,7 @@ export const generateCalendarLinks = (reservation) => {
 };
 
 export const generateGoogleCalendarLink = (event) => {
-  const link = `https://www.google.com/calendar/render?action=TEMPLATE&dates=${event.start}/${event.start}&text=${event.title}&location=${event.location}&details=${event.description}`;
+  const link = `https://www.google.com/calendar/render?action=TEMPLATE&dates=${event.start}/${event.end}&text=${event.title}&location=${event.location}&details=${event.description}`;
 
   return new URL(link).href;
 };
