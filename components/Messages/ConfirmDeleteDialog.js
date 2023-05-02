@@ -16,6 +16,7 @@ import {
   showToast
 } from "../../actions";
 import { deleteReservation } from "../../utils/apiCalls";
+import { cacheReservationsEtag } from "../../utils/localStorage";
 
 const ConfirmDeleteDialog = ({
   currentReservation,
@@ -30,12 +31,14 @@ const ConfirmDeleteDialog = ({
 
   const handleConfirmation = async () => {
     try {
-      let deletedReservation = await deleteReservation(
+      let deleteResponse = await deleteReservation(
         currentReservation,
         token,
         shouldSendEmail
       );
-      removeReservation(deletedReservation && currentReservation.id);
+      removeReservation(deleteResponse && currentReservation.id);
+      const { reservationsEtag } = deleteResponse;
+      cacheReservationsEtag(reservationsEtag);
       toggleConfirmDeleteDialog();
     } catch (err) {
       const { error } = err;

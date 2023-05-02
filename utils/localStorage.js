@@ -10,8 +10,13 @@ export const getCachedReservations = () =>
 export const getCachedReservationsEtag = () =>
   JSON.parse(localStorage.getItem("reservationsEtag"));
 
-export const cacheReservationsEtag = (newEtag) =>
+export const cacheReservationsEtag = (newEtag) => {
+  if (!newEtag) {
+    return;
+  }
   localStorage.setItem("reservationsEtag", JSON.stringify(newEtag));
+};
 
-export const cacheReservations = (reservations) =>
+export const cacheReservations = (reservations) => {
   localStorage.setItem("reservations", JSON.stringify(reservations));
+};

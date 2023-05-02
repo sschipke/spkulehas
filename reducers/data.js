@@ -10,6 +10,7 @@ import {
   convertToMountainTimeDate,
   convertReservationTimesToDates
 } from "../utils/helpers";
+import { cacheReservations } from "../utils/localStorage";
 let initialState = {
   current_reservation: null,
   reservations: [],
@@ -87,6 +88,7 @@ const data = (state = initialState, action) => {
       } else {
         new_state.user_reservations = newSortedReservations;
       }
+      cacheReservations(newSortedReservations);
       return new_state;
     case "SET_CURRENT_RESERVATION":
       new_state.current_reservation = action.reservation;
@@ -108,6 +110,7 @@ const data = (state = initialState, action) => {
         }
         return reservation;
       });
+      cacheReservations(updatedReservations);
       if (!user.isAdmin) {
         new_state.user_reservations = updatedReservations.filter(
           (res) => res.user_id === user.id
@@ -133,6 +136,7 @@ const data = (state = initialState, action) => {
       new_state.reservations = filteredReservations;
       new_state.user_reservations = userReservations;
       new_state.current_reservation = null;
+      cacheReservations(filteredReservations);
       return new_state;
     case "USER_LOGIN_SUCCESS":
       const { token } = action.data;

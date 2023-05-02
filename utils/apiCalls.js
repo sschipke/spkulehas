@@ -397,11 +397,9 @@ export const createNewMember = async (member, password, token) => {
 export const validateReservationsEtag = async (etag) => {
   const url = `${baseUrl}reservations/validate/${etag}`;
   let res = await fetch(url);
-  console.log("Validation status: ", res.status);
-  if (res.status === 412) {
-    return false;
-  }
   if (res.status === 204) {
     return true;
+  } else {
+    return false;
   }
 };

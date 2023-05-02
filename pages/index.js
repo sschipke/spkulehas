@@ -4,7 +4,6 @@ import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useRouter } from "next/router";
 import {
-  addReservation,
   toggleEditReservationPicker,
   setCurrentReservation,
   showToast,
@@ -139,7 +138,6 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      addReservation,
       toggleEditReservationPicker,
       toggleNewReservationPicker,
       setCurrentReservation,
