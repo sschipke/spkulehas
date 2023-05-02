@@ -27,6 +27,7 @@ import {
   updateSelectedMember
 } from "../actions";
 import { updateUserProfile } from "../utils/apiCalls";
+import { cacheReservationsEtag } from "../utils/localStorage";
 const ReceiveDeletionEmailControl = dynamic(() =>
   import("../components/Utilities/ReceiveDeletionEmailControl")
 );
@@ -115,7 +116,10 @@ export const ProfilePage = ({
       const response = await updateUserProfile(userInfo, token);
       const updatedUser = response.user;
       const newToken = response.token;
-      const { updatedReservations } = response;
+      const { updatedReservations, reservationsEtag } = response;
+      if (reservationsEtag) {
+        cacheReservationsEtag(reservationsEtag);
+      }
       updateReservationTitles(updatedReservations);
       if (selectedMember && updatedUser.id === selectedMember.id) {
         updateSelectedMember(updatedUser);

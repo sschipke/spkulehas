@@ -4,6 +4,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
 import { MOUNTAIN_TZ } from "./constants";
+import { cacheReservations } from "./localStorage";
 
 dayjs.extend(isBetween);
 dayjs.extend(utc);
@@ -326,6 +327,7 @@ export const handleNameChangeReservationTitles = (
     }
     return reservation;
   });
+  cacheReservations(reservationsWithNewName);
   newState.reservations = [...reservationsWithNewName];
   if (user && !user.isAdmin) {
     let updatedUserReservations = reservationsWithNewName.filter(
