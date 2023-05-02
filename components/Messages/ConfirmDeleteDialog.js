@@ -73,11 +73,11 @@ const ConfirmDeleteDialog = ({
           Would you like to dete this reservation for{" "}
           <strong>{currentReservation.title}</strong> beginning on{" "}
           <strong>
-            {dayjs(currentReservation.start).format("dddd, MMMM DD, YYYY")}
+            {dayjs(currentReservation.start).format("dddd, MMMM D, YYYY")}
           </strong>{" "}
           and ending{" "}
           <strong>
-            {dayjs(currentReservation.end).format("dddd, MMMM DD, YYYY")}
+            {dayjs(currentReservation.end).format("dddd, MMMM D, YYYY")}
           </strong>
           ?
         </p>
