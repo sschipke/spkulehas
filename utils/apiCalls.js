@@ -393,3 +393,13 @@ export const createNewMember = async (member, password, token) => {
   }
   return res.json();
 };
+
+export const validateReservationsEtag = async (etag) => {
+  const url = `${baseUrl}reservations/validate/${etag}`;
+  let res = await fetch(url);
+  if (res.status === 204) {
+    return true;
+  } else {
+    return false;
+  }
+};

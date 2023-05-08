@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Select, MenuItem, InputLabel } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import { updateSelectedUser } from "../../actions";
 
 const UserSelect = ({
@@ -12,8 +12,9 @@ const UserSelect = ({
   selectedUser,
   isEditReservationModalOpen
 }) => {
-  const handleSelect = (e) => {
-    updateSelectedUser(e.target.value);
+  const handleSelect = (value) => {
+    const userId = value && value.id ? value.id : "";
+    updateSelectedUser(userId);
   };
 
   useEffect(() => {
@@ -30,29 +31,20 @@ const UserSelect = ({
     return null;
   }
 
-  const options = usersInfo.map((user) => (
-    <MenuItem color="secondary" key={user.id} value={user.id}>
-      {user.name}
-    </MenuItem>
-  ));
+  const options = usersInfo.map((user) => ({ label: user.name, id: user.id }));
 
-  options.unshift(
-    <MenuItem key={"none"} value="">
-      None
-    </MenuItem>
-  );
+  const inputValue = selectedUser
+    ? { label: selectedUser.name, id: selectedUser.id }
+    : null;
   return (
     <div style={{ width: "80%" }}>
-      <InputLabel>Member</InputLabel>
-      <Select
-        label="Member"
-        value={selectedUser ? selectedUser.id : ""}
-        id="selectUserId"
-        onChange={handleSelect}
-        sx={{ width: "80%" }}
-      >
-        {options}
-      </Select>
+      <Autocomplete
+        options={options}
+        value={inputValue}
+        onChange={(e, value) => handleSelect(value)}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        renderInput={(params) => <TextField {...params} label="Member" />}
+      />
     </div>
   );
 };

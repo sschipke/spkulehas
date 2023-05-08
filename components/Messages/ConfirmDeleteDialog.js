@@ -9,13 +9,14 @@ import {
   DialogContent,
   DialogTitle
 } from "@mui/material";
-import moment from "moment";
+import dayjs from "dayjs";
 import {
   toggleConfirmDeleteDialog,
   removeReservation,
   showToast
 } from "../../actions";
 import { deleteReservation } from "../../utils/apiCalls";
+import { cacheReservationsEtag } from "../../utils/localStorage";
 
 const ConfirmDeleteDialog = ({
   currentReservation,
@@ -30,12 +31,14 @@ const ConfirmDeleteDialog = ({
 
   const handleConfirmation = async () => {
     try {
-      let deletedReservation = await deleteReservation(
+      let deleteResponse = await deleteReservation(
         currentReservation,
         token,
         shouldSendEmail
       );
-      removeReservation(deletedReservation && currentReservation.id);
+      removeReservation(deleteResponse && currentReservation.id);
+      const { reservationsEtag } = deleteResponse;
+      cacheReservationsEtag(reservationsEtag);
       toggleConfirmDeleteDialog();
     } catch (err) {
       const { error } = err;
@@ -70,11 +73,11 @@ const ConfirmDeleteDialog = ({
           Would you like to dete this reservation for{" "}
           <strong>{currentReservation.title}</strong> beginning on{" "}
           <strong>
-            {moment(currentReservation.start).format("dddd, MMMM DD, YYYY")}
+            {dayjs(currentReservation.start).format("dddd, MMMM D, YYYY")}
           </strong>{" "}
           and ending{" "}
           <strong>
-            {moment(currentReservation.end).format("dddd, MMMM DD, YYYY")}
+            {dayjs(currentReservation.end).format("dddd, MMMM D, YYYY")}
           </strong>
           ?
         </p>

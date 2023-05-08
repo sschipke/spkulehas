@@ -25,6 +25,7 @@ import {
   canSubmitReservation
 } from "../../utils/helpers";
 import { postReservation } from "../../utils/apiCalls";
+import { cacheReservationsEtag } from "../../utils/localStorage";
 const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
 const ReservationTitle = dynamic(() => import("../Utilities/ReservationTitle"));
 export const NewReservationPicker = ({
@@ -77,8 +78,10 @@ export const NewReservationPicker = ({
     }
     reservation = formatReservation(reservation, checkinDate, checkoutDate);
     try {
-      const newReservation = await postReservation(reservation, token);
-      addReservation(newReservation.reservation);
+      const newReservationResponse = await postReservation(reservation, token);
+      const { reservationsEtag } = newReservationResponse;
+      cacheReservationsEtag(reservationsEtag);
+      addReservation(newReservationResponse.reservation);
       toggleNewReservationPicker();
     } catch (err) {
       console.error("Error creating reservation. ", err);

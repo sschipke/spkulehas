@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from "dayjs";
 const minDate = process.env.NEXT_PUBLIC_MIN_DATE;
 const maxDate = process.env.NEXT_PUBLIC_MAX_DATE;
 let initialState = {
@@ -15,6 +15,7 @@ let initialState = {
   is_loading: false,
   is_confirm_delete_dialog_open: false,
   is_confirm_add_member_dialog_open: false,
+  is_add_to_calendar_modal_open: false,
   view_date: new Date()
 };
 
@@ -25,7 +26,8 @@ const screen = (state = initialState, action) => {
     new_reservation_picker_open,
     view_date,
     is_confirm_delete_dialog_open,
-    is_confirm_add_member_dialog_open
+    is_confirm_add_member_dialog_open,
+    is_add_to_calendar_modal_open
   } = state;
   switch (action.type) {
     case "IS_LOADING":
@@ -54,24 +56,24 @@ const screen = (state = initialState, action) => {
       new_state.show_toast = false;
       return new_state;
     case "VIEW_NEXT_MONTH":
-      new_state.view_date = moment(view_date).add(1, "month").toDate();
+      new_state.view_date = dayjs(view_date).add(1, "month").toDate();
       return new_state;
     case "VIEW_PREVIOUS_MONTH":
-      new_state.view_date = moment(view_date).subtract(1, "month").toDate();
+      new_state.view_date = dayjs(view_date).subtract(1, "month").toDate();
       return new_state;
     case "UPDATE_VIEW_DATE":
       let { date } = action;
-      if (!moment(date).isValid()) {
+      if (!dayjs(date).isValid()) {
         return new_state;
       }
       if (date) {
-        new_state.view_date = moment(date).toDate();
+        new_state.view_date = dayjs(date).toDate();
       }
-      if (moment(date).isBefore(minDate)) {
-        new_state.view_date = moment(minDate).toDate();
+      if (dayjs(date).isBefore(minDate)) {
+        new_state.view_date = dayjs(minDate).toDate();
       }
-      if (moment(date).isAfter(maxDate)) {
-        new_state.view_date = moment(maxDate).toDate();
+      if (dayjs(date).isAfter(maxDate)) {
+        new_state.view_date = dayjs(maxDate).toDate();
       }
       return new_state;
     case "VIEW_TODAY":
@@ -97,6 +99,9 @@ const screen = (state = initialState, action) => {
       return new_state;
     case "TOGGLE_CONFIRM_DELETE_DIALOG":
       new_state.is_confirm_delete_dialog_open = !is_confirm_delete_dialog_open;
+      return new_state;
+    case "TOGGLE_ADD_TO_CALENDAR_MODAL":
+      new_state.is_add_to_calendar_modal_open = !is_add_to_calendar_modal_open;
       return new_state;
     case "TOGGLE_CONFIRM_ADD_MEMBER_DIALOG":
       new_state.is_confirm_add_member_dialog_open =

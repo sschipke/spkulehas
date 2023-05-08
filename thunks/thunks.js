@@ -9,7 +9,8 @@ import {
   validateResetToken,
   fetchMemberProfile,
   fetchMemberDetailsForAdmin,
-  createNewMember
+  createNewMember,
+  validateReservationsEtag
 } from "../utils/apiCalls";
 import {
   closeLoadingModal,
@@ -30,12 +31,21 @@ import {
   loadMemberDetails,
   setNewMember,
   clearNewMemberInfo,
-  toggleConfirmAddMemberDialog
+  toggleConfirmAddMemberDialog,
+  showViewReservationModal,
+  updateViewDate,
+  setCurrentReservation
 } from "../actions";
+import {
+  cacheReservationData,
+  getCachedReservations,
+  getCachedReservationsEtag
+} from "../utils/localStorage";
 
 export const loadReservations = () => async (dispatch) => {
   return getReservations()
     .then((res) => {
+      cacheReservationData(res);
       dispatch(setReservations(res.reservations));
       dispatch(closeLoadingModal());
     })
@@ -43,6 +53,20 @@ export const loadReservations = () => async (dispatch) => {
       console.error("Unable to fetch reservations", err);
       dispatch(showToast("Unable to fetch reservations.", "error"));
     });
+};
+
+export const handleReservationLoading = () => async (dispatch) => {
+  const cachedReservations = getCachedReservations();
+  const reservationsEtag = getCachedReservationsEtag();
+  if (cachedReservations && cachedReservations.length && reservationsEtag) {
+    const isEtagValid = await validateReservationsEtag(reservationsEtag);
+    if (isEtagValid) {
+      dispatch(setReservations(cachedReservations));
+      dispatch(closeLoadingModal());
+    } else dispatch(loadReservations());
+  } else {
+    dispatch(loadReservations());
+  }
 };
 
 export const processLogin = (email, password) => async (dispatch) => {
@@ -233,5 +257,21 @@ export const handleAddNewMember =
       }
       dispatch(closeLoadingModal());
       dispatch(showToast("Unable to add new member: " + error, "error"));
+    }
+  };
+
+export const handleReservationIdFromUrl =
+  (reservationId, reservations) => (dispatch) => {
+    console.log("Looking for reservation!!: ", reservationId);
+    const reservationNumber = Number(reservationId);
+    const reservationFromUrl = reservations.find(
+      (reservation) => reservation.id === reservationNumber
+    );
+    if (reservationFromUrl) {
+      dispatch(updateViewDate(reservationFromUrl.start));
+      dispatch(setCurrentReservation(reservationFromUrl));
+      dispatch(showViewReservationModal());
+    } else {
+      dispatch(showToast("Unable to load reservation.", "error"));
     }
   };

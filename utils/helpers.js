@@ -1,35 +1,43 @@
-import * as moment from "moment-timezone";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
 import { MOUNTAIN_TZ } from "./constants";
+import { cacheReservations } from "./localStorage";
+
+dayjs.extend(isBetween);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const WINTER_SEASON_START_2022 = "2022-10-24";
 const WINTER_SEASON_END_2022 = "2023-05-21";
-const WINTER_SEASON_START_2023 = "2023-10-23";
+const WINTER_SEASON_START_2023 = "2023-10-22";
 const WINTER_SEASON_END_2023 = "2024-05-20";
 const WINTER_SEASON_START_2024 = "2024-10-21";
 const WINTER_SEASON_END_2024 = "2025-05-18";
 
 const PHONE_REGEX = new RegExp(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);
 
-const NOON_HOUR = {
-  hour: 12,
-  minute: 0,
-  second: 0,
-  millisecond: 0
-};
+const NOON_HOUR = 12;
+
+const CABIN_ADDRESS = process.env.NEXT_PUBLIC_CABIN_ADDRESS;
+
+const FE_BASE_URL = process.env.NEXT_PUBLIC_FRONTEND_BASE_URL;
 
 export const isInWinter = (date) => {
   return (
-    moment(date).isBetween(
+    dayjs(date).isBetween(
       WINTER_SEASON_START_2022,
       WINTER_SEASON_END_2022,
       "day"
     ) ||
-    moment(date).isBetween(
+    dayjs(date).isBetween(
       WINTER_SEASON_START_2023,
       WINTER_SEASON_END_2023,
       "day"
     ) ||
-    moment(date).isBetween(
+    dayjs(date).isBetween(
       WINTER_SEASON_START_2024,
       WINTER_SEASON_END_2024,
       "day"
@@ -52,13 +60,13 @@ export const isInReservation = (date, reservationStart, reservationEnd) => {
 export const findNearestReservations = (desiredDate, reservations) => {
   let nearestReservation = reservations[0];
   let nextReservation;
-  let comparisonDate = moment(desiredDate);
+  let comparisonDate = dayjs(desiredDate);
   for (let index = 0; index < reservations.length; index++) {
     const reservation = reservations[index];
-    const reservationStart = moment(reservation.start);
-    const reservationEnd = moment(reservation.end);
-    const nearestStart = moment(nearestReservation.start);
-    const nearestEnd = moment(nearestReservation.end);
+    const reservationStart = dayjs(reservation.start);
+    const reservationEnd = dayjs(reservation.end);
+    const nearestStart = dayjs(nearestReservation.start);
+    const nearestEnd = dayjs(nearestReservation.end);
 
     const differenceOfNearestStart = Math.abs(
       nearestStart.diff(comparisonDate, "days")
@@ -97,7 +105,7 @@ export const findNearestReservations = (desiredDate, reservations) => {
 
   if (
     nextReservation &&
-    moment(nearestReservation.start).isAfter(nextReservation.start)
+    dayjs(nearestReservation.start).isAfter(nextReservation.start)
   ) {
     return [nextReservation, nearestReservation];
   }
@@ -115,8 +123,8 @@ const determineNextReservation = (
   if (
     isInReservation(
       comparisonDate,
-      moment(nearestReserveration.start),
-      moment(nearestReserveration.end)
+      dayjs(nearestReserveration.start),
+      dayjs(nearestReserveration.end)
     ) &&
     index <= reservations.length - 2
   ) {
@@ -164,34 +172,34 @@ export const determineMinDate = (currentReservation, reservations) => {
     reservations
   );
   if (previousReservation) {
-    return moment(previousReservation.end).add(1, "day");
+    return dayjs(previousReservation.end).add(1, "day");
   } else {
-    return moment("2022-05-20").tz(MOUNTAIN_TZ);
+    return dayjs("2022-05-20").tz(MOUNTAIN_TZ);
   }
 };
 
 export const determineMinDateForNewReservation = (previousReservation) => {
   if (!previousReservation) {
-    return moment();
+    return dayjs();
   } else {
-    return moment(previousReservation.end).add(1, "day");
+    return dayjs(previousReservation.end).add(1, "day");
   }
 };
 
 export const determineMaxDate = (checkinDate, nextReservation, isAdmin) => {
   const longestDate = isInWinter(checkinDate)
-    ? moment(checkinDate).add(13, "day")
-    : moment(checkinDate).add(6, "day");
-  const nextReservationStart = moment(
+    ? dayjs(checkinDate).add(13, "day")
+    : dayjs(checkinDate).add(6, "day");
+  const nextReservationStart = dayjs(
     nextReservation ? nextReservation.start : null
   )
     .tz(MOUNTAIN_TZ)
-    .set(NOON_HOUR)
+    .set("hour", NOON_HOUR)
     .subtract(1, "day");
   if (nextReservationStart && isAdmin && nextReservationStart.isValid()) {
     return nextReservationStart;
   } else if (nextReservation && isAdmin && !!nextReservation.isValid()) {
-    return moment(process.env.NEXT_PUBLIC_MAX_DATE);
+    return dayjs(process.env.NEXT_PUBLIC_MAX_DATE);
   }
   if (
     nextReservationStart.isValid() &&
@@ -212,14 +220,19 @@ export const canEdit = (user, reservation) => {
 
 export const sortByStartDate = (reservations) =>
   reservations.sort((reservationA, reservationB) =>
-    moment(reservationA.start).diff(reservationB.start)
+    dayjs(reservationA.start).diff(reservationB.start)
   );
 
 export const formatReservation = (reservation, checkinDate, checkoutDate) => {
-  const start = checkinDate ? moment(checkinDate) : moment(reservation.start);
-  const end = checkoutDate ? moment(checkoutDate) : moment(reservation.end);
-  reservation.start = start.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
-  reservation.end = end.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
+  let start = checkinDate ? dayjs(checkinDate) : dayjs(reservation.start);
+  let end = checkoutDate ? dayjs(checkoutDate) : dayjs(reservation.end);
+  start = start.set("hour", NOON_HOUR);
+  end = end.set("hour", NOON_HOUR);
+  reservation.start = start
+    .tz(MOUNTAIN_TZ)
+    .set("hour", NOON_HOUR)
+    .toISOString();
+  reservation.end = end.tz(MOUNTAIN_TZ).set("hour", NOON_HOUR).toISOString();
   return reservation;
 };
 
@@ -314,6 +327,7 @@ export const handleNameChangeReservationTitles = (
     }
     return reservation;
   });
+  cacheReservations(reservationsWithNewName);
   newState.reservations = [...reservationsWithNewName];
   if (user && !user.isAdmin) {
     let updatedUserReservations = reservationsWithNewName.filter(
@@ -331,3 +345,76 @@ export const convertToMountainTimeDate = (dateString) =>
       timeZone: MOUNTAIN_TZ
     })
   );
+
+export const generateCalendarLinks = (reservation) => {
+  const feLink = createFeLinkToReservation(reservation);
+
+  const calendarEvent = {
+    id: reservation.id,
+    start: reservation.start.toISOString().replace(/-|:|\.\d+/g, ""),
+    end: reservation.end.toISOString().replace(/-|:|\.\d+/g, ""),
+    title: `${reservation.title} at the Cabin`,
+    description: `${feLink}
+    ${reservation.notes}`,
+    location: CABIN_ADDRESS
+  };
+  const googleCalendarLink = generateGoogleCalendarLink(calendarEvent);
+  const outLookLink = generateOutlookCalendarLink(reservation, calendarEvent);
+  const appleLink = generateAppleCalendarLink(calendarEvent);
+
+  return { googleCalendarLink, outLookLink, appleLink };
+
+};
+
+export const generateGoogleCalendarLink = (event) => {
+  const link = `https://www.google.com/calendar/render?action=TEMPLATE&dates=${event.start}/${event.end}&text=${event.title}&location=${event.location}&details=${event.description}`;
+
+  return new URL(link).href;
+};
+
+export const generateOutlookCalendarLink = (reservation, event) => {
+  const outlookEvent = {
+    start: reservation.start.toISOString(),
+    end: reservation.end.toISOString()
+  };
+
+  const outlookLink = `https://outlook.office.com/calendar/action/compose?subject=${encodeURIComponent(
+    event.title
+  )}&body=${encodeURI(event.description)}&location=${encodeURIComponent(
+    event.location
+  )}&startdt=${encodeURIComponent(
+    outlookEvent.start
+  )}&enddt=${encodeURIComponent(outlookEvent.end)}`;
+
+  return outlookLink;
+};
+
+export const generateAppleCalendarLink = (event) => {
+  // TODO: Add notes & url in here
+  const icsFileContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+PRODID:${event.id}
+DTSTAMP:${event.start}
+DTSTART:${event.start}
+DTEND:${event.end}
+SUMMARY:${event.title}
+LOCATION:${event.location}
+NOTES:${event.description}
+END:VEVENT
+END:VCALENDAR`;
+
+  const dataURI = `data:text/calendar;charset=utf-8,${encodeURIComponent(
+    icsFileContent
+  )}`;
+  return dataURI;
+};
+
+export const createFeLinkToReservation = (reservation) =>
+  new URL(`${FE_BASE_URL}?reservationId=${reservation.id}`).href;
+
+export const convertReservationTimesToDates = (reservation) => {
+  reservation.start = convertToMountainTimeDate(reservation.start);
+  reservation.end = convertToMountainTimeDate(reservation.end);
+  return reservation;
+};

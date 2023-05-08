@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import moment from "moment";
+import dayjs from "dayjs";
 import {
   TextField,
   Modal,
@@ -28,6 +28,7 @@ import {
   canSubmitReservation
 } from "../../utils/helpers";
 import { putReservation } from "../../utils/apiCalls";
+import { cacheReservationsEtag } from "../../utils/localStorage";
 const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
 const ReservationTitle = dynamic(() => import("../Utilities/ReservationTitle"));
 
@@ -47,7 +48,7 @@ export const EditReservationPicker = ({
 }) => {
   const initialValue = () => {
     if (!currentReservation) {
-      return [moment().startOf("isoWeek"), moment().endOf("isoWeek")];
+      return [dayjs().startOf("week"), dayjs().endOf("week")];
     } else return [currentReservation.start, currentReservation.end];
   };
   const [dates, setDates] = useState(initialValue());
@@ -104,11 +105,13 @@ export const EditReservationPicker = ({
       checkoutDate
     );
     try {
-      const updatedReservation = await putReservation(
+      const updatedReservationResponse = await putReservation(
         formattedReservation,
         token
       );
-      updateReservation(updatedReservation.reservation);
+      const { reservationsEtag } = updatedReservationResponse;
+      cacheReservationsEtag(reservationsEtag);
+      updateReservation(updatedReservationResponse.reservation);
       closeViewReservationModal();
       toggleEditReservationPicker();
     } catch (error) {
