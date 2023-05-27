@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import dayjs from "dayjs";
+import moment from "moment";
 import {
   mapEmailSettings,
   handleNameChangeReservationTitles,
@@ -93,7 +93,7 @@ const data = (state = initialState, action) => {
     case "SET_CURRENT_RESERVATION":
       new_state.current_reservation = action.reservation;
       new_state.surrounding_reservations = findNearestReservations(
-        dayjs(action.reservation.start),
+        moment(action.reservation.start),
         reservations
       );
       return new_state;

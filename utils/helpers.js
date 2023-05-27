@@ -1,25 +1,22 @@
-import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-
+import * as moment from "moment-timezone";
 import { MOUNTAIN_TZ } from "./constants";
 import { cacheReservations } from "./localStorage";
 
-dayjs.extend(isBetween);
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
 const WINTER_SEASON_START_2022 = "2022-10-24";
 const WINTER_SEASON_END_2022 = "2023-05-21";
-const WINTER_SEASON_START_2023 = "2023-10-22";
+const WINTER_SEASON_START_2023 = "2023-10-23";
 const WINTER_SEASON_END_2023 = "2024-05-20";
 const WINTER_SEASON_START_2024 = "2024-10-21";
 const WINTER_SEASON_END_2024 = "2025-05-18";
 
 const PHONE_REGEX = new RegExp(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);
 
-const NOON_HOUR = 12;
+const NOON_HOUR = {
+  hour: 12,
+  minute: 0,
+  second: 0,
+  millisecond: 0
+};
 
 const CABIN_ADDRESS = process.env.NEXT_PUBLIC_CABIN_ADDRESS;
 
@@ -27,17 +24,17 @@ const FE_BASE_URL = process.env.NEXT_PUBLIC_FRONTEND_BASE_URL;
 
 export const isInWinter = (date) => {
   return (
-    dayjs(date).isBetween(
+    moment(date).isBetween(
       WINTER_SEASON_START_2022,
       WINTER_SEASON_END_2022,
       "day"
     ) ||
-    dayjs(date).isBetween(
+    moment(date).isBetween(
       WINTER_SEASON_START_2023,
       WINTER_SEASON_END_2023,
       "day"
     ) ||
-    dayjs(date).isBetween(
+    moment(date).isBetween(
       WINTER_SEASON_START_2024,
       WINTER_SEASON_END_2024,
       "day"
@@ -60,13 +57,13 @@ export const isInReservation = (date, reservationStart, reservationEnd) => {
 export const findNearestReservations = (desiredDate, reservations) => {
   let nearestReservation = reservations[0];
   let nextReservation;
-  let comparisonDate = dayjs(desiredDate);
+  let comparisonDate = moment(desiredDate);
   for (let index = 0; index < reservations.length; index++) {
     const reservation = reservations[index];
-    const reservationStart = dayjs(reservation.start);
-    const reservationEnd = dayjs(reservation.end);
-    const nearestStart = dayjs(nearestReservation.start);
-    const nearestEnd = dayjs(nearestReservation.end);
+    const reservationStart = moment(reservation.start);
+    const reservationEnd = moment(reservation.end);
+    const nearestStart = moment(nearestReservation.start);
+    const nearestEnd = moment(nearestReservation.end);
 
     const differenceOfNearestStart = Math.abs(
       nearestStart.diff(comparisonDate, "days")
@@ -105,7 +102,7 @@ export const findNearestReservations = (desiredDate, reservations) => {
 
   if (
     nextReservation &&
-    dayjs(nearestReservation.start).isAfter(nextReservation.start)
+    moment(nearestReservation.start).isAfter(nextReservation.start)
   ) {
     return [nextReservation, nearestReservation];
   }
@@ -123,8 +120,8 @@ const determineNextReservation = (
   if (
     isInReservation(
       comparisonDate,
-      dayjs(nearestReserveration.start),
-      dayjs(nearestReserveration.end)
+      moment(nearestReserveration.start),
+      moment(nearestReserveration.end)
     ) &&
     index <= reservations.length - 2
   ) {
@@ -172,34 +169,34 @@ export const determineMinDate = (currentReservation, reservations) => {
     reservations
   );
   if (previousReservation) {
-    return dayjs(previousReservation.end).add(1, "day");
+    return moment(previousReservation.end).add(1, "day");
   } else {
-    return dayjs("2022-05-20").tz(MOUNTAIN_TZ);
+    return moment("2022-05-20").tz(MOUNTAIN_TZ);
   }
 };
 
 export const determineMinDateForNewReservation = (previousReservation) => {
   if (!previousReservation) {
-    return dayjs();
+    return moment();
   } else {
-    return dayjs(previousReservation.end).add(1, "day");
+    return moment(previousReservation.end).add(1, "day");
   }
 };
 
 export const determineMaxDate = (checkinDate, nextReservation, isAdmin) => {
   const longestDate = isInWinter(checkinDate)
-    ? dayjs(checkinDate).add(13, "day")
-    : dayjs(checkinDate).add(6, "day");
-  const nextReservationStart = dayjs(
+    ? moment(checkinDate).add(13, "day")
+    : moment(checkinDate).add(6, "day");
+  const nextReservationStart = moment(
     nextReservation ? nextReservation.start : null
   )
     .tz(MOUNTAIN_TZ)
-    .set("hour", NOON_HOUR)
+    .set(NOON_HOUR)
     .subtract(1, "day");
   if (nextReservationStart && isAdmin && nextReservationStart.isValid()) {
     return nextReservationStart;
   } else if (nextReservation && isAdmin && !!nextReservation.isValid()) {
-    return dayjs(process.env.NEXT_PUBLIC_MAX_DATE);
+    return moment(process.env.NEXT_PUBLIC_MAX_DATE);
   }
   if (
     nextReservationStart.isValid() &&
@@ -220,19 +217,14 @@ export const canEdit = (user, reservation) => {
 
 export const sortByStartDate = (reservations) =>
   reservations.sort((reservationA, reservationB) =>
-    dayjs(reservationA.start).diff(reservationB.start)
+    moment(reservationA.start).diff(reservationB.start)
   );
 
 export const formatReservation = (reservation, checkinDate, checkoutDate) => {
-  let start = checkinDate ? dayjs(checkinDate) : dayjs(reservation.start);
-  let end = checkoutDate ? dayjs(checkoutDate) : dayjs(reservation.end);
-  start = start.set("hour", NOON_HOUR);
-  end = end.set("hour", NOON_HOUR);
-  reservation.start = start
-    .tz(MOUNTAIN_TZ)
-    .set("hour", NOON_HOUR)
-    .toISOString();
-  reservation.end = end.tz(MOUNTAIN_TZ).set("hour", NOON_HOUR).toISOString();
+  const start = checkinDate ? moment(checkinDate) : moment(reservation.start);
+  const end = checkoutDate ? moment(checkoutDate) : moment(reservation.end);
+  reservation.start = start.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
+  reservation.end = end.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
   return reservation;
 };
 

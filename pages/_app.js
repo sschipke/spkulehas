@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import DateAdapter from "@mui/lab/AdapterDayjs";
+import DateAdapter from "@mui/lab/AdapterMoment";
 import { createTheme } from "@mui/material";
 import { rootReducer } from "../reducers";
 import { LocalizationProvider } from "@mui/lab";
