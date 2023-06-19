@@ -45,7 +45,7 @@ export const putReservation = async (reservation, token) => {
     switch (res.status) {
       case 401:
       case 404:
-      case 422:
+      case 409:
         throw error;
       default:
         console.error("Error updating reservation");
@@ -72,6 +72,7 @@ export const postReservation = async (reservation, token) => {
       case 401:
       case 403:
       case 404:
+      case 409:
       case 422:
         throw error;
       default:
@@ -396,10 +397,15 @@ export const createNewMember = async (member, password, token) => {
 
 export const validateReservationsEtag = async (etag) => {
   const url = `${baseUrl}reservations/validate/${etag}`;
-  let res = await fetch(url);
-  if (res.status === 204) {
-    return true;
-  } else {
+  try {
+    let res = await fetch(url);
+    if (res.status === 204) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Unable to validate reservations state, ", error);
     return false;
   }
 };

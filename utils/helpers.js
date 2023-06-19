@@ -222,9 +222,11 @@ export const sortByStartDate = (reservations) =>
 
 export const formatReservation = (reservation, checkinDate, checkoutDate) => {
   const start = checkinDate ? moment(checkinDate) : moment(reservation.start);
+  start.set(NOON_HOUR);
   const end = checkoutDate ? moment(checkoutDate) : moment(reservation.end);
-  reservation.start = start.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
-  reservation.end = end.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
+  end.set(NOON_HOUR);
+  reservation.start = start.tz(MOUNTAIN_TZ).toISOString();
+  reservation.end = end.tz(MOUNTAIN_TZ).toISOString();
   return reservation;
 };
 
