@@ -28,6 +28,7 @@ import {
   canSubmitReservation
 } from "../../utils/helpers";
 import { putReservation } from "../../utils/apiCalls";
+import { cacheReservationsEtag } from "../../utils/localStorage";
 const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
 const ReservationTitle = dynamic(() => import("../Utilities/ReservationTitle"));
 
@@ -104,11 +105,13 @@ export const EditReservationPicker = ({
       checkoutDate
     );
     try {
-      const updatedReservation = await putReservation(
+      const updatedReservationResponse = await putReservation(
         formattedReservation,
         token
       );
-      updateReservation(updatedReservation.reservation);
+      const { reservationsEtag } = updatedReservationResponse;
+      cacheReservationsEtag(reservationsEtag);
+      updateReservation(updatedReservationResponse.reservation);
       closeViewReservationModal();
       toggleEditReservationPicker();
     } catch (error) {

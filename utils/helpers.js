@@ -1,5 +1,6 @@
 import * as moment from "moment-timezone";
 import { MOUNTAIN_TZ } from "./constants";
+import { cacheReservations } from "./localStorage";
 
 const WINTER_SEASON_START_2022 = "2022-10-24";
 const WINTER_SEASON_END_2022 = "2023-05-21";
@@ -16,6 +17,10 @@ const NOON_HOUR = {
   second: 0,
   millisecond: 0
 };
+
+const CABIN_ADDRESS = process.env.NEXT_PUBLIC_CABIN_ADDRESS;
+
+const FE_BASE_URL = process.env.NEXT_PUBLIC_FRONTEND_BASE_URL;
 
 export const isInWinter = (date) => {
   return (
@@ -217,9 +222,11 @@ export const sortByStartDate = (reservations) =>
 
 export const formatReservation = (reservation, checkinDate, checkoutDate) => {
   const start = checkinDate ? moment(checkinDate) : moment(reservation.start);
+  start.set(NOON_HOUR);
   const end = checkoutDate ? moment(checkoutDate) : moment(reservation.end);
-  reservation.start = start.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
-  reservation.end = end.tz(MOUNTAIN_TZ).set(NOON_HOUR).toISOString();
+  end.set(NOON_HOUR);
+  reservation.start = start.tz(MOUNTAIN_TZ).toISOString();
+  reservation.end = end.tz(MOUNTAIN_TZ).toISOString();
   return reservation;
 };
 
@@ -314,6 +321,7 @@ export const handleNameChangeReservationTitles = (
     }
     return reservation;
   });
+  cacheReservations(reservationsWithNewName);
   newState.reservations = [...reservationsWithNewName];
   if (user && !user.isAdmin) {
     let updatedUserReservations = reservationsWithNewName.filter(
@@ -331,3 +339,76 @@ export const convertToMountainTimeDate = (dateString) =>
       timeZone: MOUNTAIN_TZ
     })
   );
+
+export const generateCalendarLinks = (reservation) => {
+  const feLink = createFeLinkToReservation(reservation);
+
+  const calendarEvent = {
+    id: reservation.id,
+    start: reservation.start.toISOString().replace(/-|:|\.\d+/g, ""),
+    end: reservation.end.toISOString().replace(/-|:|\.\d+/g, ""),
+    title: `${reservation.title} at the Cabin`,
+    description: `${feLink}
+    ${reservation.notes}`,
+    location: CABIN_ADDRESS
+  };
+  const googleCalendarLink = generateGoogleCalendarLink(calendarEvent);
+  const outLookLink = generateOutlookCalendarLink(reservation, calendarEvent);
+  const appleLink = generateAppleCalendarLink(calendarEvent);
+
+  return { googleCalendarLink, outLookLink, appleLink };
+
+};
+
+export const generateGoogleCalendarLink = (event) => {
+  const link = `https://www.google.com/calendar/render?action=TEMPLATE&dates=${event.start}/${event.end}&text=${event.title}&location=${event.location}&details=${event.description}`;
+
+  return new URL(link).href;
+};
+
+export const generateOutlookCalendarLink = (reservation, event) => {
+  const outlookEvent = {
+    start: reservation.start.toISOString(),
+    end: reservation.end.toISOString()
+  };
+
+  const outlookLink = `https://outlook.office.com/calendar/action/compose?subject=${encodeURIComponent(
+    event.title
+  )}&body=${encodeURI(event.description)}&location=${encodeURIComponent(
+    event.location
+  )}&startdt=${encodeURIComponent(
+    outlookEvent.start
+  )}&enddt=${encodeURIComponent(outlookEvent.end)}`;
+
+  return outlookLink;
+};
+
+export const generateAppleCalendarLink = (event) => {
+  // TODO: Add notes & url in here
+  const icsFileContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+PRODID:${event.id}
+DTSTAMP:${event.start}
+DTSTART:${event.start}
+DTEND:${event.end}
+SUMMARY:${event.title}
+LOCATION:${event.location}
+NOTES:${event.description}
+END:VEVENT
+END:VCALENDAR`;
+
+  const dataURI = `data:text/calendar;charset=utf-8,${encodeURIComponent(
+    icsFileContent
+  )}`;
+  return dataURI;
+};
+
+export const createFeLinkToReservation = (reservation) =>
+  new URL(`${FE_BASE_URL}?reservationId=${reservation.id}`).href;
+
+export const convertReservationTimesToDates = (reservation) => {
+  reservation.start = convertToMountainTimeDate(reservation.start);
+  reservation.end = convertToMountainTimeDate(reservation.end);
+  return reservation;
+};

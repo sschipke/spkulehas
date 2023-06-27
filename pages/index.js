@@ -4,7 +4,6 @@ import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useRouter } from "next/router";
 import {
-  addReservation,
   toggleEditReservationPicker,
   setCurrentReservation,
   showToast,
@@ -17,7 +16,11 @@ import {
   showViewReservationModal,
   showLoadingModal
 } from "../actions";
-import { loadReservations, processValidateToken } from "../thunks/thunks";
+import {
+  processValidateToken,
+  handleReservationIdFromUrl,
+  handleReservationLoading
+} from "../thunks/thunks";
 import { isInReservation, findNearestReservations } from "../utils/helpers";
 
 const CalendarNavBar = dynamic(() =>
@@ -53,7 +56,8 @@ const App = ({
   const maxDate = moment(process.env.NEXT_PUBLIC_MAX_DATE);
   const router = useRouter();
 
-  const { reset, date } = router.query;
+  const { reset, date, reservationId } = router.query;
+
   const handleEventSelect = (selection) => {
     setCurrentReservation(selection);
     showViewReservationModal();
@@ -85,7 +89,7 @@ const App = ({
   useEffect(() => {
     if (!areReservationsLoaded) {
       showLoadingModal();
-      dispatch(loadReservations());
+      dispatch(handleReservationLoading());
     }
     if (!user && reset && !token) {
       updateToken(reset);
@@ -96,9 +100,12 @@ const App = ({
     }
     if (date) {
       updateViewDate(date);
+    }
+    if (areReservationsLoaded && reservationId) {
+      dispatch(handleReservationIdFromUrl(reservationId, reservations));
       router.replace("/", null, { shallow: true });
     }
-  }, [areReservationsLoaded, reservations, user, reset, date, token]); // eslint-disable-line
+  }, [areReservationsLoaded, reservations, user, reset, date, token, reservationId]); // eslint-disable-line
 
   return (
     <div className="App">
@@ -131,7 +138,6 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      addReservation,
       toggleEditReservationPicker,
       toggleNewReservationPicker,
       setCurrentReservation,

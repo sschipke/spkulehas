@@ -202,3 +202,7 @@ export const setNewMemberInfo = (newMemberInfo) => ({
 export const clearNewMemberInfo = () => ({
   type: "CLEAR_NEW_MEMBER_INFO"
 });
+
+export const toggleAddToCalendarModal = () => ({
+  type: "TOGGLE_ADD_TO_CALENDAR_MODAL"
+});
