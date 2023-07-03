@@ -103,6 +103,16 @@ input:invalid {
   min-width: 50%;
 }
 
+.notes-title-and-member-select {
+  min-width: 40%;
+  width: 50%;
+  margin: 15px;
+}
+
+.date-range-picker {
+  border: 1px solid red;
+}
+
 @media screen and (max-width: 600px) {
   .modal-large {
     .reservation-buttons {
@@ -118,5 +128,8 @@ input:invalid {
   }
   .view-reservation-add-calendar-modal {
     min-width: 80%;
+  }
+  .notes-title-and-member-select {
+    width: 70%;  
   }
 }

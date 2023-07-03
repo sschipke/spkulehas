@@ -37,7 +37,7 @@ const UserSelect = ({
     ? { label: selectedUser.name, id: selectedUser.id }
     : null;
   return (
-    <div style={{ width: "80%" }}>
+    <div className="notes-title-and-member-select">
       <Autocomplete
         options={options}
         value={inputValue}
