@@ -84,7 +84,6 @@ export const NewReservationPicker = ({
       addReservation(newReservationResponse.reservation);
       toggleNewReservationPicker();
     } catch (err) {
-      console.error("Error creating reservation. ", err);
       const { error } = err;
       showToast("Unable to add reservation. " + error, "error");
     }
@@ -134,6 +133,7 @@ export const NewReservationPicker = ({
           )}
         />
         <TextField
+          className="notes-title-and-member-select"
           id="notes"
           label="Notes"
           placeholder="Checkin time, checkout, etc."
@@ -144,7 +144,6 @@ export const NewReservationPicker = ({
           inputProps={{
             maxLength: 60
           }}
-          sx={{ mt: "15px" }}
         />
         <ReservationTitle />
         <UserSelect />

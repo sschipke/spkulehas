@@ -55,6 +55,7 @@ const ReservationTitle = ({
 
   return (
     <TextField
+      className="notes-title-and-member-select "
       id="reservation-title"
       label="Event Title"
       rows={1}
@@ -63,7 +64,6 @@ const ReservationTitle = ({
       inputProps={{
         maxLength: 20
       }}
-      sx={{ width: "20%" }}
     />
   );
 };
