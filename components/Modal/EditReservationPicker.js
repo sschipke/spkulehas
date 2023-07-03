@@ -119,9 +119,7 @@ export const EditReservationPicker = ({
       if (typeof error === "object") {
         err = error.error;
       }
-
-      console.error("Error updating reservation.", error);
-      showToast("Error updating reservation. " + err, "error");
+      showToast("Unable to update reservation. " + err, "error");
     }
   };
 
@@ -163,10 +161,9 @@ export const EditReservationPicker = ({
           }}
           minDate={minDate}
           maxDate={maxDate}
-          style={{ display: "flex", margin: "auto", flexDirection: "column" }}
           renderInput={(startProps, endProps) => (
             <React.Fragment>
-              <TextField {...startProps} />
+              <TextField {...startProps} className="date-range-picker" />
               <TextField {...endProps} />
             </React.Fragment>
           )}
@@ -174,6 +171,7 @@ export const EditReservationPicker = ({
         <TextField
           id="notes"
           label="Notes"
+          className="notes-title-and-member-select "
           placeholder="Checkin time, checkout, etc."
           multiline
           rows={2}
@@ -182,7 +180,6 @@ export const EditReservationPicker = ({
           inputProps={{
             maxLength: 60
           }}
-          sx={{ mt: "15px" }}
         />
         <ReservationTitle />
         <UserSelect />

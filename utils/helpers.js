@@ -8,6 +8,8 @@ const WINTER_SEASON_START_2023 = "2023-10-23";
 const WINTER_SEASON_END_2023 = "2024-05-20";
 const WINTER_SEASON_START_2024 = "2024-10-21";
 const WINTER_SEASON_END_2024 = "2025-05-18";
+const WINTER_SEASON_START_2025 = "2025-10-20";
+const WINTER_SEASON_END_2025 = "2026-05-15";
 
 const PHONE_REGEX = new RegExp(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);
 
@@ -37,6 +39,11 @@ export const isInWinter = (date) => {
     moment(date).isBetween(
       WINTER_SEASON_START_2024,
       WINTER_SEASON_END_2024,
+      "day"
+    ) ||
+    moment(date).isBetween(
+      WINTER_SEASON_START_2025,
+      WINTER_SEASON_END_2025,
       "day"
     )
   );
@@ -357,7 +364,6 @@ export const generateCalendarLinks = (reservation) => {
   const appleLink = generateAppleCalendarLink(calendarEvent);
 
   return { googleCalendarLink, outLookLink, appleLink };
-
 };
 
 export const generateGoogleCalendarLink = (event) => {

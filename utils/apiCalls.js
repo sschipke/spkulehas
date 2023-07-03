@@ -41,16 +41,13 @@ export const putReservation = async (reservation, token) => {
   };
   let res = await fetch(url, options);
   if (!res.ok) {
-    const error = await res.json();
-    switch (res.status) {
-      case 401:
-      case 404:
-      case 409:
-        throw error;
-      default:
-        console.error("Error updating reservation");
-        throw new Error("Failed to update reservation.");
+    const err = await res.json();
+    let { error } = err;
+    console.error("Error updating reservation: ", err);
+    if (!error) {
+      error = "Something went wrong.";
     }
+    throw { error };
   }
   return res.json();
 };
@@ -67,18 +64,13 @@ export const postReservation = async (reservation, token) => {
   };
   let res = await fetch(url, options);
   if (!res.ok) {
-    const error = await res.json();
-    switch (res.status) {
-      case 401:
-      case 403:
-      case 404:
-      case 409:
-      case 422:
-        throw error;
-      default:
-        console.error("Error adding reservation");
-        throw { error: "Something went wrong." };
+    const err = await res.json();
+    let { error } = err;
+    console.error("Error adding reservation: ", err);
+    if (!error) {
+      error = "Something went wrong.";
     }
+    throw { error };
   }
   return res.json();
 };
