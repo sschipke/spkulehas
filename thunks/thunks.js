@@ -275,3 +275,20 @@ export const handleReservationIdFromUrl =
       dispatch(showToast("Unable to load reservation.", "error"));
     }
   };
+
+export const handleEtagMismatch =
+  (closeMainModal, closeSecondaryModal) => async (dispatch) => {
+    dispatch(showToast("Try again. Getting updated reservations.", "error"));
+    try {
+      await dispatch(loadReservations());
+      closeMainModal();
+      if (closeSecondaryModal) {
+        closeSecondaryModal();
+      }
+      dispatch(showToast("Reservations updated. Try again.", "warning"));
+    } catch (err) {
+      dispatch(
+        showToast("Unable to update reservations. Please try again.", "error")
+      );
+    }
+  };

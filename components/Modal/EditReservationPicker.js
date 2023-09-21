@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import moment from "moment";
 import {
@@ -28,7 +28,11 @@ import {
   canSubmitReservation
 } from "../../utils/helpers";
 import { putReservation } from "../../utils/apiCalls";
-import { cacheReservationsEtag } from "../../utils/localStorage";
+import { handleEtagMismatch } from "../../thunks/thunks";
+import {
+  cacheReservationsEtag,
+  getCachedReservationsEtag
+} from "../../utils/localStorage";
 const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
 const ReservationTitle = dynamic(() => import("../Utilities/ReservationTitle"));
 
@@ -51,6 +55,7 @@ export const EditReservationPicker = ({
       return [moment().startOf("isoWeek"), moment().endOf("isoWeek")];
     } else return [currentReservation.start, currentReservation.end];
   };
+  const thunkDispatch = useDispatch();
   const [dates, setDates] = useState(initialValue());
   const initialNotes = currentReservation ? currentReservation.notes : "";
   const [notes, setNotes] = useState(initialNotes);
@@ -105,21 +110,28 @@ export const EditReservationPicker = ({
       checkoutDate
     );
     try {
+      const cachedReservationsEtag = getCachedReservationsEtag();
       const updatedReservationResponse = await putReservation(
         formattedReservation,
-        token
+        token,
+        cachedReservationsEtag
       );
       const { reservationsEtag } = updatedReservationResponse;
       cacheReservationsEtag(reservationsEtag);
       updateReservation(updatedReservationResponse.reservation);
       closeViewReservationModal();
       toggleEditReservationPicker();
-    } catch (error) {
-      let err;
-      if (typeof error === "object") {
-        err = error.error;
+    } catch (err) {
+      if (err.status && err.status === 412) {
+        return thunkDispatch(
+          handleEtagMismatch(
+            toggleEditReservationPicker,
+            closeViewReservationModal
+          )
+        );
       }
-      showToast("Unable to update reservation. " + err, "error");
+      const { error } = err;
+      showToast("Unable to update reservation. " + error, "error");
     }
   };
 

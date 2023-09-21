@@ -73,7 +73,7 @@ const data = (state = initialState, action) => {
       } else {
         new_state.user_reservations = mappedReservationsToDate;
       }
-      new_state.reservations = mappedReservationsToDate;
+      new_state.reservations = [...mappedReservationsToDate];
       new_state.are_reservations_loaded = true;
       return new_state;
     case "ADD_RESERVATION":
