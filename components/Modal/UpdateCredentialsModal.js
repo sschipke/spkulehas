@@ -133,6 +133,7 @@ export const UpdateCredentialsModal = ({
             onChange={handleChange}
             autoFocus
             InputProps={{
+              minLength: 8,
               maxLength: 20
             }}
           />
@@ -149,6 +150,7 @@ export const UpdateCredentialsModal = ({
             error={values.error}
             onChange={handleChange}
             InputProps={{
+              minLength: 8,
               maxLength: 20
             }}
           />

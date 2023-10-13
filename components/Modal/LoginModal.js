@@ -97,6 +97,9 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
             value={values.email}
             error={values.error}
             autoFocus
+            inputProps={{
+              minLength: 2
+            }}
           />
           {!values.resetPassword && (
             <TextField
@@ -109,6 +112,10 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
               required
               fullWidth
               error={values.error}
+              inputProps={{
+                minLength: 8,
+                maxLength: 20
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

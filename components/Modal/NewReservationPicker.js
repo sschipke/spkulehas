@@ -46,14 +46,11 @@ export const NewReservationPicker = ({
 }) => {
   const thunkDispatch = useDispatch();
   const [dates, setDates] = useState([new Date(viewDate), null]);
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState(null);
   const [notes, setNotes] = useState("");
   useEffect(() => {
     setDates([new Date(viewDate), null]);
     return () => {
       setDates([null, null]);
-      setError(null);
       setNotes("");
     };
   }, [viewDate]);

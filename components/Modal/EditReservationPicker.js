@@ -60,13 +60,11 @@ export const EditReservationPicker = ({
   const initialNotes = currentReservation ? currentReservation.notes : "";
   const [notes, setNotes] = useState(initialNotes);
   // eslint-disable-next-line no-unused-vars
-  const [hasError, setError] = useState(false);
   useEffect(() => {
     setDates(initialValue());
     setNotes(initialNotes);
     return () => {
       setNotes("");
-      setError(false);
     };
   }, [currentReservation, initialNotes]); // eslint-disable-line
 
@@ -122,7 +120,7 @@ export const EditReservationPicker = ({
       closeViewReservationModal();
       toggleEditReservationPicker();
     } catch (err) {
-      if (err.status && err.status === 412) {
+      if (err.status && (err.status === 412 || err.status === 404)) {
         return thunkDispatch(
           handleEtagMismatch(
             toggleEditReservationPicker,
@@ -167,9 +165,6 @@ export const EditReservationPicker = ({
           value={dates}
           onChange={(newValue) => {
             setDates(newValue);
-          }}
-          onError={() => {
-            setError(true);
           }}
           minDate={minDate}
           maxDate={maxDate}

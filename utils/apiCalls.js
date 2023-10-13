@@ -37,7 +37,7 @@ export const putReservation = async (reservation, token, reservationsEtag) => {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-      "If-Match": reservationsEtag,
+      "If-Match": reservationsEtag
     }
   };
   let res = await fetch(url, options);
@@ -48,6 +48,9 @@ export const putReservation = async (reservation, token, reservationsEtag) => {
         message: "Reload reservations."
       };
       throw mismatchError;
+    }
+    if (res.status === 404) {
+      throw { status: 404 };
     }
     const err = await res.json();
     let { error } = err;
@@ -107,6 +110,10 @@ export const deleteReservation = async (
   };
   let res = await fetch(url, options);
   if (!res.ok) {
+    if (res.status === 404) {
+      console.warn("Unable to find reservation with id: ", reservation.id);
+      throw { status: 404, message: "Unable to find reservation" };
+    }
     const err = await res.json();
     let { error } = err;
     console.error("Error deleting reservation: ", error);
