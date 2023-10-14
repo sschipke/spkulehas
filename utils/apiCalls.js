@@ -417,3 +417,20 @@ export const validateReservationsEtag = async (etag) => {
     return false;
   }
 };
+
+export const getDashboardData = async (token) => {
+  const url = new URL(`${baseUrl}admin/dashboard`);
+  const options = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  };
+  try {
+    const res = await fetch(url.href, options);
+    return res.json();
+  } catch (error) {
+    console.error("Error getting dashboard. ", error);
+    throw { error: "Unable to get dashboard." };
+  }
+};

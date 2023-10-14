@@ -52,6 +52,10 @@ const UserAvatarMenu = ({ user, logOut }) => {
     {
       label: "Add New Member",
       page: "/admin/add_member"
+    },
+    {
+      label: "Dashboard",
+      page: "/admin/dashboard"
     }
   ];
 

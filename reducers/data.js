@@ -25,7 +25,8 @@ let initialState = {
   selected_member_email_settings: null,
   reservation_title: "",
   member_details: null,
-  new_member_info: null
+  new_member_info: null,
+  login_data: null
 };
 //TODO: REMOVE!!
 const generateRandomColor = () => {
@@ -161,6 +162,7 @@ const data = (state = initialState, action) => {
       new_state.selected_member_profile = null;
       new_state.selected_member_email_settings = null;
       new_state.member_details = null;
+      new_state.login_data = null;
       return new_state;
     case "UPDATE_SELECTED_USER":
       const { userId } = action;
@@ -251,6 +253,9 @@ const data = (state = initialState, action) => {
       if (member_details) {
         new_state.member_details = [...member_details, action.newMember];
       }
+      return new_state;
+    case "SET_LOGIN_DATA":
+      new_state.login_data = action.loginData;
       return new_state;
     default:
       return state;

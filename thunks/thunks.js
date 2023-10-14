@@ -10,7 +10,8 @@ import {
   fetchMemberProfile,
   fetchMemberDetailsForAdmin,
   createNewMember,
-  validateReservationsEtag
+  validateReservationsEtag,
+  getDashboardData
 } from "../utils/apiCalls";
 import {
   closeLoadingModal,
@@ -34,7 +35,8 @@ import {
   toggleConfirmAddMemberDialog,
   showViewReservationModal,
   updateViewDate,
-  setCurrentReservation
+  setCurrentReservation,
+  setLoginData
 } from "../actions";
 import {
   cacheReservationData,
@@ -219,15 +221,12 @@ export const updateSelectedMemberProfile =
   };
 
 export const processGetMemberDetails = (token) => async (dispatch) => {
-  dispatch(showLoadingModal());
   try {
     const { memberDetails } = await fetchMemberDetailsForAdmin(token);
     dispatch(loadMemberDetails(memberDetails));
-    dispatch(closeLoadingModal());
     dispatch(showToast("Member details loaded!", "success"));
   } catch (error) {
     console.error("ERROR getting member details: ", error);
-    dispatch(closeLoadingModal());
     dispatch(showToast("Unabe to fetch member details.", "error"));
   }
 };
@@ -292,3 +291,13 @@ export const handleEtagMismatch =
       );
     }
   };
+
+export const handleDashboardData = (token) => async (dispatch) => {
+  try {
+    const loginData = await getDashboardData(token);
+    dispatch(setLoginData(loginData));
+    dispatch(showToast("Dashboard data loaded.", "success"));
+  } catch (error) {
+    dispatch(showToast(error.error, "error"));
+  }
+};
