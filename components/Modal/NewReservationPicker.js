@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import dynamic from "next/dynamic";
 import {
@@ -17,6 +17,7 @@ import {
   toggleNewReservationPicker,
   showToast
 } from "../../actions";
+import { handleEtagMismatch } from "../../thunks/thunks";
 import {
   determineMinDateForNewReservation,
   determineMaxDate,
@@ -25,7 +26,10 @@ import {
   canSubmitReservation
 } from "../../utils/helpers";
 import { postReservation } from "../../utils/apiCalls";
-import { cacheReservationsEtag } from "../../utils/localStorage";
+import {
+  cacheReservationsEtag,
+  getCachedReservationsEtag
+} from "../../utils/localStorage";
 const UserSelect = dynamic(() => import("../Utilities/UserSelect"));
 const ReservationTitle = dynamic(() => import("../Utilities/ReservationTitle"));
 export const NewReservationPicker = ({
@@ -40,15 +44,13 @@ export const NewReservationPicker = ({
   token,
   reservationTitle
 }) => {
+  const thunkDispatch = useDispatch();
   const [dates, setDates] = useState([new Date(viewDate), null]);
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState(null);
   const [notes, setNotes] = useState("");
   useEffect(() => {
     setDates([new Date(viewDate), null]);
     return () => {
       setDates([null, null]);
-      setError(null);
       setNotes("");
     };
   }, [viewDate]);
@@ -78,12 +80,21 @@ export const NewReservationPicker = ({
     }
     reservation = formatReservation(reservation, checkinDate, checkoutDate);
     try {
-      const newReservationResponse = await postReservation(reservation, token);
+      const cachedReservationsEtag = getCachedReservationsEtag();
+      const newReservationResponse = await postReservation(
+        reservation,
+        token,
+        cachedReservationsEtag
+      );
       const { reservationsEtag } = newReservationResponse;
       cacheReservationsEtag(reservationsEtag);
       addReservation(newReservationResponse.reservation);
       toggleNewReservationPicker();
     } catch (err) {
+      console.warn("Error adding reservation: ", err);
+      if (err.status && err.status === 412) {
+        return thunkDispatch(handleEtagMismatch(toggleNewReservationPicker));
+      }
       const { error } = err;
       showToast("Unable to add reservation. " + error, "error");
     }

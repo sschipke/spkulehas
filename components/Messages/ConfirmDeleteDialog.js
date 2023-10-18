@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Switch, FormGroup, FormControlLabel } from "@mui/material";
 import {
@@ -13,10 +13,12 @@ import moment from "moment";
 import {
   toggleConfirmDeleteDialog,
   removeReservation,
-  showToast
+  showToast,
+  closeViewReservationModal
 } from "../../actions";
 import { deleteReservation } from "../../utils/apiCalls";
 import { cacheReservationsEtag } from "../../utils/localStorage";
+import { handleEtagMismatch } from "../../thunks/thunks";
 
 const ConfirmDeleteDialog = ({
   currentReservation,
@@ -25,9 +27,11 @@ const ConfirmDeleteDialog = ({
   toggleConfirmDeleteDialog,
   showToast,
   removeReservation,
-  isOpen
+  isOpen,
+  closeViewReservationModal
 }) => {
   const [shouldSendEmail, setShouldSendEmail] = useState(true);
+  const thunkDispatch = useDispatch();
 
   const handleConfirmation = async () => {
     try {
@@ -41,6 +45,14 @@ const ConfirmDeleteDialog = ({
       cacheReservationsEtag(reservationsEtag);
       toggleConfirmDeleteDialog();
     } catch (err) {
+      if (err.status && err.status === 404) {
+        return thunkDispatch(
+          handleEtagMismatch(
+            toggleConfirmDeleteDialog,
+            closeViewReservationModal
+          )
+        );
+      }
       const { error } = err;
       const messageToDisplay = error ? error : "Something went wrong.";
       console.error("Error in delete reservation confirmation.", err, error);
@@ -136,7 +148,12 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
-    { toggleConfirmDeleteDialog, removeReservation, showToast },
+    {
+      toggleConfirmDeleteDialog,
+      removeReservation,
+      showToast,
+      closeViewReservationModal
+    },
     dispatch
   );
 

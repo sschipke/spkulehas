@@ -29,18 +29,29 @@ export const loginUser = async (email, password) => {
   return res.json();
 };
 
-export const putReservation = async (reservation, token) => {
+export const putReservation = async (reservation, token, reservationsEtag) => {
   const url = `${baseUrl}reservations/${reservation.id}`;
   const options = {
     method: "PUT",
     body: JSON.stringify({ reservation }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      "If-Match": reservationsEtag
     }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
+    if (res.status === 412) {
+      const mismatchError = {
+        status: 412,
+        message: "Reload reservations."
+      };
+      throw mismatchError;
+    }
+    if (res.status === 404) {
+      throw { status: 404 };
+    }
     const err = await res.json();
     let { error } = err;
     console.error("Error updating reservation: ", err);
@@ -52,18 +63,26 @@ export const putReservation = async (reservation, token) => {
   return res.json();
 };
 
-export const postReservation = async (reservation, token) => {
+export const postReservation = async (reservation, token, reservationsEtag) => {
   const url = `${baseUrl}reservations/new`;
   const options = {
     method: "POST",
     body: JSON.stringify({ reservation }),
     headers: {
       "Content-Type": "application/json",
+      "If-Match": reservationsEtag,
       Authorization: `Bearer ${token}`
     }
   };
   let res = await fetch(url, options);
   if (!res.ok) {
+    if (res.status === 412) {
+      const mismatchError = {
+        status: 412,
+        message: "Reload reservations."
+      };
+      throw mismatchError;
+    }
     const err = await res.json();
     let { error } = err;
     console.error("Error adding reservation: ", err);
@@ -91,20 +110,17 @@ export const deleteReservation = async (
   };
   let res = await fetch(url, options);
   if (!res.ok) {
-    const error = await res.json();
-    switch (res.status) {
-      case 401:
-      case 404:
-      case 403:
-      case 422:
-        console.error("Error deleting reservation: ", error);
-        throw error;
-      default:
-        console.error("Error deleting reservation");
-        throw new Error("Could not delete email.", {
-          error: "Something went wrong."
-        });
+    if (res.status === 404) {
+      console.warn("Unable to find reservation with id: ", reservation.id);
+      throw { status: 404, message: "Unable to find reservation" };
     }
+    const err = await res.json();
+    let { error } = err;
+    console.error("Error deleting reservation: ", error);
+    if (!error) {
+      error = "Something went wrong.";
+    }
+    throw { error };
   }
   return res.json();
 };
@@ -399,5 +415,22 @@ export const validateReservationsEtag = async (etag) => {
   } catch (error) {
     console.error("Unable to validate reservations state, ", error);
     return false;
+  }
+};
+
+export const getDashboardData = async (token) => {
+  const url = new URL(`${baseUrl}admin/dashboard`);
+  const options = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  };
+  try {
+    const res = await fetch(url.href, options);
+    return res.json();
+  } catch (error) {
+    console.error("Error getting dashboard. ", error);
+    throw { error: "Unable to get dashboard." };
   }
 };
