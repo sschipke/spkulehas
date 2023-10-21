@@ -6,7 +6,7 @@ export const cacheReservationData = (response) => {
 
 export const getCachedReservations = () => {
   const cachedReservationData = localStorage.getItem("reservations");
-  if (cacheReservationData) {
+  if (cachedReservationData) {
     return JSON.parse(cachedReservationData);
   }
   return "";
@@ -26,5 +26,8 @@ export const cacheReservationsEtag = (newEtag) => {
 };
 
 export const cacheReservations = (reservations) => {
+  if (!reservations || !reservations.length) {
+    return;
+  }
   localStorage.setItem("reservations", JSON.stringify(reservations));
 };
