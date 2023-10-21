@@ -4,11 +4,19 @@ export const cacheReservationData = (response) => {
   cacheReservationsEtag(reservationsEtag);
 };
 
-export const getCachedReservations = () =>
-  JSON.parse(localStorage.getItem("reservations"));
+export const getCachedReservations = () => {
+  const cachedReservationData = localStorage.getItem("reservations");
+  if (cacheReservationData) {
+    return JSON.parse(cachedReservationData);
+  }
+  return "";
+};
 
-export const getCachedReservationsEtag = () =>
-  JSON.parse(localStorage.getItem("reservationsEtag"));
+export const getCachedReservationsEtag = () => {
+  const cachedEtag = localStorage.getItem("reservationsEtag");
+
+  return cachedEtag ? JSON.parse(cachedEtag) : "";
+};
 
 export const cacheReservationsEtag = (newEtag) => {
   if (!newEtag) {
