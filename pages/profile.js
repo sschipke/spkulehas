@@ -29,7 +29,7 @@ import {
 import { updateUserProfile } from "../utils/apiCalls";
 import { cacheReservationsEtag } from "../utils/localStorage";
 const ReceiveDeletionEmailControl = dynamic(() =>
-  import("../components/Utilities/ReceiveDeletionEmailControl")
+  import("../components/Utilities/ReceiveCancelationEmailControl")
 );
 const MakeAdminControlSwitch = dynamic(() =>
   import("../components/Utilities/MakeAdminControlSwitch")
