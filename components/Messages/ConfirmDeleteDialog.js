@@ -78,11 +78,11 @@ const ConfirmDeleteDialog = ({
         id="confirm-dialog"
         sx={{ m: "auto", fontWeight: "bold", fontSize: "1.25rem" }}
       >
-        Delete this reservation?
+        Cancel this reservation?
       </DialogTitle>
       <DialogContent sx={{ textAlign: "center" }}>
         <p>
-          Would you like to dete this reservation for{" "}
+          Would you like to cancel this reservation for{" "}
           <strong>{currentReservation.title}</strong> beginning on{" "}
           <strong>
             {moment(currentReservation.start).format("dddd, MMMM DD, YYYY")}
@@ -106,7 +106,7 @@ const ConfirmDeleteDialog = ({
                   }}
                 />
               }
-              label="Notify other members of this deletion?"
+              label="Notify other members of this cancellation?"
             />
           </FormGroup>
         )}
