@@ -24,7 +24,7 @@ const Toast = ({ isOpen, closeLoginPrompt, showLoginModal }) => {
       open={isOpen}
       autoHideDuration={6000}
       onClose={handleClose}
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
       style={{ width: "100%" }}
     >
       <Alert

@@ -3,7 +3,7 @@ import { connect, useDispatch } from "react-redux";
 import { processEmailSettingChange } from "../../thunks/thunks";
 import { Switch, FormGroup, FormControlLabel } from "@mui/material";
 
-export const ReceiveDeletionEmailControl = ({
+export const ReceiveCancelationEmailControl = ({
   userEmailSettings,
   userId,
   selectedMember,
@@ -38,7 +38,7 @@ export const ReceiveDeletionEmailControl = ({
             }}
           />
         }
-        label="Receive an email when another member deletes their reservation?"
+        label="Receive an email when another member cancels their reservation?"
       />
     </FormGroup>
   );
@@ -52,4 +52,4 @@ export const mapStateToProps = (state) => ({
   token: state.data.token
 });
 
-export default connect(mapStateToProps)(ReceiveDeletionEmailControl);
+export default connect(mapStateToProps)(ReceiveCancelationEmailControl);
