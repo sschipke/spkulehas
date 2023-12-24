@@ -209,7 +209,7 @@ export const EditReservationPicker = ({
             onClick={() => handleSubmit()}
             disabled={!canSubmit}
           >
-            Submit
+            Modify
           </Button>
         </Stack>
       </Box>

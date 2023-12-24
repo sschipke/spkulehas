@@ -69,7 +69,7 @@ const MemberDetailsPage = ({ user, memberDetails, token }) => {
             <TableRow className="reservation-table-head-row">
               <TableCell>Name</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>Admin?</TableCell>
+              <TableCell>Admin</TableCell>
               <TableCell>Address</TableCell>
               <TableCell>City</TableCell>
               <TableCell>State</TableCell>
