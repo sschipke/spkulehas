@@ -76,8 +76,8 @@ const MyReservationsPage = ({
               <TableCell>Checkin Date</TableCell>
               <TableCell>Checkout Date</TableCell>
               <TableCell>Notes</TableCell>
-              <TableCell>Edit</TableCell>
-              <TableCell>Delete</TableCell>
+              <TableCell>Modify</TableCell>
+              <TableCell>Cancel</TableCell>
               <TableCell>View In Calendar</TableCell>
             </TableRow>
           </TableHead>
