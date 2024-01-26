@@ -89,11 +89,10 @@ export const processPasswordChange =
       await updatePassword(newPassword, password, token, id);
       dispatch(showToast("Password sucessfully updated!", "success"));
       dispatch(closeUpdateCredentialsModal());
-    } catch (error) {
-      console.error("Catching process password change. ", error.Error);
-      dispatch(
-        showToast("Unable to updated password. " + error.error, "error")
-      );
+    } catch (err) {
+      console.error("Catching process password change. ", err);
+      const error = err.error ? error.error : "";
+      dispatch(showToast("Unable to update password. " + error, "error"));
     }
   };
 
@@ -110,7 +109,7 @@ export const processEmailChange =
       dispatch(closeUpdateCredentialsModal());
     } catch (error) {
       console.error("Catching process email change. ", error.Error);
-      dispatch(showToast("Unable to updated email. " + error.error, "error"));
+      dispatch(showToast("Unable to update email. " + error.error, "error"));
     }
   };
 
@@ -121,10 +120,11 @@ export const processRequestPasswordReset = (email) => async (dispatch) => {
     dispatch(closeLoadingModal());
     dispatch(showToast(res, "success"));
     dispatch(closeLoginModal());
-  } catch (error) {
-    console.error("Unable to request reset. ", error);
+  } catch (err) {
+    console.error("Unable to request reset. ", err);
+    const error = err.error ? error.error : "";
     dispatch(closeLoadingModal());
-    dispatch(showToast("Unable to request reset. " + error.error, "error"));
+    dispatch(showToast("Unable to request reset. " + error, "error"));
   }
 };
 
@@ -193,10 +193,14 @@ export const processEmailSettingChange =
       }
       dispatch(showToast(`${res}`, "success"));
       dispatch(closeLoadingModal());
-    } catch (error) {
-      console.error("Catching process email setting update. ", error.Error);
+    } catch (er) {
+      let { error } = er;
+      console.error("Catching process email setting update. ", error);
+      if (!error) {
+        error = "";
+      }
       dispatch(closeLoadingModal());
-      dispatch(showToast("Unable to updated email. " + error.error, "error"));
+      dispatch(showToast("Unable to update preference. " + error, "error"));
     }
   };
 
