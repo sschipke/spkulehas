@@ -172,7 +172,7 @@ const ConfirmAddMemberDialog = ({ user, token, newMemberInfo, isOpen }) => {
             <TextField
               name="password"
               autoComplete="password"
-              label="Password"
+              label="Enter Your Password to Confirm"
               type={values.showPassword ? "text" : "password"}
               value={values.password}
               onChange={handlePasswordChange}
