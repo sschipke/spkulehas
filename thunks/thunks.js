@@ -232,7 +232,6 @@ export const processGetMemberDetails = (token) => async (dispatch) => {
     dispatch(showToast("Member details loaded!", "success"));
   } catch (error) {
     console.error("ERROR getting member details: ", error);
-    
     dispatch(showToast(`Unabe to fetch member details. ${error.error ? error.error : "" }`, "error"));
   }
 };
