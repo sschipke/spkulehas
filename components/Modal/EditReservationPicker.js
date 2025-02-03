@@ -59,6 +59,7 @@ export const EditReservationPicker = ({
   const [dates, setDates] = useState(initialValue());
   const initialNotes = currentReservation ? currentReservation.notes : "";
   const [notes, setNotes] = useState(initialNotes);
+  const [hasError, setHasError] = useState(false);
   // eslint-disable-next-line no-unused-vars
   useEffect(() => {
     setDates(initialValue());
@@ -78,7 +79,8 @@ export const EditReservationPicker = ({
     user,
     selectedUser,
     checkinDate,
-    checkoutDate
+    checkoutDate,
+    hasError
   );
 
   const handleSubmit = async () => {
@@ -166,11 +168,18 @@ export const EditReservationPicker = ({
           onChange={(newValue) => {
             setDates(newValue);
           }}
+          onError={(errors) => {
+            if (!hasError && errors.some((err) => err !== null)) {
+              setHasError(true);
+            } else if (hasError && !errors.every((err) => err === null)) {
+              setHasError(false);
+            }
+          }}
           minDate={minDate}
           maxDate={maxDate}
           renderInput={(startProps, endProps) => (
             <React.Fragment>
-              <TextField {...startProps} className="date-range-picker" />
+              <TextField {...startProps} />
               <TextField {...endProps} />
             </React.Fragment>
           )}

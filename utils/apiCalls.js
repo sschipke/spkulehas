@@ -358,11 +358,15 @@ export const fetchMemberDetailsForAdmin = async (token) => {
   };
   let res = await fetch(url, options);
   if (!res.ok) {
-    const err = res.json();
+    const { status } = res;
+    const err = await res.json();
     console.error("Error fetching member details. ", err);
     let { error } = err;
     if (!error) {
       error = "Could not get member details.";
+    }
+    if (status === 401 || status === 403) {
+      error = "This session has expired. Please sign in again.";
     }
     throw { error };
   }
@@ -426,11 +430,20 @@ export const getDashboardData = async (token) => {
       Authorization: `Bearer ${token}`
     }
   };
-  try {
-    const res = await fetch(url.href, options);
-    return res.json();
-  } catch (error) {
-    console.error("Error getting dashboard. ", error);
-    throw { error: "Unable to get dashboard." };
+
+  const res = await fetch(url.href, options);
+  if (!res.ok) {
+    const { status } = res;
+    const err = await res.json();
+    console.error("Error getting Dashboard Data ", err);
+    let { error } = err;
+    if (!error) {
+      error = "Could not get member dashboard data.";
+    }
+    if (status === 401 || status === 403) {
+      error = "This session has expired. Please sign in again."
+    }
+    throw { error };
   }
+  return res.json();
 };
