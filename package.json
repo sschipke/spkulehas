@@ -1,6 +1,8 @@
 {
   "name": "spekulahas",
   "private": true,
+  "license": "UNLICENSED",
+  "author": "Scott Schipke",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -43,5 +45,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.0",
     "prettier": "^2.7.1"
-  }
+  },
+  "packageManager": "yarn@1.22.22"
 }
