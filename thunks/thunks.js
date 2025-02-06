@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   getReservations,
   loginUser,
@@ -122,7 +123,7 @@ export const processRequestPasswordReset = (email) => async (dispatch) => {
     dispatch(closeLoginModal());
   } catch (err) {
     console.error("Unable to request reset. ", err);
-    const error = err.error ? error.error : "";
+    const error = err.error ? err.error : "";
     dispatch(closeLoadingModal());
     dispatch(showToast("Unable to request reset. " + error, "error"));
   }
@@ -231,7 +232,7 @@ export const processGetMemberDetails = (token) => async (dispatch) => {
     dispatch(showToast("Member details loaded!", "success"));
   } catch (error) {
     console.error("ERROR getting member details: ", error);
-    dispatch(showToast("Unabe to fetch member details.", "error"));
+    dispatch(showToast(`Unabe to fetch member details. ${error.error ? error.error : "" }`, "error"));
   }
 };
 
@@ -302,6 +303,6 @@ export const handleDashboardData = (token) => async (dispatch) => {
     dispatch(setLoginData(loginData));
     dispatch(showToast("Dashboard data loaded.", "success"));
   } catch (error) {
-    dispatch(showToast(error.error, "error"));
+    dispatch(showToast(`Unable to get dashboard data. ${error.error ? error.error : "" }`, "error"));
   }
 };

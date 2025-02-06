@@ -302,9 +302,10 @@ export const canSubmitReservation = (
   user,
   selectedUser,
   checkinDate,
-  checkoutDate
+  checkoutDate,
+  hasError
 ) => {
-  if (!user || !checkinDate || !checkoutDate) {
+  if (hasError || !user || !checkinDate || !checkoutDate) {
     return false;
   }
   if (user.isAdmin && !selectedUser) {
@@ -367,7 +368,7 @@ export const generateCalendarLinks = (reservation) => {
 };
 
 export const generateGoogleCalendarLink = (event) => {
-  const link = `https://www.google.com/calendar/render?action=TEMPLATE&dates=${event.start}/${event.end}&text=${event.title}&location=${event.location}&details=${event.description}`;
+  const link = `https://www.google.com/calendar/render?action=TEMPLATE&dates=${event.start}/${event.end}&text=${event.title}&location=${event.location}&details=${event.notes}`;
 
   return new URL(link).href;
 };
@@ -400,7 +401,7 @@ DTSTART:${event.start}
 DTEND:${event.end}
 SUMMARY:${event.title}
 LOCATION:${event.location}
-NOTES:${event.description}
+NOTES:${event.notes}
 END:VEVENT
 END:VCALENDAR`;
 
