@@ -81,6 +81,7 @@ export default function App({ Component, emotionCache = clientSideEmotionCache, 
           name="description"
           content="Used for making reservations for Schipke's SpKuLeHaS members."
         />
+        <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
       <LocalizationProvider dateAdapter={DateAdapter}>
         <ThemeProvider theme={theme}>
