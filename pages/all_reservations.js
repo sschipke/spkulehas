@@ -56,7 +56,7 @@ const AllReservationsPage = ({
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "80vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "auto" }}
       >
         <Table stickyHeader>
           <TableHead>

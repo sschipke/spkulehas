@@ -73,7 +73,7 @@ const UserAvatarMenu = ({ user, logOut }) => {
         className="unstyled-link"
         onClick={() => handleClose()}
       >
-        <Link href={link.page} ariaRole="link">
+        <Link href={link.page}>
           {link.label}
         </Link>
       </MenuItem>

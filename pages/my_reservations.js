@@ -29,8 +29,8 @@ const Typography = dynamic(() =>
   import("@mui/material").then((mui) => mui.Typography)
 );
 const EditIcon = dynamic(() => import("@mui/icons-material/Edit"));
-const DeleteForeverIcon = dynamic(() =>
-  import("@mui/icons-material/DeleteForever")
+const DeleteForeverIcon = dynamic(
+  () => import("@mui/icons-material/DeleteForever")
 );
 const Visibility = dynamic(() => import("@mui/icons-material/Visibility"));
 const SearchBar = dynamic(() => import("../components/Utilities/SearchBar"));
@@ -67,7 +67,7 @@ const MyReservationsPage = ({
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "80vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "auto" }}
       >
         <Table stickyHeader>
           <TableHead>

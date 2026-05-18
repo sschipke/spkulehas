@@ -19,7 +19,7 @@ const NavBar = ({ user }) => {
       <AppBar color="primary" position="sticky">
         <Toolbar style={{ justifyContent: "space-between" }}>
           <Link href="/" style={{ textDecoration: "none" }}>
-            <h2 style={{ cursor: "pointer", lineHeight: 0.5 }}>
+            <h2 style={{ cursor: "pointer", lineHeight: 0.5, color: "white" }}>
               SpKuLeHaS Inc
             </h2>
           </Link>

@@ -12,7 +12,7 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { DateRangePicker } from "@mui/lab";
+import { DatePicker } from "@mui/x-date-pickers";
 import {
   toggleEditReservationPicker,
   updateReservation,
@@ -53,7 +53,7 @@ export const EditReservationPicker = ({
   const initialValue = () => {
     if (!currentReservation) {
       return [moment().startOf("isoWeek"), moment().endOf("isoWeek")];
-    } else return [currentReservation.start, currentReservation.end];
+    } else return [moment(currentReservation.start), moment(currentReservation.end)];
   };
   const thunkDispatch = useDispatch();
   const [dates, setDates] = useState(initialValue());
@@ -159,31 +159,24 @@ export const EditReservationPicker = ({
         >
           Update Reservation
         </Typography>
-        <DateRangePicker
-          views={["year", "month", "day"]}
-          startText="Check-in"
-          endText="Check-out"
-          label="Edit Reservation Dates"
-          value={dates}
-          onChange={(newValue) => {
-            setDates(newValue);
-          }}
-          onError={(errors) => {
-            if (!hasError && errors.some((err) => err !== null)) {
-              setHasError(true);
-            } else if (hasError && !errors.every((err) => err === null)) {
-              setHasError(false);
-            }
-          }}
-          minDate={minDate}
-          maxDate={maxDate}
-          renderInput={(startProps, endProps) => (
-            <React.Fragment>
-              <TextField {...startProps} />
-              <TextField {...endProps} />
-            </React.Fragment>
-          )}
-        />
+        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+          <DatePicker
+            label="Check-in"
+            value={checkinDate}
+            onChange={(newValue) => setDates([newValue, checkoutDate])}
+            onError={(err) => setHasError(err !== null)}
+            minDate={minDate}
+            maxDate={checkoutDate || maxDate}
+          />
+          <DatePicker
+            label="Check-out"
+            value={checkoutDate}
+            onChange={(newValue) => setDates([checkinDate, newValue])}
+            onError={(err) => setHasError(err !== null)}
+            minDate={checkinDate || minDate}
+            maxDate={maxDate}
+          />
+        </Stack>
         <TextField
           id="notes"
           label="Notes"
@@ -201,11 +194,12 @@ export const EditReservationPicker = ({
         <UserSelect />
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
           className="reservation-buttons"
-          sx={{ mt: 5 }}
-        >
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            mt: 5
+          }}>
           <Button
             variant="outlined"
             color="error"

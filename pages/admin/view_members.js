@@ -28,8 +28,8 @@ const Paper = dynamic(() => import("@mui/material").then((mui) => mui.Paper));
 const Typography = dynamic(() =>
   import("@mui/material").then((mui) => mui.Typography)
 );
-const LoadingDataMessage = dynamic(() =>
-  import("../../components/Utilities/LoadingDataMessage")
+const LoadingDataMessage = dynamic(
+  () => import("../../components/Utilities/LoadingDataMessage")
 );
 const SearchBar = dynamic(() => import("../../components/Utilities/SearchBar"));
 dynamic(() => import("@mui/material/styles"));
@@ -62,7 +62,7 @@ const MemberDetailsPage = ({ user, memberDetails, token }) => {
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "80vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "auto" }}
       >
         <Table stickyHeader>
           <TableHead>

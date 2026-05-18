@@ -3,7 +3,7 @@
 
 echo '🏗️👷 Linting for pre-commit'
 
-yarn lint || 
+npm run lint || 
 (
     echo '❌ Linting errors found ❌'
     false;

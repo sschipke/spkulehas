@@ -4,10 +4,11 @@ import { CircularProgress, Stack, Typography } from "@mui/material";
 const LoadingDataMessage = ({ message }) => (
   <Stack
     direction="column"
-    justifyContent="center"
-    alignItems="center"
-    sx={{ mt: 5 }}
-  >
+    sx={{
+      justifyContent: "center",
+      alignItems: "center",
+      mt: 5
+    }}>
     <Typography
       component="h4"
       variant="h4"

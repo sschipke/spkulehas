@@ -111,13 +111,11 @@ export const ViewReservationModal = ({
         </Button>
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
           sx={{
+            alignItems: "flex-end",
             m: 3,
             justifyContent: "space-evenly"
-          }}
-        >
+          }}>
           <Button
             variant="outlined"
             color="secondary"

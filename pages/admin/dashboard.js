@@ -24,8 +24,8 @@ const Paper = dynamic(() => import("@mui/material").then((mui) => mui.Paper));
 const Typography = dynamic(() =>
   import("@mui/material").then((mui) => mui.Typography)
 );
-const LoadingDataMessage = dynamic(() =>
-  import("../../components/Utilities/LoadingDataMessage")
+const LoadingDataMessage = dynamic(
+  () => import("../../components/Utilities/LoadingDataMessage")
 );
 
 const DashboardPage = ({ user, loginData, token }) => {
@@ -49,7 +49,7 @@ const DashboardPage = ({ user, loginData, token }) => {
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "80vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "auto" }}
       >
         <Table stickyHeader>
           <TableHead>

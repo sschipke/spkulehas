@@ -42,8 +42,7 @@ const ConfirmAddMemberDialog = ({ user, token, newMemberInfo, isOpen }) => {
     if (!isOpen) {
       setValues(initialState);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [isOpen]); // eslint-disable-line
 
   const canSubmit = values.canAddMember && values.password;
 
