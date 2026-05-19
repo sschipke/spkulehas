@@ -67,7 +67,7 @@ const MemberDetailsPage = ({ user, memberDetails, token }) => {
         <Table stickyHeader>
           <TableHead>
             <TableRow className="reservation-table-head-row">
-              <TableCell>Name</TableCell>
+              <TableCell className="sticky">Name</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Admin</TableCell>
               <TableCell>Address</TableCell>
@@ -85,7 +85,7 @@ const MemberDetailsPage = ({ user, memberDetails, token }) => {
                 key={member.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell>{member.name}</TableCell>
+                <TableCell className="sticky">{member.name}</TableCell>
                 <TableCell>{member.status}</TableCell>
                 <TableCell>
                   {member.isAdmin && <CheckBoxIcon color="primary" />}
