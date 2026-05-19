@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -24,8 +24,8 @@ const Paper = dynamic(() => import("@mui/material").then((mui) => mui.Paper));
 const Typography = dynamic(() =>
   import("@mui/material").then((mui) => mui.Typography)
 );
-const LoadingDataMessage = dynamic(() =>
-  import("../../components/Utilities/LoadingDataMessage")
+const LoadingDataMessage = dynamic(
+  () => import("../../components/Utilities/LoadingDataMessage")
 );
 
 const DashboardPage = ({ user, loginData, token }) => {
@@ -39,7 +39,7 @@ const DashboardPage = ({ user, loginData, token }) => {
     if (!loginData || !loginData.length) {
       dispatch(handleDashboardData(token));
     }
-  }, [user, loginData]); // eslint-disable-line
+  }, [user, loginData]);  
 
   if (!user || !user.isAdmin) {
     return null;
@@ -49,7 +49,7 @@ const DashboardPage = ({ user, loginData, token }) => {
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "80vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "auto" }}
       >
         <Table stickyHeader>
           <TableHead>

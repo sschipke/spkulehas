@@ -244,6 +244,15 @@ export const formatPhoneNumber = (digits) => {
   return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
 };
 
+// Formats a phone input in real-time as (XXX) XXX-XXXX while typing.
+// Strips all non-digits before transmitting.
+export const formatPhoneInput = (value) => {
+  const digits = (value || "").replace(/\D/g, "").slice(0, 10);
+  if (digits.length <= 3) return digits.length ? `(${digits}` : "";
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+};
+
 export const determineIfAdmin = (member) => {
   return member && member.isAdmin;
 };

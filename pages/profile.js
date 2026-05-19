@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useRouter } from "next/router";
@@ -19,7 +19,7 @@ const Typography = dynamic(() =>
 );
 const Paper = dynamic(() => import("@mui/material").then((mod) => mod.Paper));
 const EditIcon = dynamic(() => import("@mui/icons-material/Edit"));
-import { formatPhoneNumber } from "../utils/helpers";
+import { formatPhoneNumber, formatPhoneInput } from "../utils/helpers";
 import {
   showToast,
   updateUser,
@@ -28,14 +28,14 @@ import {
 } from "../actions";
 import { updateUserProfile } from "../utils/apiCalls";
 import { cacheReservationsEtag } from "../utils/localStorage";
-const ReceiveDeletionEmailControl = dynamic(() =>
-  import("../components/Utilities/ReceiveCancelationEmailControl")
+const ReceiveDeletionEmailControl = dynamic(
+  () => import("../components/Utilities/ReceiveCancelationEmailControl")
 );
-const MakeAdminControlSwitch = dynamic(() =>
-  import("../components/Utilities/MakeAdminControlSwitch")
+const MakeAdminControlSwitch = dynamic(
+  () => import("../components/Utilities/MakeAdminControlSwitch")
 );
-const SelectStatus = dynamic(() =>
-  import("../components/Utilities/SelectStatus")
+const SelectStatus = dynamic(
+  () => import("../components/Utilities/SelectStatus")
 );
 
 export const ProfilePage = ({
@@ -64,17 +64,12 @@ export const ProfilePage = ({
   }, [isEditting, userToUpdate, userClone, router]);
 
   if (userToUpdate) {
-    userClone.phone = ((userToUpdate && userToUpdate.phone) || "")
-      .split("-")
-      .join("");
+    userClone.phone = formatPhoneInput((userToUpdate && userToUpdate.phone) || "");
   } else {
     return null;
   }
 
   const userReference = isEditting ? userInfo : userClone;
-  const phoneFormat = isEditting
-    ? { length: 10, pattern: "[0-9]{10}" }
-    : { length: 12, pattern: "^[0-9]{3}-[0-9]{3}-[0-9]{4}$" };
 
   const hasChanges = JSON.stringify(userClone) !== JSON.stringify(userInfo);
 
@@ -101,6 +96,9 @@ export const ProfilePage = ({
         }
         inputValue = e.target.value;
         break;
+      case "phone":
+        inputValue = formatPhoneInput(e.target.value);
+        break;
       default:
         inputValue = e.target.value.trim();
         break;
@@ -110,8 +108,8 @@ export const ProfilePage = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    userInfo.phone = formatPhoneNumber(userInfo.phone || "");
-    //TODO: Validate phone format/reset
+    const rawDigits = (userInfo.phone || "").replace(/\D/g, "");
+    userInfo.phone = rawDigits.length === 10 ? formatPhoneNumber(rawDigits) : rawDigits;
     try {
       const response = await updateUserProfile(userInfo, token);
       const updatedUser = response.user;
@@ -120,7 +118,9 @@ export const ProfilePage = ({
       if (reservationsEtag) {
         cacheReservationsEtag(reservationsEtag);
       }
-      updateReservationTitles(updatedReservations);
+      if (updatedReservations) {
+        updateReservationTitles(updatedReservations);
+      }
       if (selectedMember && updatedUser.id === selectedMember.id) {
         updateSelectedMember(updatedUser);
       } else {
@@ -130,9 +130,9 @@ export const ProfilePage = ({
       setIsEditting(false);
     } catch (error) {
       console.error(error);
-      let phoneNumber = user.phone;
-      updateUserInfo({ ...userInfo, phone: phoneNumber });
-      showToast("Unable to update profile. " + error.error, "error");
+      updateUserInfo({ ...userInfo, phone: formatPhoneInput(user.phone) });
+      const message = error.error || error.message || "Please try again.";
+      showToast("Unable to update profile. " + message, "error");
     }
   };
 
@@ -306,14 +306,12 @@ export const ProfilePage = ({
             value={userReference.phone}
             onChange={handleChange}
             required={isEditting}
-            placeholder="Phone Number"
-            helperText={isEditting ? "Please only enter 10 digits." : ""}
+            placeholder="(XXX) XXX-XXXX"
+            helperText={isEditting ? "10-digit US phone number." : ""}
             inputProps={{
               readOnly: !isEditting,
-              inputMode: "numeric",
-              minLength: phoneFormat.length,
-              maxLength: phoneFormat.length,
-              pattern: phoneFormat.pattern
+              minLength: 14,
+              maxLength: 14
             }}
           />
         </Stack>

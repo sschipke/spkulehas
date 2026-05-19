@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import {
@@ -42,8 +42,7 @@ const ConfirmAddMemberDialog = ({ user, token, newMemberInfo, isOpen }) => {
     if (!isOpen) {
       setValues(initialState);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [isOpen]);  
 
   const canSubmit = values.canAddMember && values.password;
 

@@ -1,11 +1,11 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import moment from "moment";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import { AppBar, Box, Toolbar, IconButton, TextField } from "@mui/material";
+import { AppBar, Box, Toolbar, IconButton, Typography } from "@mui/material";
 
-import { DatePicker } from "@mui/lab";
+import { DatePicker } from "@mui/x-date-pickers";
 
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
@@ -27,10 +27,12 @@ const CalendarNavBar = ({
   viewDate
 }) => {
   const momentViewDate = moment(viewDate, "YYYY-MM-DD");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
   return (
     <Box sx={{ flexGrow: 1, width: "100%" }}>
       <AppBar color="secondary" position="static">
-        <Toolbar style={{ justifyContent: "center" }}>
+        <Toolbar style={{ justifyContent: "center", overflow: "hidden" }}>
           <IconButton
             size="large"
             edge="start"
@@ -41,38 +43,41 @@ const CalendarNavBar = ({
           >
             <ArrowBackIosNewRoundedIcon />
           </IconButton>
-          <DatePicker
-            views={["month", "year"]}
-            value={moment(viewDate)}
-            onChange={(newValue) => {
-              if (moment(newValue).isValid()) {
-                updateViewDate(newValue);
-              }
-            }}
-            showTodayButton
-            todayText="Today"
-            variant="filled"
-            minDate={moment(minDate)}
-            maxDate={moment(maxDate)}
-            sx={{
-              display: "flex",
-              border: "none",
-              width: "30%",
-              flexDirection: "column",
-              backgroundColor: "white",
-              color: "white"
-            }}
-            renderInput={(params) => (
-              <TextField
-                sx={{
-                  svg: { color: "white" },
-                  input: { color: "white" },
-                  label: { color: "white" }
-                }}
-                {...params}
-              />
-            )}
-          />
+          {mounted ? (
+            <DatePicker
+              views={["month", "year"]}
+              value={moment(viewDate)}
+              onChange={(newValue) => {
+                if (moment(newValue).isValid()) {
+                  updateViewDate(newValue);
+                }
+              }}
+              minDate={moment(minDate)}
+              maxDate={moment(maxDate)}
+              sx={{
+                "& .MuiPickersOutlinedInput-root": {
+                  backgroundColor: "transparent !important",
+                  "& .MuiPickersOutlinedInput-notchedOutline": { border: "none !important" },
+                  "&:hover .MuiPickersOutlinedInput-notchedOutline": { border: "none !important" },
+                  "&.Mui-focused .MuiPickersOutlinedInput-notchedOutline": { border: "none !important" }
+                },
+                "& .MuiPickersSectionList-sectionContent": { color: "white !important" },
+                "& .MuiPickersSectionList-sectionSeparator": { color: "white !important" },
+                "& .MuiPickersSectionList-sectionBefore, & .MuiPickersSectionList-sectionAfter": {
+                  color: "white !important"
+                }
+              }}
+              slotProps={{
+                openPickerButton: { sx: { color: "white" } },
+                textField: { size: "small" },
+                actionBar: { actions: ["today", "cancel", "accept"] }
+              }}
+            />
+          ) : (
+            <Typography sx={{ color: "white", fontSize: "1rem", fontWeight: 500, mx: 2 }}>
+              {momentViewDate.format("MMMM YYYY")}
+            </Typography>
+          )}
           <IconButton
             size="large"
             edge="end"

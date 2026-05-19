@@ -1,4 +1,3 @@
-import React from "react";
 import { List, ListItemIcon, ListItemText, ListItem } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import BlockIcon from "@mui/icons-material/Block";

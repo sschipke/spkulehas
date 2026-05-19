@@ -1,4 +1,3 @@
-import React from "react";
 import { Switch, FormGroup, FormControlLabel } from "@mui/material";
 
 export const MakeAdminControlSwitch = ({

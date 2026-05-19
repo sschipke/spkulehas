@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Link from "next/link";
@@ -73,7 +73,7 @@ const UserAvatarMenu = ({ user, logOut }) => {
         className="unstyled-link"
         onClick={() => handleClose()}
       >
-        <Link href={link.page} ariaRole="link">
+        <Link href={link.page}>
           {link.label}
         </Link>
       </MenuItem>

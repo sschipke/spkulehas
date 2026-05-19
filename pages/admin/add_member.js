@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
-import { formatPhoneNumber } from "../../utils/helpers";
+import { formatPhoneNumber, formatPhoneInput } from "../../utils/helpers";
 import { setNewMemberInfo, toggleConfirmAddMemberDialog } from "../../actions";
 
 const TextField = dynamic(() =>
@@ -15,8 +15,8 @@ const Typography = dynamic(() =>
   import("@mui/material").then((mod) => mod.Typography)
 );
 const Paper = dynamic(() => import("@mui/material").then((mod) => mod.Paper));
-const SelectStatus = dynamic(() =>
-  import("../../components/Utilities/SelectStatus")
+const SelectStatus = dynamic(
+  () => import("../../components/Utilities/SelectStatus")
 );
 
 export const AddMemberPage = ({ user }) => {
@@ -46,8 +46,6 @@ export const AddMemberPage = ({ user }) => {
     return null;
   }
 
-  const phoneFormat = { length: 10, pattern: "[0-9]{10}" };
-
   const handleChange = (e) => {
     let inputValue;
     const type = e.target.id;
@@ -74,6 +72,9 @@ export const AddMemberPage = ({ user }) => {
         }
         inputValue = e.target.value;
         break;
+      case "phone":
+        inputValue = formatPhoneInput(e.target.value);
+        break;
       default:
         inputValue = e.target.value.trim();
         break;
@@ -83,7 +84,7 @@ export const AddMemberPage = ({ user }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    userInfo.phone = formatPhoneNumber(userInfo.phone || "");
+    userInfo.phone = formatPhoneNumber((userInfo.phone || "").replace(/\D/g, ""));
     dispatch(setNewMemberInfo(userInfo));
     dispatch(toggleConfirmAddMemberDialog());
   };
@@ -224,13 +225,11 @@ export const AddMemberPage = ({ user }) => {
             label="Phone"
             value={userInfo.phone}
             onChange={handleChange}
-            placeholder="Phone Number"
-            helperText="Please only enter 10 digits."
+            placeholder="(XXX) XXX-XXXX"
+            helperText="10-digit US phone number."
             inputProps={{
-              inputMode: "numeric",
-              minLength: phoneFormat.length,
-              maxLength: phoneFormat.length,
-              pattern: phoneFormat.pattern
+              minLength: 14,
+              maxLength: 14
             }}
           />
         </Stack>
@@ -238,10 +237,9 @@ export const AddMemberPage = ({ user }) => {
           direction="row"
           sx={{
             m: { xs: "10px 0", sm: "10px 0", md: "25px auto", lg: "25px auto" },
-            width: { md: "50%", lg: "30%" }
+            width: { md: "50%", lg: "30%" },
+            justifyContent: "space-between",
           }}
-          justifyContent="space-between"
-          alignItems="flex-end"
         >
           <Button
             variant="outlined"

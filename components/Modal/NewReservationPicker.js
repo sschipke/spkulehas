@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import dynamic from "next/dynamic";
+import moment from "moment";
 import {
-  TextField,
   Modal,
   Backdrop,
   Box,
   Stack,
   Button,
+  TextField,
   Typography
 } from "@mui/material";
-import { DateRangePicker } from "@mui/lab";
+import { DatePicker } from "@mui/x-date-pickers";
 import {
   addReservation,
   toggleNewReservationPicker,
@@ -45,10 +46,10 @@ export const NewReservationPicker = ({
   reservationTitle
 }) => {
   const thunkDispatch = useDispatch();
-  const [dates, setDates] = useState([new Date(viewDate), null]);
+  const [dates, setDates] = useState([moment(viewDate), null]);
   const [notes, setNotes] = useState("");
   useEffect(() => {
-    setDates([new Date(viewDate), null]);
+    setDates([moment(viewDate), null]);
     return () => {
       setDates([null, null]);
       setNotes("");
@@ -124,25 +125,28 @@ export const NewReservationPicker = ({
         >
           Create New Reservation
         </Typography>
-        <DateRangePicker
-          views={["year", "month", "day"]}
-          startText="Check-in"
-          endText="Check-out"
-          label="Reservation Dates"
-          value={dates}
-          onChange={(newValue) => {
-            setDates(newValue);
-          }}
-          minDate={minDate}
-          maxDate={maxDate}
-          sx={{ display: "flex", margin: "auto", flexDirection: "column" }}
-          renderInput={(startProps, endProps) => (
-            <React.Fragment>
-              <TextField {...startProps} />
-              <TextField {...endProps} />
-            </React.Fragment>
-          )}
-        />
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mb: 2 }}>
+          <DatePicker
+            label="Check-in"
+            value={checkinDate}
+            onChange={(newValue) => setDates([newValue, checkoutDate])}
+            minDate={minDate}
+            maxDate={checkoutDate || maxDate}
+            slotProps={{
+              toolbar: { hidden: false, toolbarTitle: "Check-in Date" }
+            }}
+          />
+          <DatePicker
+            label="Check-out"
+            value={checkoutDate}
+            onChange={(newValue) => setDates([checkinDate, newValue])}
+            minDate={checkinDate || minDate}
+            maxDate={maxDate}
+            slotProps={{
+              toolbar: { hidden: false, toolbarTitle: "Check-out Date" }
+            }}
+          />
+        </Stack>
         <TextField
           className="notes-title-and-member-select"
           id="notes"
@@ -160,11 +164,12 @@ export const NewReservationPicker = ({
         <UserSelect />
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
           className="reservation-buttons"
-          sx={{ mt: 5 }}
-        >
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            mt: 5
+          }}>
           <Button
             variant="outlined"
             color="error"

@@ -1,4 +1,3 @@
-import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import moment from "moment";
@@ -111,13 +110,11 @@ export const ViewReservationModal = ({
         </Button>
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
           sx={{
+            alignItems: "flex-end",
             m: 3,
             justifyContent: "space-evenly"
-          }}
-        >
+          }}>
           <Button
             variant="outlined"
             color="secondary"

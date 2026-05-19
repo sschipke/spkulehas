@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import Avatar from "@mui/material/Avatar";
@@ -36,7 +36,7 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
     if (!isOpen) {
       setValues(initialState);
     }
-  }, [isOpen]); // eslint-disable-line
+  }, [isOpen]);  
 
   if (user) {
     return null;
@@ -144,8 +144,8 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
           >
             {values.resetPassword ? "Reset Password" : "Sign In"}
           </Button>
-          {!values.resetPassword && (
-            <div style={{ width: "100%", textAlign: "center" }}>
+          <div style={{ width: "100%", textAlign: "center" }}>
+            {!values.resetPassword ? (
               <Button
                 variant="outlined"
                 color="secondary"
@@ -153,13 +153,27 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
                 onClick={() => setValues({ ...values, resetPassword: true })}
                 sx={{
                   m: "auto",
-                  width: { xs: "85%", sm: "60%", md: "50%", lg: "40%" }
+                  width: { xs: "85%", sm: "60%", md: "50%", lg: "40%" },
+                  whiteSpace: "nowrap"
                 }}
               >
                 Forgot password?
               </Button>
-            </div>
-          )}
+            ) : (
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => setValues({ ...values, resetPassword: false })}
+                sx={{
+                  m: "auto",
+                  width: { xs: "85%", sm: "60%", md: "50%", lg: "40%" },
+                  whiteSpace: "nowrap"
+                }}
+              >
+                Back to Sign In
+              </Button>
+            )}
+          </div>
           {values.error && (
             <FormHelperText sx={{ color: "red" }}>
               Invalid email or password.

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -23,16 +23,16 @@ import {
 } from "../thunks/thunks";
 import { isInReservation, findNearestReservations } from "../utils/helpers";
 
-const CalendarNavBar = dynamic(() =>
-  import("../components/CalendarNavBar/CalendarNavBar")
+const CalendarNavBar = dynamic(
+  () => import("../components/CalendarNavBar/CalendarNavBar")
 );
 
-const BigCalendar = dynamic(() =>
-  import("../components/BigCalendar/BigCalendar")
+const BigCalendar = dynamic(
+  () => import("../components/BigCalendar/BigCalendar")
 );
 
-const LoadingDataMessage = dynamic(() =>
-  import("../components/Utilities/LoadingDataMessage")
+const LoadingDataMessage = dynamic(
+  () => import("../components/Utilities/LoadingDataMessage")
 );
 
 import moment from "moment";
@@ -105,7 +105,15 @@ const App = ({
       dispatch(handleReservationIdFromUrl(reservationId, reservations));
       router.replace("/", null, { shallow: true });
     }
-  }, [areReservationsLoaded, reservations, user, reset, date, token, reservationId]); // eslint-disable-line
+  }, [
+    areReservationsLoaded,
+    reservations,
+    user,
+    reset,
+    date,
+    token,
+    reservationId
+  ]);  
 
   return (
     <div className="App">
