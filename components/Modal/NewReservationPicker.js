@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import dynamic from "next/dynamic";
@@ -125,13 +125,16 @@ export const NewReservationPicker = ({
         >
           Create New Reservation
         </Typography>
-        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mb: 2 }}>
           <DatePicker
             label="Check-in"
             value={checkinDate}
             onChange={(newValue) => setDates([newValue, checkoutDate])}
             minDate={minDate}
             maxDate={checkoutDate || maxDate}
+            slotProps={{
+              toolbar: { hidden: false, toolbarTitle: "Check-in Date" }
+            }}
           />
           <DatePicker
             label="Check-out"
@@ -139,6 +142,9 @@ export const NewReservationPicker = ({
             onChange={(newValue) => setDates([checkinDate, newValue])}
             minDate={checkinDate || minDate}
             maxDate={maxDate}
+            slotProps={{
+              toolbar: { hidden: false, toolbarTitle: "Check-out Date" }
+            }}
           />
         </Stack>
         <TextField

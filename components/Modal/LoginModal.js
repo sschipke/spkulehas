@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import Avatar from "@mui/material/Avatar";
@@ -36,7 +36,7 @@ export const LoginModal = ({ isOpen, user, closeLoginModal }) => {
     if (!isOpen) {
       setValues(initialState);
     }
-  }, [isOpen]); // eslint-disable-line
+  }, [isOpen]);  
 
   if (user) {
     return null;

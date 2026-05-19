@@ -1,28 +1,38 @@
 import js from "@eslint/js";
+import reactPlugin from "eslint-plugin-react";
+
+const browserGlobals = {
+  process: "readonly",
+  console: "readonly",
+  window: "readonly",
+  document: "readonly",
+  setTimeout: "readonly",
+  clearTimeout: "readonly",
+  setInterval: "readonly",
+  clearInterval: "readonly",
+  fetch: "readonly",
+  URL: "readonly",
+  URLSearchParams: "readonly",
+  localStorage: "readonly",
+  FormData: "readonly",
+  module: "readonly",
+  require: "readonly",
+  __dirname: "readonly",
+  __filename: "readonly",
+  exports: "writable",
+  React: "readonly",
+};
 
 export default [
+  js.configs.recommended,
+  reactPlugin.configs.flat.recommended,
+  reactPlugin.configs.flat["jsx-runtime"],
   {
-    ...js.configs.recommended,
+    settings: {
+      react: { version: "detect" },
+    },
     languageOptions: {
-      ...js.configs.recommended.languageOptions,
-      globals: {
-        process: "readonly",
-        console: "readonly",
-        window: "readonly",
-        document: "readonly",
-        setTimeout: "readonly",
-        clearTimeout: "readonly",
-        setInterval: "readonly",
-        clearInterval: "readonly",
-        fetch: "readonly",
-        URLSearchParams: "readonly",
-        module: "readonly",
-        require: "readonly",
-        __dirname: "readonly",
-        __filename: "readonly",
-        exports: "writable",
-        React: "readonly",
-      },
+      globals: browserGlobals,
       parserOptions: {
         ecmaFeatures: { jsx: true },
         ecmaVersion: "latest",
@@ -30,9 +40,9 @@ export default [
       },
     },
     rules: {
-      ...js.configs.recommended.rules,
       "no-unused-vars": "warn",
       "no-undef": "warn",
+      "react/prop-types": "off",
     },
   },
   {

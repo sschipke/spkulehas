@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -60,14 +60,14 @@ export const EditReservationPicker = ({
   const initialNotes = currentReservation ? currentReservation.notes : "";
   const [notes, setNotes] = useState(initialNotes);
   const [hasError, setHasError] = useState(false);
-  // eslint-disable-next-line no-unused-vars
+   
   useEffect(() => {
     setDates(initialValue());
     setNotes(initialNotes);
     return () => {
       setNotes("");
     };
-  }, [currentReservation, initialNotes]); // eslint-disable-line
+  }, [currentReservation, initialNotes]);  
 
   if (!currentReservation || !canEdit(user, currentReservation)) {
     return null;
@@ -159,7 +159,7 @@ export const EditReservationPicker = ({
         >
           Update Reservation
         </Typography>
-        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mb: 2 }}>
           <DatePicker
             label="Check-in"
             value={checkinDate}
@@ -167,6 +167,9 @@ export const EditReservationPicker = ({
             onError={(err) => setHasError(err !== null)}
             minDate={minDate}
             maxDate={checkoutDate || maxDate}
+            slotProps={{
+              toolbar: { hidden: false, toolbarTitle: "Check-in Date" }
+            }}
           />
           <DatePicker
             label="Check-out"
@@ -175,6 +178,9 @@ export const EditReservationPicker = ({
             onError={(err) => setHasError(err !== null)}
             minDate={checkinDate || minDate}
             maxDate={maxDate}
+            slotProps={{
+              toolbar: { hidden: false, toolbarTitle: "Check-out Date" }
+            }}
           />
         </Stack>
         <TextField

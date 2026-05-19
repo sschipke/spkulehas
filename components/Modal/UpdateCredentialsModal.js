@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import Avatar from "@mui/material/Avatar";
@@ -50,7 +50,7 @@ export const UpdateCredentialsModal = ({
     if (!isOpen) {
       setValues(initialState);
     }
-  }, [isOpen]); // eslint-disable-line
+  }, [isOpen]);  
 
   const userToUpdate = selectedMember ? selectedMember : user;
   const isSelectedMember =

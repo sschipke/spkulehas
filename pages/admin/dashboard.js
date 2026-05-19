@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -39,7 +39,7 @@ const DashboardPage = ({ user, loginData, token }) => {
     if (!loginData || !loginData.length) {
       dispatch(handleDashboardData(token));
     }
-  }, [user, loginData]); // eslint-disable-line
+  }, [user, loginData]);  
 
   if (!user || !user.isAdmin) {
     return null;

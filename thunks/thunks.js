@@ -289,7 +289,7 @@ export const handleEtagMismatch =
         closeSecondaryModal();
       }
       dispatch(showToast("Reservations updated. Try again.", "warning"));
-    } catch (err) {
+    } catch {
       dispatch(
         showToast("Unable to update reservations. Please try again.", "error")
       );

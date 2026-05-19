@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -113,7 +113,7 @@ const App = ({
     date,
     token,
     reservationId
-  ]); // eslint-disable-line
+  ]);  
 
   return (
     <div className="App">

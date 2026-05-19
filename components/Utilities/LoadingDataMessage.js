@@ -1,4 +1,3 @@
-import React from "react";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 
 const LoadingDataMessage = ({ message }) => (

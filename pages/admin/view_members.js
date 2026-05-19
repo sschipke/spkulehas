@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -48,7 +48,7 @@ const MemberDetailsPage = ({ user, memberDetails, token }) => {
     if (!memberDetails || !memberDetails.length) {
       dispatch(processGetMemberDetails(token));
     }
-  }, [user, memberDetails]); // eslint-disable-line
+  }, [user, memberDetails]);  
 
   if (!user || !user.isAdmin) {
     return null;

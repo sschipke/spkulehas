@@ -1,4 +1,3 @@
-import React from "react";
 import { connect } from "react-redux";
 import { Select, MenuItem, InputLabel } from "@mui/material";
 import dynamic from "next/dynamic";

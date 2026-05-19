@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Autocomplete, TextField } from "@mui/material";
@@ -25,7 +25,7 @@ const UserSelect = ({
     return () => {
       updateSelectedUser(null);
     };
-  }, [isEditReservationModalOpen, currentReservation]); // eslint-disable-line
+  }, [isEditReservationModalOpen, currentReservation]);  
 
   if (!user.isAdmin || !usersInfo) {
     return null;

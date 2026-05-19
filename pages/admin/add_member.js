@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
@@ -235,13 +235,11 @@ export const AddMemberPage = ({ user }) => {
         </Stack>
         <Stack
           direction="row"
-          spacing={3}
           sx={{
-            m: { xs: "25px 0", sm: "25px 0", md: "25px auto", lg: "25px auto" },
-            width: { xs: "100%", sm: "60%", md: "50%", lg: "30%" }
+            m: { xs: "10px 0", sm: "10px 0", md: "25px auto", lg: "25px auto" },
+            width: { md: "50%", lg: "30%" },
+            justifyContent: "space-between",
           }}
-          justifyContent="space-between"
-          alignItems="flex-end"
         >
           <Button
             variant="outlined"

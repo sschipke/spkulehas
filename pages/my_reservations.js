@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import dynamic from "next/dynamic";
@@ -57,7 +57,7 @@ const MyReservationsPage = ({
     if (!user) {
       router.push("/");
     }
-  }, [user]); // eslint-disable-line
+  }, [user]);  
 
   const reservationsToDisplay = (userReservations || []).filter((reservation) =>
     reservation.title.toLowerCase().includes(searchText.toLowerCase())

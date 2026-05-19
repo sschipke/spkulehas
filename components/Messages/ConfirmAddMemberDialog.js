@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import {
@@ -42,7 +42,7 @@ const ConfirmAddMemberDialog = ({ user, token, newMemberInfo, isOpen }) => {
     if (!isOpen) {
       setValues(initialState);
     }
-  }, [isOpen]); // eslint-disable-line
+  }, [isOpen]);  
 
   const canSubmit = values.canAddMember && values.password;
 
