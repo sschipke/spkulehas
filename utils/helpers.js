@@ -10,6 +10,12 @@ const WINTER_SEASON_START_2024 = "2024-10-21";
 const WINTER_SEASON_END_2024 = "2025-05-18";
 const WINTER_SEASON_START_2025 = "2025-10-20";
 const WINTER_SEASON_END_2025 = "2026-05-15";
+const WINTER_SEASON_START_2026 = "2026-10-19";
+const WINTER_SEASON_END_2026 = "2027-05-15";
+const WINTER_SEASON_START_2027 = "2027-10-18";
+const WINTER_SEASON_END_2027 = "2028-05-15";
+const WINTER_SEASON_START_2028 = "2028-10-21";
+const WINTER_SEASON_END_2028 = "2029-05-18";
 
 const PHONE_REGEX = new RegExp(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);
 
@@ -44,6 +50,21 @@ export const isInWinter = (date) => {
     moment(date).isBetween(
       WINTER_SEASON_START_2025,
       WINTER_SEASON_END_2025,
+      "day"
+    ) ||
+    moment(date).isBetween(
+      WINTER_SEASON_START_2026,
+      WINTER_SEASON_END_2026,
+      "day"
+    ) ||
+    moment(date).isBetween(
+      WINTER_SEASON_START_2027,
+      WINTER_SEASON_END_2027,
+      "day"
+    ) ||
+    moment(date).isBetween(
+      WINTER_SEASON_START_2028,
+      WINTER_SEASON_END_2028,
       "day"
     )
   );
@@ -200,19 +221,30 @@ export const determineMaxDate = (checkinDate, nextReservation, isAdmin) => {
     .tz(MOUNTAIN_TZ)
     .set(NOON_HOUR)
     .subtract(1, "day");
-  if (nextReservationStart && isAdmin && nextReservationStart.isValid()) {
-    return nextReservationStart;
-  } else if (nextReservation && isAdmin && !!nextReservation.isValid()) {
-    return moment(process.env.NEXT_PUBLIC_MAX_DATE);
-  }
-  if (
-    nextReservationStart.isValid() &&
-    nextReservationStart.isBefore(longestDate)
-  ) {
-    return nextReservationStart;
+
+  console.group("[determineMaxDate]");
+  console.log("checkinDate:", checkinDate ? moment(checkinDate).format("YYYY-MM-DD") : null);
+  console.log("isAdmin:", isAdmin);
+  console.log("nextReservation:", nextReservation || null);
+  console.log("nextReservationStart (computed):", nextReservationStart.isValid() ? nextReservationStart.format("YYYY-MM-DD") : "invalid");
+  console.log("longestDate:", longestDate.format("YYYY-MM-DD"), `(${isInWinter(checkinDate) ? "winter +13" : "summer +6"})`);
+
+  let result;
+  if (isAdmin && nextReservationStart.isValid()) {
+    result = nextReservationStart;
+    console.log("→ Branch: admin + valid nextReservationStart →", result.format("YYYY-MM-DD"));
+  } else if (isAdmin) {
+    result = moment(process.env.NEXT_PUBLIC_MAX_DATE);
+    console.log("→ Branch: admin + no next reservation, using MAX_DATE →", result.format("YYYY-MM-DD"));
+  } else if (nextReservationStart.isValid() && nextReservationStart.isBefore(longestDate)) {
+    result = nextReservationStart;
+    console.log("→ Branch: non-admin, nextReservationStart before longestDate →", result.format("YYYY-MM-DD"));
   } else {
-    return longestDate;
+    result = longestDate;
+    console.log("→ Branch: non-admin, using longestDate →", result.format("YYYY-MM-DD"));
   }
+  console.groupEnd();
+  return result;
 };
 
 export const canEdit = (user, reservation) => {
