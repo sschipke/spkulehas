@@ -10,6 +10,12 @@ const WINTER_SEASON_START_2024 = "2024-10-21";
 const WINTER_SEASON_END_2024 = "2025-05-18";
 const WINTER_SEASON_START_2025 = "2025-10-20";
 const WINTER_SEASON_END_2025 = "2026-05-15";
+const WINTER_SEASON_START_2026 = "2026-10-19";
+const WINTER_SEASON_END_2026 = "2027-05-15";
+const WINTER_SEASON_START_2027 = "2027-10-18";
+const WINTER_SEASON_END_2027 = "2028-05-15";
+const WINTER_SEASON_START_2028 = "2028-10-16";
+const WINTER_SEASON_END_2028 = "2029-05-18";
 
 const PHONE_REGEX = new RegExp(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/);
 
@@ -44,6 +50,21 @@ export const isInWinter = (date) => {
     moment(date).isBetween(
       WINTER_SEASON_START_2025,
       WINTER_SEASON_END_2025,
+      "day"
+    ) ||
+    moment(date).isBetween(
+      WINTER_SEASON_START_2026,
+      WINTER_SEASON_END_2026,
+      "day"
+    ) ||
+    moment(date).isBetween(
+      WINTER_SEASON_START_2027,
+      WINTER_SEASON_END_2027,
+      "day"
+    ) ||
+    moment(date).isBetween(
+      WINTER_SEASON_START_2028,
+      WINTER_SEASON_END_2028,
       "day"
     )
   );
@@ -200,15 +221,12 @@ export const determineMaxDate = (checkinDate, nextReservation, isAdmin) => {
     .tz(MOUNTAIN_TZ)
     .set(NOON_HOUR)
     .subtract(1, "day");
-  if (nextReservationStart && isAdmin && nextReservationStart.isValid()) {
+
+  if (isAdmin && nextReservationStart.isValid()) {
     return nextReservationStart;
-  } else if (nextReservation && isAdmin && !!nextReservation.isValid()) {
+  } else if (isAdmin) {
     return moment(process.env.NEXT_PUBLIC_MAX_DATE);
-  }
-  if (
-    nextReservationStart.isValid() &&
-    nextReservationStart.isBefore(longestDate)
-  ) {
+  } else if (nextReservationStart.isValid() && nextReservationStart.isBefore(longestDate)) {
     return nextReservationStart;
   } else {
     return longestDate;
