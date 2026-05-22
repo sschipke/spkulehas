@@ -16,7 +16,7 @@ let initialState = {
   is_confirm_delete_dialog_open: false,
   is_confirm_add_member_dialog_open: false,
   is_add_to_calendar_modal_open: false,
-  view_date: new Date()
+  view_date: new Date().toISOString().slice(0, 10)
 };
 
 const screen = (state = initialState, action) => {
@@ -61,8 +61,8 @@ const screen = (state = initialState, action) => {
     case "VIEW_PREVIOUS_MONTH":
       new_state.view_date = moment(view_date).subtract(1, "month").toDate();
       return new_state;
-    case "UPDATE_VIEW_DATE":
-      let { date } = action;
+    case "UPDATE_VIEW_DATE": {
+      const { date } = action;
       if (!moment(date).isValid()) {
         return new_state;
       }
@@ -76,6 +76,7 @@ const screen = (state = initialState, action) => {
         new_state.view_date = moment(maxDate).toDate();
       }
       return new_state;
+    }
     case "VIEW_TODAY":
       new_state.view_date = new Date();
       return new_state;

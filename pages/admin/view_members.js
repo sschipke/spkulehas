@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -28,8 +28,8 @@ const Paper = dynamic(() => import("@mui/material").then((mui) => mui.Paper));
 const Typography = dynamic(() =>
   import("@mui/material").then((mui) => mui.Typography)
 );
-const LoadingDataMessage = dynamic(() =>
-  import("../../components/Utilities/LoadingDataMessage")
+const LoadingDataMessage = dynamic(
+  () => import("../../components/Utilities/LoadingDataMessage")
 );
 const SearchBar = dynamic(() => import("../../components/Utilities/SearchBar"));
 dynamic(() => import("@mui/material/styles"));
@@ -48,7 +48,7 @@ const MemberDetailsPage = ({ user, memberDetails, token }) => {
     if (!memberDetails || !memberDetails.length) {
       dispatch(processGetMemberDetails(token));
     }
-  }, [user, memberDetails]); // eslint-disable-line
+  }, [user, memberDetails]);  
 
   if (!user || !user.isAdmin) {
     return null;
@@ -62,12 +62,12 @@ const MemberDetailsPage = ({ user, memberDetails, token }) => {
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "80vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "auto" }}
       >
         <Table stickyHeader>
           <TableHead>
             <TableRow className="reservation-table-head-row">
-              <TableCell>Name</TableCell>
+              <TableCell className="sticky">Name</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Admin</TableCell>
               <TableCell>Address</TableCell>
@@ -85,7 +85,7 @@ const MemberDetailsPage = ({ user, memberDetails, token }) => {
                 key={member.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell>{member.name}</TableCell>
+                <TableCell className="sticky">{member.name}</TableCell>
                 <TableCell>{member.status}</TableCell>
                 <TableCell>
                   {member.isAdmin && <CheckBoxIcon color="primary" />}

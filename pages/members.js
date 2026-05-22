@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
@@ -35,7 +35,7 @@ const MembersContactPage = ({ user, usersInfo }) => {
     if (!user) {
       router.push("/");
     }
-  }, [user]); // eslint-disable-line
+  }, [user]);  
 
   const membersToDisplay = (usersInfo || []).filter((member) =>
     member.name.toLowerCase().includes(searchMember.toLowerCase())
@@ -45,7 +45,7 @@ const MembersContactPage = ({ user, usersInfo }) => {
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "80vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "auto" }}
       >
         <Table stickyHeader>
           <TableHead>

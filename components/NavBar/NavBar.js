@@ -1,4 +1,3 @@
-import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Link from "next/link";
@@ -19,7 +18,7 @@ const NavBar = ({ user }) => {
       <AppBar color="primary" position="sticky">
         <Toolbar style={{ justifyContent: "space-between" }}>
           <Link href="/" style={{ textDecoration: "none" }}>
-            <h2 style={{ cursor: "pointer", lineHeight: 0.5 }}>
+            <h2 style={{ cursor: "pointer", lineHeight: 0.5, color: "white" }}>
               SpKuLeHaS Inc
             </h2>
           </Link>

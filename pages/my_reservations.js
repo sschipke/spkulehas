@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import dynamic from "next/dynamic";
@@ -29,8 +29,8 @@ const Typography = dynamic(() =>
   import("@mui/material").then((mui) => mui.Typography)
 );
 const EditIcon = dynamic(() => import("@mui/icons-material/Edit"));
-const DeleteForeverIcon = dynamic(() =>
-  import("@mui/icons-material/DeleteForever")
+const DeleteForeverIcon = dynamic(
+  () => import("@mui/icons-material/DeleteForever")
 );
 const Visibility = dynamic(() => import("@mui/icons-material/Visibility"));
 const SearchBar = dynamic(() => import("../components/Utilities/SearchBar"));
@@ -57,7 +57,7 @@ const MyReservationsPage = ({
     if (!user) {
       router.push("/");
     }
-  }, [user]); // eslint-disable-line
+  }, [user]);  
 
   const reservationsToDisplay = (userReservations || []).filter((reservation) =>
     reservation.title.toLowerCase().includes(searchText.toLowerCase())
@@ -67,7 +67,7 @@ const MyReservationsPage = ({
     return (
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: "80vh", overflow: "scroll" }}
+        sx={{ maxHeight: "80vh", overflow: "auto" }}
       >
         <Table stickyHeader>
           <TableHead>

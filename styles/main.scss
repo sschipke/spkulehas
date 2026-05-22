@@ -87,7 +87,7 @@ input:invalid {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: scroll;
+  overflow: auto;
   .reservation-buttons {
     width: 30%;
   }

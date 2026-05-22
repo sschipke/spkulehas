@@ -1,4 +1,3 @@
-import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Modal, Backdrop, Box, Button, Stack } from "@mui/material";
@@ -54,12 +53,10 @@ export const AddToCalendarModal = ({
         <h3>Add to Calendar</h3>
         <Stack
           direction="column"
-          justifyContent="space-between"
-          alignItems="center"
           sx={{
+            alignItems: "center",
             justifyContent: "space-evenly"
-          }}
-        >
+          }}>
           <Button
             sx={{ borderRadius: 10 }}
             variant="contained"
@@ -96,13 +93,11 @@ export const AddToCalendarModal = ({
         </Stack>
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
           sx={{
+            alignItems: "flex-end",
             m: 3,
             justifyContent: "space-evenly"
-          }}
-        >
+          }}>
           <Button
             variant="outlined"
             color="secondary"

@@ -1,4 +1,3 @@
-import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { IconButton, Avatar } from "@mui/material";
@@ -8,21 +7,21 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 import { showLoginModal } from "../../actions";
 
+const BlackToolTip = styled(({ className, ...props }) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: theme.palette.common.black
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.black
+  }
+}));
+
 const BlankAvatarMenu = ({ showLoginModal, isLoginModalOpen }) => {
   const handleOpen = () => {
     showLoginModal();
   };
-
-  const BlackToolTip = styled(({ className, ...props }) => (
-    <Tooltip {...props} arrow classes={{ popper: className }} />
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.arrow}`]: {
-      color: theme.palette.common.black
-    },
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: theme.palette.common.black
-    }
-  }));
 
   return (
     <>
@@ -33,7 +32,7 @@ const BlankAvatarMenu = ({ showLoginModal, isLoginModalOpen }) => {
         placement="left"
       >
         <IconButton onClick={handleOpen} sx={{ p: 0 }}>
-          <Avatar alt="" src="/" />
+          <Avatar alt="" />
         </IconButton>
       </BlackToolTip>
     </>

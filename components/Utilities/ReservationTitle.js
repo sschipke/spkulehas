@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { TextField } from "@mui/material";
@@ -55,7 +55,7 @@ const ReservationTitle = ({
 
   return (
     <TextField
-      className="notes-title-and-member-select "
+      className="notes-title-and-member-select"
       id="reservation-title"
       label="Event Title"
       rows={1}
@@ -64,6 +64,7 @@ const ReservationTitle = ({
       inputProps={{
         maxLength: 20
       }}
+      sx={{ mt: 3 }}
     />
   );
 };
