@@ -11,7 +11,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "prepare": "husky install"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@date-io/moment": "^3.2.0",
